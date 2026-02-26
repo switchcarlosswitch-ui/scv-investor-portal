@@ -246,24 +246,6 @@
             display: none !important;
         }
 
-        .debug {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.875rem;
-            margin: 1rem 0;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--muted);
-        }
-
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -281,10 +263,10 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="lang-toggle" onclick="toggleLanguage()">
+                <button class="lang-toggle" id="langButton">
                     <span id="langText">ES</span>
                 </button>
-                <button id="logoutBtn" class="btn btn-secondary hidden" onclick="logout()">
+                <button id="logoutBtn" class="btn btn-secondary hidden">
                     Logout
                 </button>
             </div>
@@ -292,19 +274,8 @@
     </header>
 
     <main class="main-content">
-        <!-- Loading State -->
-        <div id="loadingState" class="loading">
-            <h3>Loading Portal...</h3>
-            <p>Initializing Supabase connection...</p>
-        </div>
-
-        <!-- Debug Info -->
-        <div id="debugInfo" class="debug hidden">
-            Debug Log:<br>
-        </div>
-
         <!-- Login Form -->
-        <div id="authContainer" class="auth-container hidden">
+        <div id="authContainer" class="auth-container">
             <div class="auth-header">
                 <h2>Investor Login</h2>
                 <p>Access your secure investor portal</p>
@@ -324,10 +295,10 @@
                 </button>
             </form>
 
-            <div style="text-align: center; margin-top: 1rem;">
-                <button onclick="showDebug()" class="btn btn-secondary" style="font-size: 0.875rem;">
-                    Show Debug
-                </button>
+            <div style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <p style="color: var(--muted); font-size: 0.875rem;">
+                    New investor? You must be invited by an admin to create an account.
+                </p>
             </div>
         </div>
 
@@ -335,18 +306,19 @@
         <div id="adminPanel" class="admin-panel">
             <div class="card">
                 <h2 class="card-title">🎉 Admin Panel</h2>
-                <p><strong>Congratulations!</strong> You are logged in as an administrator.</p>
-                <p><strong>User:</strong> <span id="adminUserInfo"></span></p>
-                <p><strong>Role:</strong> <span id="adminRoleInfo"></span></p>
-                <p><strong>Status:</strong> <span id="adminStatusInfo"></span></p>
-            </div>
-
-            <div class="card">
-                <h3 class="card-title">Admin Functions</h3>
-                <p>✅ Send investor invitations</p>
-                <p>✅ Review documents</p>
-                <p>✅ Manage user accounts</p>
-                <p>✅ Configure news watchlist</p>
+                <p><strong>SUCCESS!</strong> You are logged in as an administrator.</p>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <strong>✅ Admin Features Available:</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li>Send investor invitations</li>
+                        <li>Review and approve documents</li>
+                        <li>Manage user accounts</li>
+                        <li>Configure news watchlist</li>
+                    </ul>
+                </div>
+                <p><strong>User:</strong> <span id="adminUserInfo">Loading...</span></p>
+                <p><strong>Role:</strong> <span id="adminRoleInfo">admin</span></p>
+                <p><strong>Status:</strong> <span id="adminStatusInfo">active</span></p>
             </div>
         </div>
 
@@ -355,88 +327,48 @@
             <div class="card">
                 <h2 class="card-title">👤 Investor Dashboard</h2>
                 <p>Welcome to your investor portal!</p>
-                <p><strong>User:</strong> <span id="userInfo"></span></p>
-                <p><strong>Status:</strong> <span id="userStatusInfo"></span></p>
+                <p><strong>User:</strong> <span id="userInfo">Loading...</span></p>
+                <p><strong>Status:</strong> <span id="userStatusInfo">active</span></p>
             </div>
         </div>
     </main>
 
-    <!-- Load Supabase -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
+        console.log('🚀 Starting portal initialization...');
+
+        // Configuration
+        const SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
+
         // Global variables
         let supabase = null;
         let currentUser = null;
         let userProfile = null;
 
-        // Debug logging
-        function debugLog(message) {
-            console.log(message);
-            const debugDiv = document.getElementById('debugInfo');
-            if (debugDiv) {
-                debugDiv.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
-                debugDiv.scrollTop = debugDiv.scrollHeight;
-            }
-        }
-
-        function showDebug() {
-            document.getElementById('debugInfo').classList.toggle('hidden');
-        }
-
         // Initialize Supabase
-        function initializeSupabase() {
-            debugLog('Checking if Supabase is available...');
-            
-            if (typeof window.supabase === 'undefined') {
-                debugLog('ERROR: Supabase library not loaded!');
-                showNotification('Supabase library failed to load', 'danger');
-                return false;
-            }
-
-            debugLog('Supabase library loaded successfully');
-            
+        function initSupabase() {
+            console.log('🔧 Initializing Supabase...');
             try {
-                const SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
-                const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-                
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                debugLog('Supabase client created successfully');
-                
-                // Test connection
-                testConnection();
-                return true;
-                
-            } catch (error) {
-                debugLog('ERROR creating Supabase client: ' + error.message);
-                showNotification('Failed to initialize Supabase', 'danger');
-                return false;
-            }
-        }
-
-        // Test connection
-        async function testConnection() {
-            debugLog('Testing Supabase connection...');
-            try {
-                const { data, error } = await supabase.auth.getUser();
-                if (error) {
-                    debugLog('Connection test error: ' + error.message);
-                } else {
-                    debugLog('Connection test successful');
-                    debugLog('Current user: ' + (data.user ? data.user.email : 'None'));
+                if (typeof window.supabase === 'undefined') {
+                    console.error('❌ Supabase library not loaded!');
+                    alert('Error: Supabase library failed to load. Please refresh the page.');
+                    return false;
                 }
-                
-                // Hide loading, show login
-                document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('authContainer').classList.remove('hidden');
-                
+
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase initialized successfully');
+                return true;
             } catch (error) {
-                debugLog('Connection test exception: ' + error.message);
-                showNotification('Connection test failed', 'danger');
+                console.error('❌ Supabase initialization error:', error);
+                alert('Error initializing database connection: ' + error.message);
+                return false;
             }
         }
 
         // Language toggle
         function toggleLanguage() {
+            console.log('🌐 Language toggle clicked');
             const langText = document.getElementById('langText');
             langText.textContent = langText.textContent === 'ES' ? 'EN' : 'ES';
             showNotification('Language toggled!', 'success');
@@ -444,7 +376,7 @@
 
         // Show notification
         function showNotification(message, type = 'info') {
-            debugLog(`Notification: ${message} (${type})`);
+            console.log(`📢 Notification: ${message} (${type})`);
             const notification = document.createElement('div');
             notification.className = `alert alert-${type}`;
             notification.style.cssText = `
@@ -458,27 +390,29 @@
 
         // Login function
         async function loginUser(email, password) {
-            debugLog(`Starting login for: ${email}`);
+            console.log(`🔑 Attempting login for: ${email}`);
             
             if (!supabase) {
-                debugLog('ERROR: Supabase not initialized');
-                showNotification('Portal not ready - please refresh', 'danger');
+                console.error('❌ Supabase not initialized');
+                showNotification('Database not ready. Please refresh the page.', 'danger');
                 return;
             }
             
             try {
+                showNotification('Signing in...', 'info');
+                
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
                 
                 if (error) {
-                    debugLog(`Login error: ${error.message}`);
+                    console.error('❌ Login error:', error.message);
                     showNotification('Login failed: ' + error.message, 'danger');
                     return;
                 }
                 
-                debugLog(`Login successful for user: ${data.user.id}`);
+                console.log('✅ Login successful!');
                 currentUser = data.user;
                 
                 // Load profile
@@ -488,13 +422,14 @@
                 showDashboard();
                 
             } catch (error) {
-                debugLog(`Login exception: ${error.message}`);
+                console.error('❌ Login exception:', error);
                 showNotification('Login error: ' + error.message, 'danger');
             }
         }
 
+        // Load user profile
         async function loadUserProfile() {
-            debugLog(`Loading profile for user: ${currentUser.id}`);
+            console.log(`👤 Loading profile for user: ${currentUser.id}`);
             
             try {
                 const { data, error } = await supabase
@@ -504,21 +439,19 @@
                     .single();
 
                 if (error) {
-                    debugLog(`Profile load error: ${error.message}`);
-                    debugLog('Creating default profile...');
+                    console.log('⚠️ Profile not found in database, using defaults');
                     userProfile = { 
                         role: 'investor', 
                         full_name: currentUser.email,
                         status: 'active'
                     };
-                    return;
+                } else {
+                    userProfile = data;
+                    console.log(`✅ Profile loaded: ${userProfile.role}`);
                 }
                 
-                userProfile = data;
-                debugLog(`Profile loaded: role=${userProfile.role}, status=${userProfile.status}`);
-                
             } catch (error) {
-                debugLog(`Profile load exception: ${error.message}`);
+                console.error('❌ Profile load error:', error);
                 userProfile = { 
                     role: 'investor', 
                     full_name: currentUser.email,
@@ -527,8 +460,9 @@
             }
         }
 
+        // Show appropriate dashboard
         function showDashboard() {
-            debugLog(`Showing dashboard for role: ${userProfile.role}`);
+            console.log(`📊 Showing dashboard for role: ${userProfile.role}`);
             
             // Hide login form
             document.getElementById('authContainer').classList.add('hidden');
@@ -536,23 +470,21 @@
             
             // Show appropriate dashboard
             if (userProfile.role === 'admin') {
-                debugLog('Displaying admin panel');
+                console.log('👨‍💼 Showing admin panel');
                 document.getElementById('adminPanel').classList.add('active');
                 document.getElementById('adminUserInfo').textContent = userProfile.full_name || currentUser.email;
-                document.getElementById('adminRoleInfo').textContent = userProfile.role;
-                document.getElementById('adminStatusInfo').textContent = userProfile.status || 'active';
-                showNotification('Welcome, Administrator!', 'success');
+                showNotification('Welcome, Administrator! 🎉', 'success');
             } else {
-                debugLog('Displaying investor dashboard');
+                console.log('👤 Showing investor dashboard');
                 document.getElementById('dashboard').classList.add('active');
                 document.getElementById('userInfo').textContent = userProfile.full_name || currentUser.email;
-                document.getElementById('userStatusInfo').textContent = userProfile.status || 'active';
-                showNotification('Welcome, Investor!', 'success');
+                showNotification('Welcome to your portal! 👋', 'success');
             }
         }
 
+        // Logout
         function logout() {
-            debugLog('Logging out user');
+            console.log('🚪 Logging out...');
             if (supabase) {
                 supabase.auth.signOut();
             }
@@ -568,40 +500,48 @@
             showNotification('Logged out successfully', 'success');
         }
 
-        // Event listeners
+        // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            debugLog('DOM loaded, initializing...');
+            console.log('📄 DOM loaded, setting up portal...');
             
-            // Wait a bit for Supabase to load, then initialize
-            setTimeout(() => {
-                if (initializeSupabase()) {
-                    // Setup login form
-                    document.getElementById('loginForm').addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        debugLog('Login form submitted');
-                        
-                        const email = document.getElementById('loginEmail').value;
-                        const password = document.getElementById('loginPassword').value;
-                        
-                        if (!email || !password) {
-                            showNotification('Please fill in all fields', 'warning');
-                            return;
-                        }
-                        
-                        loginUser(email, password);
-                    });
-                    
-                    debugLog('Initialization complete');
+            // Initialize Supabase
+            if (!initSupabase()) {
+                return;
+            }
+
+            // Language toggle
+            document.getElementById('langButton').addEventListener('click', toggleLanguage);
+
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('📝 Login form submitted');
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!email || !password) {
+                    showNotification('Please fill in all fields', 'warning');
+                    return;
                 }
-            }, 1000);
+                
+                loginUser(email, password);
+            });
+            
+            console.log('✅ Portal setup complete!');
+            showNotification('Portal loaded successfully! 🚀', 'info');
         });
 
         // Make functions global for debugging
+        window.toggleLanguage = toggleLanguage;
         window.loginUser = loginUser;
-        window.testConnection = testConnection;
-        window.initializeSupabase = initializeSupabase;
+        window.logout = logout;
+        window.supabase = supabase;
         
-        debugLog('JavaScript loaded successfully');
+        console.log('✅ JavaScript loaded successfully');
     </script>
 </body>
 </html>

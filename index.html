@@ -837,14 +837,10 @@ async function sendInvite() {
 async function sendEmailViaEdgeFunction(name, email, token, expiry) {
     const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;
     try {
-        // Get the current session token to authenticate with the Edge Function
-        const { data: { session } } = await sb.auth.getSession();
-
         const res = await fetch(EDGE_FUNCTION_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session?.access_token || SUPABASE_KEY}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 name:      name,
@@ -867,7 +863,6 @@ async function sendEmailViaEdgeFunction(name, email, token, expiry) {
         return false;
     }
 }
-
 // ============================================================
 // ADMIN: DOCUMENTS
 // ============================================================
@@ -1293,3 +1288,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+

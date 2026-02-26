@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silicon Corridor Ventures - Investor Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --purple: #6B3FA0;
@@ -24,11 +23,7 @@
             --shadow: 0 4px 20px rgba(107, 63, 160, 0.15);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -42,9 +37,6 @@
             color: white;
             padding: 1rem 0;
             box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
 
         .header-content {
@@ -70,11 +62,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .logo-icon svg {
-            width: 36px;
-            height: 36px;
+            font-weight: 800;
         }
 
         .logo-text h1 {
@@ -197,51 +185,12 @@
             border: 1px solid var(--border);
         }
 
-        /* Dashboard */
-        .dashboard {
+        .dashboard, .admin-panel {
             display: none;
         }
 
-        .dashboard.active {
+        .dashboard.active, .admin-panel.active {
             display: block;
-        }
-
-        .admin-panel {
-            display: none;
-        }
-
-        .admin-panel.active {
-            display: block;
-        }
-
-        .dashboard-nav {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-item {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: 1px solid var(--border);
-        }
-
-        .nav-item.active {
-            background: var(--grad);
-            color: white;
-            border-color: transparent;
-        }
-
-        .nav-item:hover:not(.active) {
-            background: var(--light);
         }
 
         .card {
@@ -253,46 +202,11 @@
             border: 1px solid var(--border);
         }
 
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
         .card-title {
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--text);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--purple);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .alert {
@@ -332,38 +246,27 @@
             display: none !important;
         }
 
-        .dashboard-section {
-            display: none;
+        .debug {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            margin: 1rem 0;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
-        .dashboard-section.active {
-            display: block;
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
         }
 
         @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
-            }
-            .main-content {
-                padding: 1rem;
-            }
-            .auth-container {
-                margin: 2rem auto;
-            }
-            .dashboard-nav {
-                flex-direction: column;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
@@ -371,27 +274,10 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#6B3FA0;stop-opacity:1" />
-                                <stop offset="50%" style="stop-color:#4AABCF;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#3BBFAD;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <polygon points="50,10 80,30 80,70 50,90 20,70 20,30" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
-                        <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGrad)" stroke-width="2"/>
-                        <polygon points="50,30 60,40 60,60 50,70 40,60 40,40" fill="url(#logoGrad)"/>
-                        <line x1="20" y1="30" x2="10" y2="20" stroke="url(#logoGrad)" stroke-width="2"/>
-                        <line x1="80" y1="30" x2="90" y2="20" stroke="url(#logoGrad)" stroke-width="2"/>
-                        <line x1="80" y1="70" x2="90" y2="80" stroke="url(#logoGrad)" stroke-width="2"/>
-                        <line x1="20" y1="70" x2="10" y2="80" stroke="url(#logoGrad)" stroke-width="2"/>
-                    </svg>
-                </div>
+                <div class="logo-icon">SCV</div>
                 <div class="logo-text">
-                    <h1 data-en="Silicon Corridor Ventures" data-es="Silicon Corridor Ventures">Silicon Corridor Ventures</h1>
-                    <p data-en="Investor Portal" data-es="Portal de Inversores">Investor Portal</p>
+                    <h1>Silicon Corridor Ventures</h1>
+                    <p>Investor Portal</p>
                 </div>
             </div>
             <div class="header-actions">
@@ -399,311 +285,217 @@
                     <span id="langText">ES</span>
                 </button>
                 <button id="logoutBtn" class="btn btn-secondary hidden" onclick="logout()">
-                    <span data-en="Logout" data-es="Cerrar Sesión">Logout</span>
+                    Logout
                 </button>
             </div>
         </div>
     </header>
 
     <main class="main-content">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <h3>Loading Portal...</h3>
+            <p>Initializing Supabase connection...</p>
+        </div>
+
+        <!-- Debug Info -->
+        <div id="debugInfo" class="debug hidden">
+            Debug Log:<br>
+        </div>
+
         <!-- Login Form -->
-        <div id="authContainer" class="auth-container">
+        <div id="authContainer" class="auth-container hidden">
             <div class="auth-header">
-                <h2 data-en="Investor Login" data-es="Inicio de Sesión de Inversor">Investor Login</h2>
-                <p data-en="Access your secure investor portal" data-es="Acceda a su portal seguro de inversores">Access your secure investor portal</p>
+                <h2>Investor Login</h2>
+                <p>Access your secure investor portal</p>
             </div>
 
-            <form id="loginForm" class="auth-form">
+            <form id="loginForm">
                 <div class="form-group">
-                    <label data-en="Email" data-es="Correo Electrónico">Email</label>
+                    <label for="loginEmail">Email</label>
                     <input type="email" class="form-input" id="loginEmail" required>
                 </div>
                 <div class="form-group">
-                    <label data-en="Password" data-es="Contraseña">Password</label>
+                    <label for="loginPassword">Password</label>
                     <input type="password" class="form-input" id="loginPassword" required>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>
+                    Sign In
                 </button>
             </form>
 
-            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
-                <p style="color: var(--muted); font-size: 0.875rem;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversor? Debe ser invitado por un administrador para crear una cuenta.">
-                    New investor? You must be invited by an admin to create an account.
-                </p>
+            <div style="text-align: center; margin-top: 1rem;">
+                <button onclick="showDebug()" class="btn btn-secondary" style="font-size: 0.875rem;">
+                    Show Debug
+                </button>
             </div>
-        </div>
-
-        <!-- Investor Dashboard -->
-        <div id="dashboard" class="dashboard">
-            <nav class="dashboard-nav">
-                <div class="nav-item active" data-section="overview" onclick="showSection('overview')">
-                    <span data-en="Overview" data-es="Resumen">Overview</span>
-                </div>
-                <div class="nav-item" data-section="documents" onclick="showSection('documents')">
-                    <span data-en="Documents" data-es="Documentos">Documents</span>
-                </div>
-                <div class="nav-item" data-section="news" onclick="showSection('news')">
-                    <span data-en="Market News" data-es="Noticias del Mercado">Market News</span>
-                </div>
-                <div class="nav-item" data-section="profile" onclick="showSection('profile')">
-                    <span data-en="Profile" data-es="Perfil">Profile</span>
-                </div>
-            </nav>
-
-            <section id="overviewSection" class="dashboard-section active">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Welcome to Your Investor Portal" data-es="Bienvenido a Su Portal de Inversores">Welcome to Your Investor Portal</h2>
-                    </div>
-                    <p data-en="Access your investment documents, market news, and account information." data-es="Acceda a sus documentos de inversión, noticias del mercado e información de cuenta.">
-                        Access your investment documents, market news, and account information.
-                    </p>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label" data-en="Documents Uploaded" data-es="Documentos Subidos">Documents Uploaded</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label" data-en="Approved Documents" data-es="Documentos Aprobados">Approved Documents</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label" data-en="Pending Review" data-es="Pendiente de Revisión">Pending Review</div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="documentsSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Document Upload" data-es="Subida de Documentos">Document Upload</h2>
-                    </div>
-                    <p data-en="Upload your KYC documents for review." data-es="Suba sus documentos KYC para revisión.">Upload your KYC documents for review.</p>
-                </div>
-            </section>
-
-            <section id="newsSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h2>
-                    </div>
-                    <p data-en="Latest financial news and market updates." data-es="Últimas noticias financieras y actualizaciones del mercado.">Latest financial news and market updates.</p>
-                </div>
-            </section>
-
-            <section id="profileSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Profile Information" data-es="Información del Perfil">Profile Information</h2>
-                    </div>
-                    <p data-en="Manage your account information." data-es="Gestione la información de su cuenta.">Manage your account information.</p>
-                </div>
-            </section>
         </div>
 
         <!-- Admin Panel -->
         <div id="adminPanel" class="admin-panel">
-            <nav class="dashboard-nav">
-                <div class="nav-item active" data-section="admin-overview" onclick="showAdminSection('admin-overview')">
-                    <span data-en="Overview" data-es="Resumen">Overview</span>
-                </div>
-                <div class="nav-item" data-section="admin-invitations" onclick="showAdminSection('admin-invitations')">
-                    <span data-en="Invitations" data-es="Invitaciones">Invitations</span>
-                </div>
-                <div class="nav-item" data-section="admin-documents" onclick="showAdminSection('admin-documents')">
-                    <span data-en="Document Review" data-es="Revisión de Documentos">Document Review</span>
-                </div>
-                <div class="nav-item" data-section="admin-investors" onclick="showAdminSection('admin-investors')">
-                    <span data-en="Investors" data-es="Inversores">Investors</span>
-                </div>
-                <div class="nav-item" data-section="admin-news" onclick="showAdminSection('admin-news')">
-                    <span data-en="News Watchlist" data-es="Lista de Noticias">News Watchlist</span>
-                </div>
-            </nav>
+            <div class="card">
+                <h2 class="card-title">🎉 Admin Panel</h2>
+                <p><strong>Congratulations!</strong> You are logged in as an administrator.</p>
+                <p><strong>User:</strong> <span id="adminUserInfo"></span></p>
+                <p><strong>Role:</strong> <span id="adminRoleInfo"></span></p>
+                <p><strong>Status:</strong> <span id="adminStatusInfo"></span></p>
+            </div>
 
-            <section id="adminOverviewSection" class="dashboard-section active">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Admin Dashboard" data-es="Panel de Administración">Admin Dashboard</h2>
-                    </div>
-                    <p data-en="Manage investors, review documents, and send invitations." data-es="Gestione inversores, revise documentos y envíe invitaciones.">Manage investors, review documents, and send invitations.</p>
-                </div>
+            <div class="card">
+                <h3 class="card-title">Admin Functions</h3>
+                <p>✅ Send investor invitations</p>
+                <p>✅ Review documents</p>
+                <p>✅ Manage user accounts</p>
+                <p>✅ Configure news watchlist</p>
+            </div>
+        </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label" data-en="Total Investors" data-es="Total de Inversores">Total Investors</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label" data-en="Pending Documents" data-es="Documentos Pendientes">Pending Documents</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label" data-en="Active Investors" data-es="Inversores Activos">Active Investors</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label" data-en="Pending Invitations" data-es="Invitaciones Pendientes">Pending Invitations</div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="adminInvitationsSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Send Investor Invitations" data-es="Enviar Invitaciones de Inversores">Send Investor Invitations</h2>
-                    </div>
-                    <p data-en="Send secure invitations to new investors. Only invited users can create accounts." data-es="Envíe invitaciones seguras a nuevos inversores. Solo los usuarios invitados pueden crear cuentas.">Send secure invitations to new investors. Only invited users can create accounts.</p>
-                    
-                    <form id="inviteForm" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; margin: 1.5rem 0; align-items: end;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label data-en="Investor Name" data-es="Nombre del Inversor">Investor Name</label>
-                            <input type="text" id="adminInviteeName" class="form-input" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label data-en="Email Address" data-es="Correo Electrónico">Email Address</label>
-                            <input type="email" id="adminInviteeEmail" class="form-input" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <span data-en="Send Invitation" data-es="Enviar Invitación">Send Invitation</span>
-                        </button>
-                    </form>
-                    
-                    <div id="invitationsList">
-                        <p data-en="No invitations sent yet." data-es="Aún no se han enviado invitaciones.">No invitations sent yet.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="adminDocumentsSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Document Review" data-es="Revisión de Documentos">Document Review</h2>
-                    </div>
-                    <p data-en="Review and approve investor documents." data-es="Revise y apruebe documentos de inversores.">Review and approve investor documents.</p>
-                </div>
-            </section>
-
-            <section id="adminInvestorsSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Investor Management" data-es="Gestión de Inversores">Investor Management</h2>
-                    </div>
-                    <p data-en="Manage investor accounts and status." data-es="Gestione cuentas de inversores y estado.">Manage investor accounts and status.</p>
-                </div>
-            </section>
-
-            <section id="adminNewsSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="News Watchlist" data-es="Lista de Noticias">News Watchlist</h2>
-                    </div>
-                    <p data-en="Manage companies for news monitoring." data-es="Gestione empresas para monitoreo de noticias.">Manage companies for news monitoring.</p>
-                </div>
-            </section>
+        <!-- Regular Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="card">
+                <h2 class="card-title">👤 Investor Dashboard</h2>
+                <p>Welcome to your investor portal!</p>
+                <p><strong>User:</strong> <span id="userInfo"></span></p>
+                <p><strong>Status:</strong> <span id="userStatusInfo"></span></p>
+            </div>
         </div>
     </main>
 
+    <!-- Load Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
-        // Configuration
-        const SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-        const BREVO_API_KEY = 'xsmtpsib-df2a512668b09de083e05462c3df6d0dd3d7d9d2da4f8214fd8e17f8d8e741d4-gp66ve4zDpxyKwbD';
-
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         // Global variables
-        let currentLanguage = 'en';
+        let supabase = null;
         let currentUser = null;
         let userProfile = null;
 
-        // Language functions
-        function toggleLanguage() {
-            console.log('toggleLanguage called - current language:', currentLanguage);
-            currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
-            updateLanguage();
-            document.getElementById('langText').textContent = currentLanguage === 'en' ? 'ES' : 'EN';
-            showNotification(
-                currentLanguage === 'en' ? 'Language changed to English' : 'Idioma cambiado a Español',
-                'success',
-                2000
-            );
+        // Debug logging
+        function debugLog(message) {
+            console.log(message);
+            const debugDiv = document.getElementById('debugInfo');
+            if (debugDiv) {
+                debugDiv.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+                debugDiv.scrollTop = debugDiv.scrollHeight;
+            }
         }
 
-        function updateLanguage() {
-            const elements = document.querySelectorAll('[data-en][data-es]');
-            elements.forEach(element => {
-                const text = element.getAttribute(`data-${currentLanguage}`);
-                if (text) {
-                    if (element.tagName === 'INPUT' && element.type !== 'submit') {
-                        element.placeholder = text;
-                    } else if (element.tagName === 'OPTION') {
-                        element.textContent = text;
-                    } else {
-                        element.textContent = text;
-                    }
+        function showDebug() {
+            document.getElementById('debugInfo').classList.toggle('hidden');
+        }
+
+        // Initialize Supabase
+        function initializeSupabase() {
+            debugLog('Checking if Supabase is available...');
+            
+            if (typeof window.supabase === 'undefined') {
+                debugLog('ERROR: Supabase library not loaded!');
+                showNotification('Supabase library failed to load', 'danger');
+                return false;
+            }
+
+            debugLog('Supabase library loaded successfully');
+            
+            try {
+                const SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
+                const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
+                
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                debugLog('Supabase client created successfully');
+                
+                // Test connection
+                testConnection();
+                return true;
+                
+            } catch (error) {
+                debugLog('ERROR creating Supabase client: ' + error.message);
+                showNotification('Failed to initialize Supabase', 'danger');
+                return false;
+            }
+        }
+
+        // Test connection
+        async function testConnection() {
+            debugLog('Testing Supabase connection...');
+            try {
+                const { data, error } = await supabase.auth.getUser();
+                if (error) {
+                    debugLog('Connection test error: ' + error.message);
+                } else {
+                    debugLog('Connection test successful');
+                    debugLog('Current user: ' + (data.user ? data.user.email : 'None'));
                 }
-            });
+                
+                // Hide loading, show login
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('authContainer').classList.remove('hidden');
+                
+            } catch (error) {
+                debugLog('Connection test exception: ' + error.message);
+                showNotification('Connection test failed', 'danger');
+            }
         }
 
-        // Notification function
-        function showNotification(message, type = 'info', duration = 5000) {
+        // Language toggle
+        function toggleLanguage() {
+            const langText = document.getElementById('langText');
+            langText.textContent = langText.textContent === 'ES' ? 'EN' : 'ES';
+            showNotification('Language toggled!', 'success');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            debugLog(`Notification: ${message} (${type})`);
             const notification = document.createElement('div');
             notification.className = `alert alert-${type}`;
             notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 10000;
-                min-width: 300px;
-                max-width: 500px;
-                animation: slideIn 0.3s ease-out;
-                cursor: pointer;
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                min-width: 300px; animation: slideIn 0.3s ease-out;
             `;
-            
-            const icon = type === 'success' ? '✅' : 
-                        type === 'warning' ? '⚠️' : 
-                        type === 'danger' ? '❌' : 'ℹ️';
-            
-            notification.innerHTML = `
-                <span style="font-size: 1.2rem; margin-right: 0.5rem;">${icon}</span>
-                <span>${message}</span>
-                <button onclick="this.parentElement.remove()" style="background: none; border: none; font-size: 1.2rem; margin-left: auto; cursor: pointer;">×</button>
-            `;
-            
+            notification.innerHTML = `<span>${message}</span>`;
             document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.remove();
-                }
-            }, duration);
+            setTimeout(() => notification.remove(), 4000);
         }
 
-        // Authentication functions
-        async function checkAuth() {
+        // Login function
+        async function loginUser(email, password) {
+            debugLog(`Starting login for: ${email}`);
+            
+            if (!supabase) {
+                debugLog('ERROR: Supabase not initialized');
+                showNotification('Portal not ready - please refresh', 'danger');
+                return;
+            }
+            
             try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user) {
-                    currentUser = user;
-                    await loadUserProfile();
-                    showDashboard();
-                } else {
-                    showAuth();
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    debugLog(`Login error: ${error.message}`);
+                    showNotification('Login failed: ' + error.message, 'danger');
+                    return;
                 }
+                
+                debugLog(`Login successful for user: ${data.user.id}`);
+                currentUser = data.user;
+                
+                // Load profile
+                await loadUserProfile();
+                
+                // Show dashboard
+                showDashboard();
+                
             } catch (error) {
-                console.error('Auth check error:', error);
-                showAuth();
+                debugLog(`Login exception: ${error.message}`);
+                showNotification('Login error: ' + error.message, 'danger');
             }
         }
 
         async function loadUserProfile() {
+            debugLog(`Loading profile for user: ${currentUser.id}`);
+            
             try {
                 const { data, error } = await supabase
                     .from('profiles')
@@ -712,21 +504,104 @@
                     .single();
 
                 if (error) {
-                    console.log('Profile not found, creating...');
-                    // Create profile if it doesn't exist
-                    await createProfile();
+                    debugLog(`Profile load error: ${error.message}`);
+                    debugLog('Creating default profile...');
+                    userProfile = { 
+                        role: 'investor', 
+                        full_name: currentUser.email,
+                        status: 'active'
+                    };
                     return;
                 }
+                
                 userProfile = data;
-                console.log('User profile loaded:', userProfile);
+                debugLog(`Profile loaded: role=${userProfile.role}, status=${userProfile.status}`);
+                
             } catch (error) {
-                console.error('Profile load error:', error);
+                debugLog(`Profile load exception: ${error.message}`);
+                userProfile = { 
+                    role: 'investor', 
+                    full_name: currentUser.email,
+                    status: 'active'
+                };
             }
         }
 
-        async function createProfile() {
-            try {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .insert({
-                        id: currentUser.id,
+        function showDashboard() {
+            debugLog(`Showing dashboard for role: ${userProfile.role}`);
+            
+            // Hide login form
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            
+            // Show appropriate dashboard
+            if (userProfile.role === 'admin') {
+                debugLog('Displaying admin panel');
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('adminUserInfo').textContent = userProfile.full_name || currentUser.email;
+                document.getElementById('adminRoleInfo').textContent = userProfile.role;
+                document.getElementById('adminStatusInfo').textContent = userProfile.status || 'active';
+                showNotification('Welcome, Administrator!', 'success');
+            } else {
+                debugLog('Displaying investor dashboard');
+                document.getElementById('dashboard').classList.add('active');
+                document.getElementById('userInfo').textContent = userProfile.full_name || currentUser.email;
+                document.getElementById('userStatusInfo').textContent = userProfile.status || 'active';
+                showNotification('Welcome, Investor!', 'success');
+            }
+        }
+
+        function logout() {
+            debugLog('Logging out user');
+            if (supabase) {
+                supabase.auth.signOut();
+            }
+            currentUser = null;
+            userProfile = null;
+            
+            // Reset UI
+            document.getElementById('authContainer').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('dashboard').classList.remove('active');
+            
+            showNotification('Logged out successfully', 'success');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('DOM loaded, initializing...');
+            
+            // Wait a bit for Supabase to load, then initialize
+            setTimeout(() => {
+                if (initializeSupabase()) {
+                    // Setup login form
+                    document.getElementById('loginForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        debugLog('Login form submitted');
+                        
+                        const email = document.getElementById('loginEmail').value;
+                        const password = document.getElementById('loginPassword').value;
+                        
+                        if (!email || !password) {
+                            showNotification('Please fill in all fields', 'warning');
+                            return;
+                        }
+                        
+                        loginUser(email, password);
+                    });
+                    
+                    debugLog('Initialization complete');
+                }
+            }, 1000);
+        });
+
+        // Make functions global for debugging
+        window.loginUser = loginUser;
+        window.testConnection = testConnection;
+        window.initializeSupabase = initializeSupabase;
+        
+        debugLog('JavaScript loaded successfully');
+    </script>
+</body>
+</html>

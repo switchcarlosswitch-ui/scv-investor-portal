@@ -226,7 +226,7 @@
             </div>
             <div class="logo-text">
                 <h1>Silicon Corridor Ventures</h1>
-                <p data-en="Investor Portal" data-es="Portal de Inversores">Investor Portal</p>
+                <p data-en="Investor Portal" data-es="Portal de Inversionistas">Investor Portal</p>
             </div>
         </div>
         <div class="header-actions">
@@ -246,7 +246,7 @@
 <div id="authContainer" class="auth-container">
     <div class="auth-header">
         <h2 data-en="Investor Login" data-es="Inicio de Sesión">Investor Login</h2>
-        <p data-en="Access your secure investor portal" data-es="Acceda a su portal seguro de inversores">Access your secure investor portal</p>
+        <p data-en="Access your secure investor portal" data-es="Acceda a su portal seguro de Inversionistases">Access your secure investor portal</p>
     </div>
     <form id="loginForm">
         <div class="form-group">
@@ -262,7 +262,7 @@
         </button>
     </form>
     <hr class="divider">
-    <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversor? Debe ser invitado por un administrador para crear una cuenta.">
+    <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversionista? Debe ser invitado por un administrador para crear una cuenta.">
         New investor? You must be invited by an admin to create an account.
     </p>
 </div>
@@ -271,7 +271,7 @@
 <div id="adminDashboard" class="dashboard">
     <nav class="dashboard-nav">
         <div class="nav-item active" data-section="adminStats" onclick="adminNav(this)">📊 <span data-en="Statistics" data-es="Estadísticas">Statistics</span></div>
-        <div class="nav-item" data-section="adminInvestors" onclick="adminNav(this)">👥 <span data-en="Investors" data-es="Inversores">Investors</span></div>
+        <div class="nav-item" data-section="adminInvestors" onclick="adminNav(this)">👥 <span data-en="Investors" data-es="Inversionistas">Investors</span></div>
         <div class="nav-item" data-section="adminDocuments" onclick="adminNav(this)">📄 <span data-en="Documents" data-es="Documentos">Documents</span></div>
         <div class="nav-item" data-section="adminWatchlist" onclick="adminNav(this)">👁️ <span data-en="Watchlist" data-es="Seguimiento">Watchlist</span></div>
         <div class="nav-item" data-section="adminOpportunities" onclick="adminNav(this)">💡 <span data-en="Opportunities" data-es="Oportunidades">Opportunities</span></div>
@@ -280,15 +280,15 @@
     <!-- Admin: Statistics -->
     <section id="adminStats" class="dashboard-section active">
         <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number" id="sTotalInv">—</div><div class="stat-label" data-en="Total Investors" data-es="Total Inversores">Total Investors</div></div>
-            <div class="stat-card"><div class="stat-number" id="sActiveInv">—</div><div class="stat-label" data-en="Active Investors" data-es="Inversores Activos">Active Investors</div></div>
+            <div class="stat-card"><div class="stat-number" id="sTotalInv">—</div><div class="stat-label" data-en="Total Investors" data-es="Total Inversionistas">Total Investors</div></div>
+            <div class="stat-card"><div class="stat-number" id="sActiveInv">—</div><div class="stat-label" data-en="Active Investors" data-es="Inversionistas Activos">Active Investors</div></div>
             <div class="stat-card"><div class="stat-number" id="sPendingDocs">—</div><div class="stat-label" data-en="Pending Documents" data-es="Documentos Pendientes">Pending Documents</div></div>
             <div class="stat-card"><div class="stat-number" id="sPendingInv">—</div><div class="stat-label" data-en="Pending Invitations" data-es="Invitaciones Pendientes">Pending Invitations</div></div>
             <div class="stat-card"><div class="stat-number" id="sAcceptedInv">—</div><div class="stat-label" data-en="Accepted Invitations" data-es="Invitaciones Aceptadas">Accepted Invitations</div></div>
         </div>
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Admin Dashboard" data-es="Panel de Administración">Admin Dashboard</h3></div>
-            <p style="color:var(--muted);" data-en="Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities." data-es="Bienvenido al panel de administración. Use la navegación de arriba para gestionar inversores, revisar documentos, gestionar la lista de seguimiento y publicar nuevas oportunidades de inversión.">
+            <p style="color:var(--muted);" data-en="Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities." data-es="Bienvenido al panel de administración. Use la navegación de arriba para gestionar inversionistaes, revisar documentos, gestionar la lista de seguimiento y publicar nuevas oportunidades de inversión.">
                 Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities.
             </p>
         </div>
@@ -298,8 +298,8 @@
     <section id="adminInvestors" class="dashboard-section">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title" data-en="Investor Management" data-es="Gestión de Inversores">Investor Management</h3>
-                <button class="btn btn-primary btn-sm" onclick="openModal('inviteModal')">✉️ <span data-en="Invite Investor" data-es="Invitar Inversor">Invite Investor</span></button>
+                <h3 class="card-title" data-en="Investor Management" data-es="Gestión de Inversionistas">Investor Management</h3>
+                <button class="btn btn-primary btn-sm" onclick="openModal('inviteModal')">✉️ <span data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</span></button>
             </div>
             <div class="table-wrap">
                 <table>
@@ -471,7 +471,7 @@
 <div class="modal-overlay" id="inviteModal">
     <div class="modal">
         <div class="modal-header">
-            <h3 class="modal-title" data-en="Invite Investor" data-es="Invitar Inversor">Invite Investor</h3>
+            <h3 class="modal-title" data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</h3>
             <button class="modal-close" onclick="closeModal('inviteModal')">×</button>
         </div>
         <div class="form-group"><label data-en="Full Name" data-es="Nombre Completo">Full Name</label><input type="text" class="form-input" id="iName" placeholder="John Doe"></div>
@@ -1284,4 +1284,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 

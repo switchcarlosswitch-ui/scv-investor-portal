@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -226,7 +227,7 @@
             </div>
             <div class="logo-text">
                 <h1>Silicon Corridor Ventures</h1>
-                <p data-en="Investor Portal" data-es="Portal de Inversionistas">Investor Portal</p>
+                <p data-en="Investor Portal" data-es="Portal de Inversores">Investor Portal</p>
             </div>
         </div>
         <div class="header-actions">
@@ -246,7 +247,7 @@
 <div id="authContainer" class="auth-container">
     <div class="auth-header">
         <h2 data-en="Investor Login" data-es="Inicio de Sesión">Investor Login</h2>
-        <p data-en="Access your secure investor portal" data-es="Acceda a su portal seguro de Inversionistas">Access your secure investor portal</p>
+        <p data-en="Access your secure investor portal" data-es="Acceda a su portal seguro de inversores">Access your secure investor portal</p>
     </div>
     <form id="loginForm">
         <div class="form-group">
@@ -262,7 +263,7 @@
         </button>
     </form>
     <hr class="divider">
-    <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversionista? Debe ser invitado por un administrador para crear una cuenta.">
+    <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversor? Debe ser invitado por un administrador para crear una cuenta.">
         New investor? You must be invited by an admin to create an account.
     </p>
 </div>
@@ -271,7 +272,7 @@
 <div id="adminDashboard" class="dashboard">
     <nav class="dashboard-nav">
         <div class="nav-item active" data-section="adminStats" onclick="adminNav(this)">📊 <span data-en="Statistics" data-es="Estadísticas">Statistics</span></div>
-        <div class="nav-item" data-section="adminInvestors" onclick="adminNav(this)">👥 <span data-en="Investors" data-es="Inversionistas">Investors</span></div>
+        <div class="nav-item" data-section="adminInvestors" onclick="adminNav(this)">👥 <span data-en="Investors" data-es="Inversores">Investors</span></div>
         <div class="nav-item" data-section="adminDocuments" onclick="adminNav(this)">📄 <span data-en="Documents" data-es="Documentos">Documents</span></div>
         <div class="nav-item" data-section="adminWatchlist" onclick="adminNav(this)">👁️ <span data-en="Watchlist" data-es="Seguimiento">Watchlist</span></div>
         <div class="nav-item" data-section="adminOpportunities" onclick="adminNav(this)">💡 <span data-en="Opportunities" data-es="Oportunidades">Opportunities</span></div>
@@ -280,15 +281,15 @@
     <!-- Admin: Statistics -->
     <section id="adminStats" class="dashboard-section active">
         <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number" id="sTotalInv">—</div><div class="stat-label" data-en="Total Investors" data-es="Total Inversionistas">Total Investors</div></div>
-            <div class="stat-card"><div class="stat-number" id="sActiveInv">—</div><div class="stat-label" data-en="Active Investors" data-es="Inversionistas Activos">Active Investors</div></div>
+            <div class="stat-card"><div class="stat-number" id="sTotalInv">—</div><div class="stat-label" data-en="Total Investors" data-es="Total Inversores">Total Investors</div></div>
+            <div class="stat-card"><div class="stat-number" id="sActiveInv">—</div><div class="stat-label" data-en="Active Investors" data-es="Inversores Activos">Active Investors</div></div>
             <div class="stat-card"><div class="stat-number" id="sPendingDocs">—</div><div class="stat-label" data-en="Pending Documents" data-es="Documentos Pendientes">Pending Documents</div></div>
             <div class="stat-card"><div class="stat-number" id="sPendingInv">—</div><div class="stat-label" data-en="Pending Invitations" data-es="Invitaciones Pendientes">Pending Invitations</div></div>
             <div class="stat-card"><div class="stat-number" id="sAcceptedInv">—</div><div class="stat-label" data-en="Accepted Invitations" data-es="Invitaciones Aceptadas">Accepted Invitations</div></div>
         </div>
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Admin Dashboard" data-es="Panel de Administración">Admin Dashboard</h3></div>
-            <p style="color:var(--muted);" data-en="Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities." data-es="Bienvenido al panel de administración. Use la navegación de arriba para gestionar inversionistaes, revisar documentos, gestionar la lista de seguimiento y publicar nuevas oportunidades de inversión.">
+            <p style="color:var(--muted);" data-en="Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities." data-es="Bienvenido al panel de administración. Use la navegación de arriba para gestionar inversores, revisar documentos, gestionar la lista de seguimiento y publicar nuevas oportunidades de inversión.">
                 Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities.
             </p>
         </div>
@@ -298,8 +299,8 @@
     <section id="adminInvestors" class="dashboard-section">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title" data-en="Investor Management" data-es="Gestión de Inversionistas">Investor Management</h3>
-                <button class="btn btn-primary btn-sm" onclick="openModal('inviteModal')">✉️ <span data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</span></button>
+                <h3 class="card-title" data-en="Investor Management" data-es="Gestión de Inversores">Investor Management</h3>
+                <button class="btn btn-primary btn-sm" onclick="openModal('inviteModal')">✉️ <span data-en="Invite Investor" data-es="Invitar Inversor">Invite Investor</span></button>
             </div>
             <div class="table-wrap">
                 <table>
@@ -471,7 +472,7 @@
 <div class="modal-overlay" id="inviteModal">
     <div class="modal">
         <div class="modal-header">
-            <h3 class="modal-title" data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</h3>
+            <h3 class="modal-title" data-en="Invite Investor" data-es="Invitar Inversor">Invite Investor</h3>
             <button class="modal-close" onclick="closeModal('inviteModal')">×</button>
         </div>
         <div class="form-group"><label data-en="Full Name" data-es="Nombre Completo">Full Name</label><input type="text" class="form-input" id="iName" placeholder="John Doe"></div>
@@ -551,7 +552,8 @@
 // ============================================================
 const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-const BREVO_KEY     = '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';
+// Email is now handled securely via Supabase Edge Function — no API key needed here
+const EDGE_FUNCTION_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co/functions/v1/send-invitation';
 const BUCKET        = 'investor-documents';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -768,7 +770,7 @@ async function loadInvitations() {
 }
 
 // ============================================================
-// SEND INVITE — uses Web Crypto API, no RPC dependency
+// SEND INVITE — uses Supabase Edge Function for secure email
 // ============================================================
 async function sendInvite() {
     const name   = document.getElementById('iName').value.trim();
@@ -778,7 +780,7 @@ async function sendInvite() {
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
 
     try {
-        // Generate secure token using Web Crypto API (no RPC needed)
+        // Generate secure token using Web Crypto API
         const array = new Uint8Array(32);
         crypto.getRandomValues(array);
         const token = btoa(String.fromCharCode(...array))
@@ -790,7 +792,7 @@ async function sendInvite() {
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + expiry);
 
-        // Insert directly into invitations table (no RPC call)
+        // Insert into invitations table
         const { error } = await sb.from('invitations').insert({
             name:       name,
             email:      email,
@@ -802,8 +804,8 @@ async function sendInvite() {
 
         if (error) throw error;
 
-        // Send email via Brevo
-        const sent = await sendBrevo(name, email, token, expiry);
+        // Send email via Supabase Edge Function (API key stays secure on server)
+        const sent = await sendEmailViaEdgeFunction(name, email, token, expiry);
 
         closeModal('inviteModal');
         document.getElementById('iName').value  = '';
@@ -829,34 +831,41 @@ async function sendInvite() {
     }
 }
 
-async function sendBrevo(name, email, token, expiry) {
-    const url = `${window.location.origin}${window.location.pathname}?invite=${token}`;
+// ============================================================
+// EMAIL VIA SUPABASE EDGE FUNCTION (API key is secure server-side)
+// ============================================================
+async function sendEmailViaEdgeFunction(name, email, token, expiry) {
+    const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;
     try {
-        const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        // Get the current session token to authenticate with the Edge Function
+        const { data: { session } } = await sb.auth.getSession();
+
+        const res = await fetch(EDGE_FUNCTION_URL, {
             method: 'POST',
-            headers: { 'api-key': BREVO_KEY, 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session?.access_token || SUPABASE_KEY}`
+            },
             body: JSON.stringify({
-                sender: { name: 'Silicon Corridor Ventures', email: 'noreply@siliconcorridorventures.com' },
-                to: [{ email, name }],
-                subject: 'You are invited to the Silicon Corridor Ventures Investor Portal',
-                htmlContent: `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;">
-                    <div style="background:linear-gradient(135deg,#6B3FA0,#4AABCF,#3BBFAD);padding:2rem;border-radius:12px 12px 0 0;text-align:center;">
-                        <h1 style="color:white;margin:0;font-size:1.5rem;">Silicon Corridor Ventures</h1>
-                        <p style="color:rgba(255,255,255,0.9);margin:0.5rem 0 0;font-size:0.9rem;">Investor Portal Invitation</p>
-                    </div>
-                    <div style="padding:2rem;background:#f7f8fc;border-radius:0 0 12px 12px;">
-                        <h2 style="color:#1e293b;">Welcome, ${name}!</h2>
-                        <p style="color:#64748b;">You have been invited to join the Silicon Corridor Ventures Investor Portal — your gateway to exclusive investment opportunities.</p>
-                        <div style="text-align:center;margin:2rem 0;">
-                            <a href="${url}" style="background:linear-gradient(135deg,#6B3FA0,#4AABCF);color:white;padding:1rem 2.5rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:1rem;display:inline-block;">Accept Invitation →</a>
-                        </div>
-                        <p style="color:#94a3b8;font-size:0.8rem;">This invitation expires in ${expiry} days. If you did not expect this email, please ignore it.</p>
-                    </div>
-                </div>`
+                name:      name,
+                email:     email,
+                token:     token,
+                expiry:    expiry,
+                inviteUrl: inviteUrl
             })
         });
-        return res.ok;
-    } catch (err) { console.error('Brevo:', err); return false; }
+
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            console.error('Edge Function error:', errData);
+            return false;
+        }
+
+        return true;
+    } catch (err) {
+        console.error('Edge Function call failed:', err);
+        return false;
+    }
 }
 
 // ============================================================
@@ -1284,8 +1293,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
-
-
-

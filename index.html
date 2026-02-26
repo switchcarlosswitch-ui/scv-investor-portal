@@ -342,7 +342,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
 
         // Global variables
-        let supabase = null;
+        let sbClient = null;
         let currentUser = null;
         let userProfile = null;
 
@@ -356,7 +356,7 @@
                     return false;
                 }
 
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 console.log('✅ Supabase initialized successfully');
                 return true;
             } catch (error) {
@@ -392,7 +392,7 @@
         async function loginUser(email, password) {
             console.log(`🔑 Attempting login for: ${email}`);
             
-            if (!supabase) {
+            if (!sbClient) {
                 console.error('❌ Supabase not initialized');
                 showNotification('Database not ready. Please refresh the page.', 'danger');
                 return;
@@ -401,7 +401,7 @@
             try {
                 showNotification('Signing in...', 'info');
                 
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await sbClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -432,7 +432,7 @@
             console.log(`👤 Loading profile for user: ${currentUser.id}`);
             
             try {
-                const { data, error } = await supabase
+                const { data, error } = await sbClient
                     .from('profiles')
                     .select('*')
                     .eq('id', currentUser.id)
@@ -485,8 +485,8 @@
         // Logout
         function logout() {
             console.log('🚪 Logging out...');
-            if (supabase) {
-                supabase.auth.signOut();
+            if (sbClient) {
+                sbClient.auth.signOut();
             }
             currentUser = null;
             userProfile = null;
@@ -539,7 +539,6 @@
         window.toggleLanguage = toggleLanguage;
         window.loginUser = loginUser;
         window.logout = logout;
-        window.supabase = supabase;
         
         console.log('✅ JavaScript loaded successfully');
     </script>

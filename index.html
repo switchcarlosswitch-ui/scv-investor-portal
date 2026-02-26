@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silicon Corridor Ventures - Investor Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --purple: #6B3FA0;
@@ -196,6 +197,104 @@
             border: 1px solid var(--border);
         }
 
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .dashboard-nav {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+
+        .nav-item.active {
+            background: var(--grad);
+            color: white;
+            border-color: transparent;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: var(--light);
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
         .alert {
             padding: 1rem;
             border-radius: 8px;
@@ -233,6 +332,14 @@
             display: none !important;
         }
 
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -253,6 +360,9 @@
             }
             .auth-container {
                 margin: 2rem auto;
+            }
+            .dashboard-nav {
+                flex-direction: column;
             }
         }
     </style>
@@ -296,6 +406,7 @@
     </header>
 
     <main class="main-content">
+        <!-- Login Form -->
         <div id="authContainer" class="auth-container">
             <div class="auth-header">
                 <h2 data-en="Investor Login" data-es="Inicio de Sesión de Inversor">Investor Login</h2>
@@ -322,18 +433,197 @@
                 </p>
             </div>
         </div>
+
+        <!-- Investor Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <nav class="dashboard-nav">
+                <div class="nav-item active" data-section="overview" onclick="showSection('overview')">
+                    <span data-en="Overview" data-es="Resumen">Overview</span>
+                </div>
+                <div class="nav-item" data-section="documents" onclick="showSection('documents')">
+                    <span data-en="Documents" data-es="Documentos">Documents</span>
+                </div>
+                <div class="nav-item" data-section="news" onclick="showSection('news')">
+                    <span data-en="Market News" data-es="Noticias del Mercado">Market News</span>
+                </div>
+                <div class="nav-item" data-section="profile" onclick="showSection('profile')">
+                    <span data-en="Profile" data-es="Perfil">Profile</span>
+                </div>
+            </nav>
+
+            <section id="overviewSection" class="dashboard-section active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Welcome to Your Investor Portal" data-es="Bienvenido a Su Portal de Inversores">Welcome to Your Investor Portal</h2>
+                    </div>
+                    <p data-en="Access your investment documents, market news, and account information." data-es="Acceda a sus documentos de inversión, noticias del mercado e información de cuenta.">
+                        Access your investment documents, market news, and account information.
+                    </p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Documents Uploaded" data-es="Documentos Subidos">Documents Uploaded</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Approved Documents" data-es="Documentos Aprobados">Approved Documents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Pending Review" data-es="Pendiente de Revisión">Pending Review</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="documentsSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Document Upload" data-es="Subida de Documentos">Document Upload</h2>
+                    </div>
+                    <p data-en="Upload your KYC documents for review." data-es="Suba sus documentos KYC para revisión.">Upload your KYC documents for review.</p>
+                </div>
+            </section>
+
+            <section id="newsSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h2>
+                    </div>
+                    <p data-en="Latest financial news and market updates." data-es="Últimas noticias financieras y actualizaciones del mercado.">Latest financial news and market updates.</p>
+                </div>
+            </section>
+
+            <section id="profileSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Profile Information" data-es="Información del Perfil">Profile Information</h2>
+                    </div>
+                    <p data-en="Manage your account information." data-es="Gestione la información de su cuenta.">Manage your account information.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+            <nav class="dashboard-nav">
+                <div class="nav-item active" data-section="admin-overview" onclick="showAdminSection('admin-overview')">
+                    <span data-en="Overview" data-es="Resumen">Overview</span>
+                </div>
+                <div class="nav-item" data-section="admin-invitations" onclick="showAdminSection('admin-invitations')">
+                    <span data-en="Invitations" data-es="Invitaciones">Invitations</span>
+                </div>
+                <div class="nav-item" data-section="admin-documents" onclick="showAdminSection('admin-documents')">
+                    <span data-en="Document Review" data-es="Revisión de Documentos">Document Review</span>
+                </div>
+                <div class="nav-item" data-section="admin-investors" onclick="showAdminSection('admin-investors')">
+                    <span data-en="Investors" data-es="Inversores">Investors</span>
+                </div>
+                <div class="nav-item" data-section="admin-news" onclick="showAdminSection('admin-news')">
+                    <span data-en="News Watchlist" data-es="Lista de Noticias">News Watchlist</span>
+                </div>
+            </nav>
+
+            <section id="adminOverviewSection" class="dashboard-section active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Admin Dashboard" data-es="Panel de Administración">Admin Dashboard</h2>
+                    </div>
+                    <p data-en="Manage investors, review documents, and send invitations." data-es="Gestione inversores, revise documentos y envíe invitaciones.">Manage investors, review documents, and send invitations.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Total Investors" data-es="Total de Inversores">Total Investors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Pending Documents" data-es="Documentos Pendientes">Pending Documents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Active Investors" data-es="Inversores Activos">Active Investors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Pending Invitations" data-es="Invitaciones Pendientes">Pending Invitations</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="adminInvitationsSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Send Investor Invitations" data-es="Enviar Invitaciones de Inversores">Send Investor Invitations</h2>
+                    </div>
+                    <p data-en="Send secure invitations to new investors. Only invited users can create accounts." data-es="Envíe invitaciones seguras a nuevos inversores. Solo los usuarios invitados pueden crear cuentas.">Send secure invitations to new investors. Only invited users can create accounts.</p>
+                    
+                    <form id="inviteForm" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; margin: 1.5rem 0; align-items: end;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label data-en="Investor Name" data-es="Nombre del Inversor">Investor Name</label>
+                            <input type="text" id="adminInviteeName" class="form-input" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label data-en="Email Address" data-es="Correo Electrónico">Email Address</label>
+                            <input type="email" id="adminInviteeEmail" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span data-en="Send Invitation" data-es="Enviar Invitación">Send Invitation</span>
+                        </button>
+                    </form>
+                    
+                    <div id="invitationsList">
+                        <p data-en="No invitations sent yet." data-es="Aún no se han enviado invitaciones.">No invitations sent yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="adminDocumentsSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Document Review" data-es="Revisión de Documentos">Document Review</h2>
+                    </div>
+                    <p data-en="Review and approve investor documents." data-es="Revise y apruebe documentos de inversores.">Review and approve investor documents.</p>
+                </div>
+            </section>
+
+            <section id="adminInvestorsSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Investor Management" data-es="Gestión de Inversores">Investor Management</h2>
+                    </div>
+                    <p data-en="Manage investor accounts and status." data-es="Gestione cuentas de inversores y estado.">Manage investor accounts and status.</p>
+                </div>
+            </section>
+
+            <section id="adminNewsSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="News Watchlist" data-es="Lista de Noticias">News Watchlist</h2>
+                    </div>
+                    <p data-en="Manage companies for news monitoring." data-es="Gestione empresas para monitoreo de noticias.">Manage companies for news monitoring.</p>
+                </div>
+            </section>
+        </div>
     </main>
 
     <script>
-        // Configuration - Replace with your actual credentials
+        // Configuration
         const SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
         const BREVO_API_KEY = 'xsmtpsib-df2a512668b09de083e05462c3df6d0dd3d7d9d2da4f8214fd8e17f8d8e741d4-gp66ve4zDpxyKwbD';
 
-        // Language Management
-        let currentLanguage = 'en';
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Toggle Language Function
+        // Global variables
+        let currentLanguage = 'en';
+        let currentUser = null;
+        let userProfile = null;
+
+        // Language functions
         function toggleLanguage() {
             console.log('toggleLanguage called - current language:', currentLanguage);
             currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
@@ -346,12 +636,8 @@
             );
         }
 
-        // Update Language Function
         function updateLanguage() {
-            console.log('Updating language to:', currentLanguage);
             const elements = document.querySelectorAll('[data-en][data-es]');
-            console.log('Found', elements.length, 'elements to translate');
-            
             elements.forEach(element => {
                 const text = element.getAttribute(`data-${currentLanguage}`);
                 if (text) {
@@ -366,9 +652,8 @@
             });
         }
 
-        // Show Notification Function
+        // Notification function
         function showNotification(message, type = 'info', duration = 5000) {
-            console.log('Showing notification:', message, type);
             const notification = document.createElement('div');
             notification.className = `alert alert-${type}`;
             notification.style.cssText = `
@@ -401,44 +686,47 @@
             }, duration);
         }
 
-        // Logout Function
-        function logout() {
-            showNotification('Logout functionality', 'info');
+        // Authentication functions
+        async function checkAuth() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    currentUser = user;
+                    await loadUserProfile();
+                    showDashboard();
+                } else {
+                    showAuth();
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                showAuth();
+            }
         }
 
-        // Test Function
-        function testJS() {
-            console.log('JavaScript is working!');
-            showNotification('JavaScript test successful!', 'success');
-            return 'JS Working!';
+        async function loadUserProfile() {
+            try {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) {
+                    console.log('Profile not found, creating...');
+                    // Create profile if it doesn't exist
+                    await createProfile();
+                    return;
+                }
+                userProfile = data;
+                console.log('User profile loaded:', userProfile);
+            } catch (error) {
+                console.error('Profile load error:', error);
+            }
         }
 
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing...');
-            
-            // Test JavaScript
-            console.log('Testing JavaScript functions...');
-            testJS();
-            
-            // Initialize language
-            updateLanguage();
-            
-            // Show welcome message
-            setTimeout(() => {
-                showNotification('Welcome to Silicon Corridor Ventures!', 'info', 3000);
-            }, 1000);
-            
-            console.log('Initialization complete');
-        });
-
-        // Make functions globally available for debugging
-        window.toggleLanguage = toggleLanguage;
-        window.showNotification = showNotification;
-        window.testJS = testJS;
-        window.updateLanguage = updateLanguage;
-        
-        console.log('All JavaScript functions loaded');
-    </script>
-</body>
-</html>
+        async function createProfile() {
+            try {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .insert({
+                        id: currentUser.id,

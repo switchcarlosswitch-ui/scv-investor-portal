@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silicon Corridor Ventures - Investor Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --purple: #6B3FA0;
@@ -37,7 +36,6 @@
             line-height: 1.6;
         }
 
-        /* Header */
         .header {
             background: var(--grad);
             color: white;
@@ -71,8 +69,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
         }
 
         .logo-icon svg {
@@ -113,14 +109,12 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Login Form */
         .auth-container {
             max-width: 400px;
             margin: 4rem auto;
@@ -202,69 +196,6 @@
             border: 1px solid var(--border);
         }
 
-        /* Dashboard */
-        .dashboard {
-            display: none;
-        }
-
-        .dashboard.active {
-            display: block;
-        }
-
-        .dashboard-nav {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-item {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: 1px solid var(--border);
-        }
-
-        .nav-item.active {
-            background: var(--grad);
-            color: white;
-            border-color: transparent;
-        }
-
-        .nav-item:hover:not(.active) {
-            background: var(--light);
-        }
-
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        /* Alerts */
         .alert {
             padding: 1rem;
             border-radius: 8px;
@@ -298,61 +229,10 @@
             color: #3730a3;
         }
 
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--purple);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .auth-container {
-                margin: 2rem auto;
-            }
-
-            .dashboard-nav {
-                flex-direction: column;
-            }
-        }
-
-        /* Hidden by default */
         .hidden {
             display: none !important;
         }
 
-        /* Notification styles */
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -363,15 +243,25 @@
                 opacity: 1;
             }
         }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .auth-container {
+                margin: 2rem auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">
-                    <!-- Silicon Corridor Ventures Logo SVG -->
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -380,11 +270,9 @@
                                 <stop offset="100%" style="stop-color:#3BBFAD;stop-opacity:1" />
                             </linearGradient>
                         </defs>
-                        <!-- Hexagonal tech pattern -->
                         <polygon points="50,10 80,30 80,70 50,90 20,70 20,30" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
                         <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGrad)" stroke-width="2"/>
                         <polygon points="50,30 60,40 60,60 50,70 40,60 40,40" fill="url(#logoGrad)"/>
-                        <!-- Circuit lines -->
                         <line x1="20" y1="30" x2="10" y2="20" stroke="url(#logoGrad)" stroke-width="2"/>
                         <line x1="80" y1="30" x2="90" y2="20" stroke="url(#logoGrad)" stroke-width="2"/>
                         <line x1="80" y1="70" x2="90" y2="80" stroke="url(#logoGrad)" stroke-width="2"/>
@@ -407,9 +295,7 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Login Form -->
         <div id="authContainer" class="auth-container">
             <div class="auth-header">
                 <h2 data-en="Investor Login" data-es="Inicio de Sesión de Inversor">Investor Login</h2>
@@ -436,74 +322,20 @@
                 </p>
             </div>
         </div>
-
-        <!-- Dashboard -->
-        <div id="dashboard" class="dashboard">
-            <nav class="dashboard-nav">
-                <div class="nav-item active" data-section="overview">
-                    <span data-en="Overview" data-es="Resumen">Overview</span>
-                </div>
-                <div class="nav-item" data-section="documents">
-                    <span data-en="Documents" data-es="Documentos">Documents</span>
-                </div>
-                <div class="nav-item" data-section="news">
-                    <span data-en="Market News" data-es="Noticias del Mercado">Market News</span>
-                </div>
-                <div class="nav-item" data-section="profile">
-                    <span data-en="Profile" data-es="Perfil">Profile</span>
-                </div>
-            </nav>
-
-            <!-- Overview Section -->
-            <section id="overviewSection" class="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" data-en="Welcome to Your Investor Portal" data-es="Bienvenido a Su Portal de Inversores">Welcome to Your Investor Portal</h2>
-                    </div>
-                    <p data-en="Access your investment documents, market news, and account information." data-es="Acceda a sus documentos de inversión, noticias del mercado e información de cuenta.">
-                        Access your investment documents, market news, and account information.
-                    </p>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="documentsCount">0</div>
-                        <div class="stat-label" data-en="Documents Uploaded" data-es="Documentos Subidos">Documents Uploaded</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="approvedCount">0</div>
-                        <div class="stat-label" data-en="Approved Documents" data-es="Documentos Aprobados">Approved Documents</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="pendingCount">0</div>
-                        <div class="stat-label" data-en="Pending Review" data-es="Pendiente de Revisión">Pending Review</div>
-                    </div>
-                </div>
-            </section>
-        </div>
     </main>
 
-    <!-- JavaScript -->
     <script>
-        // Configuration
+        // Configuration - Replace with your actual credentials
         const SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
         const BREVO_API_KEY = 'xsmtpsib-df2a512668b09de083e05462c3df6d0dd3d7d9d2da4f8214fd8e17f8d8e741d4-gp66ve4zDpxyKwbD';
 
-        // Initialize Supabase (only if credentials are provided)
-        let supabase = null;
-        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-
         // Language Management
         let currentLanguage = 'en';
-        let currentUser = null;
-        let userProfile = null;
 
-        // Toggle Language Function - THIS FIXES THE ERROR
+        // Toggle Language Function
         function toggleLanguage() {
-            console.log('toggleLanguage called - current:', currentLanguage);
+            console.log('toggleLanguage called - current language:', currentLanguage);
             currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
             updateLanguage();
             document.getElementById('langText').textContent = currentLanguage === 'en' ? 'ES' : 'EN';
@@ -516,8 +348,9 @@
 
         // Update Language Function
         function updateLanguage() {
+            console.log('Updating language to:', currentLanguage);
             const elements = document.querySelectorAll('[data-en][data-es]');
-            console.log('Updating language for', elements.length, 'elements');
+            console.log('Found', elements.length, 'elements to translate');
             
             elements.forEach(element => {
                 const text = element.getAttribute(`data-${currentLanguage}`);
@@ -535,6 +368,7 @@
 
         // Show Notification Function
         function showNotification(message, type = 'info', duration = 5000) {
+            console.log('Showing notification:', message, type);
             const notification = document.createElement('div');
             notification.className = `alert alert-${type}`;
             notification.style.cssText = `
@@ -560,158 +394,51 @@
             
             document.body.appendChild(notification);
             
-            // Auto remove
             setTimeout(() => {
                 if (notification.parentElement) {
                     notification.remove();
                 }
             }, duration);
-            
-            // Click to remove
-            notification.addEventListener('click', () => notification.remove());
         }
 
         // Logout Function
         function logout() {
-            if (!supabase) {
-                showNotification('Logout functionality requires Supabase configuration.', 'warning');
-                return;
-            }
-            
-            try {
-                // supabase.auth.signOut();
-                currentUser = null;
-                userProfile = null;
-                showAuth();
-                showNotification('Logged out successfully', 'success');
-            } catch (error) {
-                console.error('Logout error:', error);
-                showNotification('Error logging out', 'danger');
-            }
+            showNotification('Logout functionality', 'info');
         }
 
-        // Show Auth Function
-        function showAuth() {
-            document.getElementById('authContainer').classList.remove('hidden');
-            document.getElementById('dashboard').classList.remove('active');
-            document.getElementById('logoutBtn').classList.add('hidden');
+        // Test Function
+        function testJS() {
+            console.log('JavaScript is working!');
+            showNotification('JavaScript test successful!', 'success');
+            return 'JS Working!';
         }
 
-        // Show Dashboard Function
-        function showDashboard() {
-            document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('logoutBtn').classList.remove('hidden');
-            document.getElementById('dashboard').classList.add('active');
-        }
-
-        // Demo Login Function
-        function demoLogin() {
-            showNotification('Demo login successful!', 'success');
-            currentUser = { id: 'demo-user', email: 'demo@example.com' };
-            userProfile = { role: 'investor', full_name: 'Demo User' };
-            showDashboard();
-        }
-
-        // Event Listeners
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, setting up event listeners');
+            console.log('DOM loaded, initializing...');
             
-            // Login form
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                if (!email || !password) {
-                    showNotification('Please fill in all fields', 'warning');
-                    return;
-                }
-                
-                if (!supabase) {
-                    // Demo mode
-                    showNotification('Demo mode - Supabase not configured', 'info');
-                    demoLogin();
-                } else {
-                    // Real login
-                    loginUser(email, password);
-                }
-            });
-
-            // Dashboard navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const section = this.dataset.section;
-                    
-                    // Update active nav item
-                    this.parentElement.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    showNotification(`Switched to ${section} section`, 'info', 2000);
-                });
-            });
-
+            // Test JavaScript
+            console.log('Testing JavaScript functions...');
+            testJS();
+            
             // Initialize language
             updateLanguage();
             
             // Show welcome message
             setTimeout(() => {
-                showNotification('Welcome to Silicon Corridor Ventures Investor Portal!', 'info', 4000);
+                showNotification('Welcome to Silicon Corridor Ventures!', 'info', 3000);
             }, 1000);
-        });
-
-        // Real login function (when Supabase is configured)
-        async function loginUser(email, password) {
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
-                
-                if (error) throw error;
-                
-                currentUser = data.user;
-                await loadUserProfile();
-                showDashboard();
-                showNotification('Login successful!', 'success');
-                
-            } catch (error) {
-                console.error('Login error:', error);
-                showNotification('Login failed: ' + error.message, 'danger');
-            }
-        }
-
-        // Load user profile
-        async function loadUserProfile() {
-            if (!supabase || !currentUser) return;
             
-            try {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', currentUser.id)
-                    .single();
-
-                if (error) throw error;
-                userProfile = data;
-            } catch (error) {
-                console.error('Profile load error:', error);
-            }
-        }
-
-        // Test function to verify JavaScript is working
-        function testFunction() {
-            console.log('JavaScript is working!');
-            showNotification('JavaScript test successful!', 'success');
-        }
+            console.log('Initialization complete');
+        });
 
         // Make functions globally available for debugging
         window.toggleLanguage = toggleLanguage;
         window.showNotification = showNotification;
-        window.logout = logout;
-        window.testFunction = testFunction;
+        window.testJS = testJS;
+        window.updateLanguage = updateLanguage;
         
-        console.log('All JavaScript functions loaded successfully');
+        console.log('All JavaScript functions loaded');
     </script>
 </body>
 </html>

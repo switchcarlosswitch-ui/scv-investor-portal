@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silicon Corridor Ventures - Investor Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --purple: #6B3FA0;
+            --purple-dark: #4A2570;
+            --sky: #4AABCF;
+            --teal: #3BBFAD;
+            --grad: linear-gradient(135deg, #6B3FA0 0%, #4AABCF 50%, #3BBFAD 100%);
+            --light: #F7F8FC;
+            --white: #fff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #2d7a4f;
+            --warning: #b45309;
+            --danger: #991b1b;
+            --shadow: 0 4px 20px rgba(107, 63, 160, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--grad);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lang-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Login Form */
+        .auth-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            color: var(--purple-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(107, 63, 160, 0.1);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--grad);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(107, 63, 160, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-nav {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+
+        .nav-item.active {
+            background: var(--grad);
+            color: white;
+            border-color: transparent;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: var(--light);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .alert-info {
+            background: #f0f4ff;
+            border: 1px solid #c7d2fe;
+            color: #3730a3;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .auth-container {
+                margin: 2rem auto;
+            }
+
+            .dashboard-nav {
+                flex-direction: column;
+            }
+        }
+
+        /* Hidden by default */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Notification styles */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <!-- Silicon Corridor Ventures Logo SVG -->
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6B3FA0;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#4AABCF;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#3BBFAD;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Hexagonal tech pattern -->
+                        <polygon points="50,10 80,30 80,70 50,90 20,70 20,30" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
+                        <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGrad)" stroke-width="2"/>
+                        <polygon points="50,30 60,40 60,60 50,70 40,60 40,40" fill="url(#logoGrad)"/>
+                        <!-- Circuit lines -->
+                        <line x1="20" y1="30" x2="10" y2="20" stroke="url(#logoGrad)" stroke-width="2"/>
+                        <line x1="80" y1="30" x2="90" y2="20" stroke="url(#logoGrad)" stroke-width="2"/>
+                        <line x1="80" y1="70" x2="90" y2="80" stroke="url(#logoGrad)" stroke-width="2"/>
+                        <line x1="20" y1="70" x2="10" y2="80" stroke="url(#logoGrad)" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1 data-en="Silicon Corridor Ventures" data-es="Silicon Corridor Ventures">Silicon Corridor Ventures</h1>
+                    <p data-en="Investor Portal" data-es="Portal de Inversores">Investor Portal</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="lang-toggle" onclick="toggleLanguage()">
+                    <span id="langText">ES</span>
+                </button>
+                <button id="logoutBtn" class="btn btn-secondary hidden" onclick="logout()">
+                    <span data-en="Logout" data-es="Cerrar Sesión">Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Login Form -->
+        <div id="authContainer" class="auth-container">
+            <div class="auth-header">
+                <h2 data-en="Investor Login" data-es="Inicio de Sesión de Inversor">Investor Login</h2>
+                <p data-en="Access your secure investor portal" data-es="Acceda a su portal seguro de inversores">Access your secure investor portal</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label data-en="Email" data-es="Correo Electrónico">Email</label>
+                    <input type="email" class="form-input" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label data-en="Password" data-es="Contraseña">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                <p style="color: var(--muted); font-size: 0.875rem;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversor? Debe ser invitado por un administrador para crear una cuenta.">
+                    New investor? You must be invited by an admin to create an account.
+                </p>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <nav class="dashboard-nav">
+                <div class="nav-item active" data-section="overview">
+                    <span data-en="Overview" data-es="Resumen">Overview</span>
+                </div>
+                <div class="nav-item" data-section="documents">
+                    <span data-en="Documents" data-es="Documentos">Documents</span>
+                </div>
+                <div class="nav-item" data-section="news">
+                    <span data-en="Market News" data-es="Noticias del Mercado">Market News</span>
+                </div>
+                <div class="nav-item" data-section="profile">
+                    <span data-en="Profile" data-es="Perfil">Profile</span>
+                </div>
+            </nav>
+
+            <!-- Overview Section -->
+            <section id="overviewSection" class="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-en="Welcome to Your Investor Portal" data-es="Bienvenido a Su Portal de Inversores">Welcome to Your Investor Portal</h2>
+                    </div>
+                    <p data-en="Access your investment documents, market news, and account information." data-es="Acceda a sus documentos de inversión, noticias del mercado e información de cuenta.">
+                        Access your investment documents, market news, and account information.
+                    </p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="documentsCount">0</div>
+                        <div class="stat-label" data-en="Documents Uploaded" data-es="Documentos Subidos">Documents Uploaded</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="approvedCount">0</div>
+                        <div class="stat-label" data-en="Approved Documents" data-es="Documentos Aprobados">Approved Documents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pendingCount">0</div>
+                        <div class="stat-label" data-en="Pending Review" data-es="Pendiente de Revisión">Pending Review</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Configuration
+        const SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
+        const BREVO_API_KEY = 'xsmtpsib-df2a512668b09de083e05462c3df6d0dd3d7d9d2da4f8214fd8e17f8d8e741d4-gp66ve4zDpxyKwbD';
+
+        // Initialize Supabase (only if credentials are provided)
+        let supabase = null;
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        // Language Management
+        let currentLanguage = 'en';
+        let currentUser = null;
+        let userProfile = null;
+
+        // Toggle Language Function - THIS FIXES THE ERROR
+        function toggleLanguage() {
+            console.log('toggleLanguage called - current:', currentLanguage);
+            currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
+            updateLanguage();
+            document.getElementById('langText').textContent = currentLanguage === 'en' ? 'ES' : 'EN';
+            showNotification(
+                currentLanguage === 'en' ? 'Language changed to English' : 'Idioma cambiado a Español',
+                'success',
+                2000
+            );
+        }
+
+        // Update Language Function
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[data-en][data-es]');
+            console.log('Updating language for', elements.length, 'elements');
+            
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    if (element.tagName === 'INPUT' && element.type !== 'submit') {
+                        element.placeholder = text;
+                    } else if (element.tagName === 'OPTION') {
+                        element.textContent = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            });
+        }
+
+        // Show Notification Function
+        function showNotification(message, type = 'info', duration = 5000) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10000;
+                min-width: 300px;
+                max-width: 500px;
+                animation: slideIn 0.3s ease-out;
+                cursor: pointer;
+            `;
+            
+            const icon = type === 'success' ? '✅' : 
+                        type === 'warning' ? '⚠️' : 
+                        type === 'danger' ? '❌' : 'ℹ️';
+            
+            notification.innerHTML = `
+                <span style="font-size: 1.2rem; margin-right: 0.5rem;">${icon}</span>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" style="background: none; border: none; font-size: 1.2rem; margin-left: auto; cursor: pointer;">×</button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, duration);
+            
+            // Click to remove
+            notification.addEventListener('click', () => notification.remove());
+        }
+
+        // Logout Function
+        function logout() {
+            if (!supabase) {
+                showNotification('Logout functionality requires Supabase configuration.', 'warning');
+                return;
+            }
+            
+            try {
+                // supabase.auth.signOut();
+                currentUser = null;
+                userProfile = null;
+                showAuth();
+                showNotification('Logged out successfully', 'success');
+            } catch (error) {
+                console.error('Logout error:', error);
+                showNotification('Error logging out', 'danger');
+            }
+        }
+
+        // Show Auth Function
+        function showAuth() {
+            document.getElementById('authContainer').classList.remove('hidden');
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('logoutBtn').classList.add('hidden');
+        }
+
+        // Show Dashboard Function
+        function showDashboard() {
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('active');
+        }
+
+        // Demo Login Function
+        function demoLogin() {
+            showNotification('Demo login successful!', 'success');
+            currentUser = { id: 'demo-user', email: 'demo@example.com' };
+            userProfile = { role: 'investor', full_name: 'Demo User' };
+            showDashboard();
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up event listeners');
+            
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!email || !password) {
+                    showNotification('Please fill in all fields', 'warning');
+                    return;
+                }
+                
+                if (!supabase) {
+                    // Demo mode
+                    showNotification('Demo mode - Supabase not configured', 'info');
+                    demoLogin();
+                } else {
+                    // Real login
+                    loginUser(email, password);
+                }
+            });
+
+            // Dashboard navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    
+                    // Update active nav item
+                    this.parentElement.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    showNotification(`Switched to ${section} section`, 'info', 2000);
+                });
+            });
+
+            // Initialize language
+            updateLanguage();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showNotification('Welcome to Silicon Corridor Ventures Investor Portal!', 'info', 4000);
+            }, 1000);
+        });
+
+        // Real login function (when Supabase is configured)
+        async function loginUser(email, password) {
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) throw error;
+                
+                currentUser = data.user;
+                await loadUserProfile();
+                showDashboard();
+                showNotification('Login successful!', 'success');
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Login failed: ' + error.message, 'danger');
+            }
+        }
+
+        // Load user profile
+        async function loadUserProfile() {
+            if (!supabase || !currentUser) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) throw error;
+                userProfile = data;
+            } catch (error) {
+                console.error('Profile load error:', error);
+            }
+        }
+
+        // Test function to verify JavaScript is working
+        function testFunction() {
+            console.log('JavaScript is working!');
+            showNotification('JavaScript test successful!', 'success');
+        }
+
+        // Make functions globally available for debugging
+        window.toggleLanguage = toggleLanguage;
+        window.showNotification = showNotification;
+        window.logout = logout;
+        window.testFunction = testFunction;
+        
+        console.log('All JavaScript functions loaded successfully');
+    </script>
+</body>
+</html>

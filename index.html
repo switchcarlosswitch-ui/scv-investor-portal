@@ -151,7 +151,6 @@
         .watchlist-name { font-weight: 600; font-size: 0.9rem; }
         .watchlist-ticker { font-size: 0.8rem; color: var(--purple); font-weight: 700; }
 
-        /* NEWS HEADLINES */
         .news-company-section { margin-bottom: 2rem; }
         .news-company-header { font-size: 1rem; font-weight: 700; color: var(--purple); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
         .news-item { padding: 0.875rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.5rem; background: var(--white); transition: all 0.2s; }
@@ -251,7 +250,7 @@
         </button>
     </form>
     <div style="text-align:center;margin-top:1rem;">
-        <button class="btn-link" onclick="showForgotPassword()" data-en="Forgot your password?" data-es="¿Olvidó su contraseña?">Forgot your password?</button>
+        <button class="btn-link" id="forgotPasswordLink" data-en="Forgot your password?" data-es="¿Olvidó su contraseña?">Forgot your password?</button>
     </div>
     <hr class="divider">
     <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversionista? Debe ser invitado por un administrador para crear una cuenta.">
@@ -276,11 +275,11 @@
         </button>
     </form>
     <div style="text-align:center;margin-top:1rem;">
-        <button class="btn-link" onclick="showLogin()">← <span data-en="Back to Login" data-es="Volver al Inicio">Back to Login</span></button>
+        <button class="btn-link" id="backToLoginLink">← <span data-en="Back to Login" data-es="Volver al Inicio">Back to Login</span></button>
     </div>
 </div>
 
-<!-- RESET PASSWORD (after clicking email link) -->
+<!-- RESET PASSWORD -->
 <div id="resetContainer" class="auth-container hidden">
     <div class="auth-header">
         <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔐</div>
@@ -290,7 +289,7 @@
     <form id="resetForm">
         <div class="form-group">
             <label data-en="New Password" data-es="Nueva Contraseña">New Password</label>
-            <input type="password" class="form-input" id="resetPassword" required minlength="8" oninput="checkPasswordStrength2(this.value)" placeholder="Minimum 8 characters">
+            <input type="password" class="form-input" id="resetPassword" required minlength="8" placeholder="Minimum 8 characters">
             <div class="password-strength">
                 <div class="strength-bar"><div class="strength-fill" id="strengthFill2" style="width:0%;background:#dc2626;"></div></div>
                 <div class="strength-text" id="strengthText2" style="color:var(--muted);"></div>
@@ -327,7 +326,7 @@
         </div>
         <div class="form-group">
             <label data-en="Password" data-es="Contraseña">Password</label>
-            <input type="password" class="form-input" id="regPassword" required minlength="8" oninput="checkPasswordStrength(this.value)" placeholder="Minimum 8 characters">
+            <input type="password" class="form-input" id="regPassword" required minlength="8" placeholder="Minimum 8 characters">
             <div class="password-strength">
                 <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%;background:#dc2626;"></div></div>
                 <div class="strength-text" id="strengthText" style="color:var(--muted);"></div>
@@ -350,7 +349,7 @@
         <h2 style="color:#dc2626;">Invalid Invitation</h2>
         <p id="invalidInviteMsg" style="color:var(--muted);">This invitation link is invalid or has expired.</p>
     </div>
-    <button class="btn btn-primary btn-full" onclick="showLogin()">← Back to Login</button>
+    <button class="btn btn-primary btn-full" id="backFromInvalidBtn">← Back to Login</button>
 </div>
 
 <!-- ADMIN DASHBOARD -->
@@ -651,15 +650,17 @@ function updateLang() {
 // ============================================================
 // NOTIFICATIONS
 // ============================================================
-function notify(msg, type = 'info', ms = 5000) {
-    const icons = { success:'✅', warning:'⚠️', danger:'❌', info:'ℹ️' };
-    const n = document.createElement('div');
+function notify(msg, type, ms) {
+    type = type || 'info';
+    ms = ms || 5000;
+    var icons = { success:'✅', warning:'⚠️', danger:'❌', info:'ℹ️' };
+    var n = document.createElement('div');
     n.className = 'alert alert-' + type;
     n.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;min-width:300px;max-width:480px;animation:slideIn 0.3s ease;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.15);';
-    n.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span style="flex:1">${msg}</span><button onclick="this.parentElement.remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:inherit;">×</button>`;
+    n.innerHTML = '<span>' + (icons[type]||'ℹ️') + '</span><span style="flex:1">' + msg + '</span><button onclick="this.parentElement.remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:inherit;">×</button>';
     document.body.appendChild(n);
-    setTimeout(() => n.isConnected && n.remove(), ms);
-    n.addEventListener('click', () => n.remove());
+    setTimeout(function() { if (n.isConnected) n.remove(); }, ms);
+    n.addEventListener('click', function() { n.remove(); });
 }
 
 // ============================================================
@@ -667,94 +668,96 @@ function notify(msg, type = 'info', ms = 5000) {
 // ============================================================
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
+document.querySelectorAll('.modal-overlay').forEach(function(o) {
+    o.addEventListener('click', function(e) { if (e.target === o) o.classList.remove('active'); });
+});
 
 // ============================================================
 // SHOW/HIDE CONTAINERS
 // ============================================================
+var allAuthContainers = ['authContainer','forgotContainer','resetContainer','registerContainer','invalidInviteContainer'];
+
+function hideAllAuth() {
+    allAuthContainers.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
+}
+
 function showLogin() {
+    hideAllAuth();
     document.getElementById('authContainer').classList.remove('hidden');
-    document.getElementById('forgotContainer').classList.add('hidden');
-    document.getElementById('resetContainer').classList.add('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
 function showForgotPassword() {
-    document.getElementById('authContainer').classList.add('hidden');
+    hideAllAuth();
     document.getElementById('forgotContainer').classList.remove('hidden');
-    document.getElementById('resetContainer').classList.add('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
 function showResetPassword() {
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('forgotContainer').classList.add('hidden');
+    hideAllAuth();
     document.getElementById('resetContainer').classList.remove('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
 function showRegister() {
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('forgotContainer').classList.add('hidden');
-    document.getElementById('resetContainer').classList.add('hidden');
+    hideAllAuth();
     document.getElementById('registerContainer').classList.remove('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
 function showInvalidInvite(msg) {
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('forgotContainer').classList.add('hidden');
-    document.getElementById('resetContainer').classList.add('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
+    hideAllAuth();
     document.getElementById('invalidInviteContainer').classList.remove('hidden');
     document.getElementById('invalidInviteMsg').textContent = msg || 'This invitation link is invalid or has expired.';
 }
 
+// Wire up buttons
+document.getElementById('forgotPasswordLink').addEventListener('click', showForgotPassword);
+document.getElementById('backToLoginLink').addEventListener('click', showLogin);
+document.getElementById('backFromInvalidBtn').addEventListener('click', showLogin);
+
 // ============================================================
 // PASSWORD STRENGTH
 // ============================================================
-function checkPasswordStrength(password) {
-    _checkStrength(password, 'strengthFill', 'strengthText');
-}
-function checkPasswordStrength2(password) {
-    _checkStrength(password, 'strengthFill2', 'strengthText2');
-}
-function _checkStrength(password, fillId, textId) {
-    const fill = document.getElementById(fillId);
-    const text = document.getElementById(textId);
-    let strength = 0;
+function checkStrength(password, fillId, textId) {
+    var fill = document.getElementById(fillId);
+    var text = document.getElementById(textId);
+    var strength = 0;
     if (password.length >= 8) strength++;
     if (password.length >= 12) strength++;
     if (/[A-Z]/.test(password)) strength++;
     if (/[0-9]/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
-    const levels = [
+    var levels = [
         { pct: '20%', color: '#dc2626', label: 'Very Weak' },
         { pct: '40%', color: '#f97316', label: 'Weak' },
         { pct: '60%', color: '#eab308', label: 'Fair' },
         { pct: '80%', color: '#22c55e', label: 'Strong' },
         { pct: '100%', color: '#16a34a', label: 'Very Strong' }
     ];
-    const level = levels[Math.min(strength - 1, 4)] || { pct: '0%', color: '#dc2626', label: '' };
+    var level = levels[Math.min(strength - 1, 4)] || { pct: '0%', color: '#dc2626', label: '' };
     fill.style.width = password.length > 0 ? level.pct : '0%';
     fill.style.background = level.color;
     text.textContent = password.length > 0 ? level.label : '';
     text.style.color = level.color;
 }
 
+document.getElementById('regPassword').addEventListener('input', function() {
+    checkStrength(this.value, 'strengthFill', 'strengthText');
+});
+document.getElementById('resetPassword').addEventListener('input', function() {
+    checkStrength(this.value, 'strengthFill2', 'strengthText2');
+});
+
 // ============================================================
 // FORGOT PASSWORD
 // ============================================================
-document.getElementById('forgotForm').addEventListener('submit', async e => {
+document.getElementById('forgotForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const email = document.getElementById('forgotEmail').value.trim();
-    const btn = document.getElementById('forgotBtn');
+    var email = document.getElementById('forgotEmail').value.trim();
+    var btn = document.getElementById('forgotBtn');
     btn.disabled = true;
     btn.textContent = 'Sending...';
     try {
-        const redirectTo = window.location.origin + window.location.pathname;
-        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
-        if (error) throw error;
-        notify(`Password reset link sent to ${email}. Please check your inbox.`, 'success', 10000);
+        var redirectTo = window.location.origin + window.location.pathname;
+        var result = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
+        if (result.error) throw result.error;
+        notify('Password reset link sent to ' + email + '. Please check your inbox.', 'success', 10000);
         showLogin();
     } catch (err) {
         notify('Error: ' + err.message, 'danger');
@@ -765,22 +768,20 @@ document.getElementById('forgotForm').addEventListener('submit', async e => {
 });
 
 // ============================================================
-// RESET PASSWORD FORM
+// RESET PASSWORD
 // ============================================================
-document.getElementById('resetForm').addEventListener('submit', async e => {
+document.getElementById('resetForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const password = document.getElementById('resetPassword').value;
-    const passwordConfirm = document.getElementById('resetPasswordConfirm').value;
-    const btn = document.getElementById('resetBtn');
-
+    var password = document.getElementById('resetPassword').value;
+    var passwordConfirm = document.getElementById('resetPasswordConfirm').value;
+    var btn = document.getElementById('resetBtn');
     if (password.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
     if (password !== passwordConfirm) { notify('Passwords do not match', 'warning'); return; }
-
     btn.disabled = true;
     btn.textContent = 'Updating...';
     try {
-        const { error } = await sb.auth.updateUser({ password });
-        if (error) throw error;
+        var result = await sb.auth.updateUser({ password: password });
+        if (result.error) throw result.error;
         notify('Password updated successfully! Please log in.', 'success', 8000);
         window.history.replaceState({}, document.title, window.location.pathname);
         showLogin();
@@ -796,35 +797,36 @@ document.getElementById('resetForm').addEventListener('submit', async e => {
 // INVITATION FLOW
 // ============================================================
 async function checkInviteToken() {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('invite');
-    if (!token) return;
+    var params = new URLSearchParams(window.location.search);
+    var token = params.get('invite');
+    if (!token) return false;
 
     try {
-        const { data, error } = await sb.from('invitations')
+        var result = await sb.from('invitations')
             .select('*')
             .eq('token', token)
             .is('deleted_at', null)
             .single();
 
+        var data = result.data;
+        var error = result.error;
+
         if (error || !data) {
             showInvalidInvite('This invitation link is invalid. Please contact your administrator.');
-            return;
+            return true;
         }
-
         if (new Date(data.expires_at) < new Date()) {
             showInvalidInvite('This invitation has expired. Please ask your administrator to send a new one.');
-            return;
+            return true;
         }
-
         if (data.status === 'accepted') {
             showInvalidInvite('This invitation has already been used. Please log in with your existing account.');
-            return;
+            return true;
         }
 
         document.getElementById('regName').value = data.name || '';
         document.getElementById('regEmail').value = data.email || '';
-        document.getElementById('inviteWelcomeMsg').textContent = `Welcome, ${data.name}! Please create your password to access the Silicon Corridor Ventures Investor Portal.`;
+        document.getElementById('inviteWelcomeMsg').textContent = 'Welcome, ' + data.name + '! Please create your password to access the Silicon Corridor Ventures Investor Portal.';
 
         window._inviteToken = token;
         window._inviteId = data.id;
@@ -832,21 +834,23 @@ async function checkInviteToken() {
         window._inviteName = data.name;
 
         showRegister();
+        return true;
     } catch (err) {
         showInvalidInvite('An error occurred validating your invitation. Please try again.');
+        return true;
     }
 }
 
 // ============================================================
 // REGISTRATION FORM
 // ============================================================
-document.getElementById('registerForm').addEventListener('submit', async e => {
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const name = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
-    const passwordConfirm = document.getElementById('regPasswordConfirm').value;
-    const btn = document.getElementById('registerBtn');
+    var name = document.getElementById('regName').value.trim();
+    var email = document.getElementById('regEmail').value.trim();
+    var password = document.getElementById('regPassword').value;
+    var passwordConfirm = document.getElementById('regPasswordConfirm').value;
+    var btn = document.getElementById('registerBtn');
 
     if (!name) { notify('Please enter your full name', 'warning'); return; }
     if (password.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
@@ -856,17 +860,18 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
     btn.textContent = 'Creating account...';
 
     try {
-        const { data: authData, error: authError } = await sb.auth.signUp({
-            email, password,
+        var authResult = await sb.auth.signUp({
+            email: email,
+            password: password,
             options: { data: { full_name: name } }
         });
 
-        if (authError) throw authError;
-        const userId = authData.user?.id;
+        if (authResult.error) throw authResult.error;
+        var userId = authResult.data.user && authResult.data.user.id;
         if (!userId) throw new Error('Failed to create user account');
 
         await sb.from('profiles').upsert({
-            id: userId, full_name: name, email,
+            id: userId, full_name: name, email: email,
             role: 'investor', status: 'active',
             created_at: new Date().toISOString()
         });
@@ -876,14 +881,14 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
             used_at: new Date().toISOString()
         }).eq('id', window._inviteId);
 
-        const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password });
-        if (signInError) throw signInError;
+        var signInResult = await sb.auth.signInWithPassword({ email: email, password: password });
+        if (signInResult.error) throw signInResult.error;
 
-        currentUser = signInData.user;
-        userProfile = { id: userId, full_name: name, email, role: 'investor', status: 'active' };
+        currentUser = signInResult.data.user;
+        userProfile = { id: userId, full_name: name, email: email, role: 'investor', status: 'active' };
 
         window.history.replaceState({}, document.title, window.location.pathname);
-        notify(`Welcome to Silicon Corridor Ventures, ${name}! 🎉`, 'success', 8000);
+        notify('Welcome to Silicon Corridor Ventures, ' + name + '! 🎉', 'success', 8000);
         showDashboard();
     } catch (err) {
         notify('Registration failed: ' + err.message, 'danger');
@@ -896,17 +901,17 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
 // ============================================================
 // AUTH
 // ============================================================
-document.getElementById('loginForm').addEventListener('submit', async e => {
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass  = document.getElementById('loginPassword').value;
-    const btn   = document.getElementById('loginBtn');
+    var email = document.getElementById('loginEmail').value.trim();
+    var pass  = document.getElementById('loginPassword').value;
+    var btn   = document.getElementById('loginBtn');
     btn.disabled = true;
     btn.textContent = '...';
     try {
-        const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-        if (error) throw error;
-        currentUser = data.user;
+        var result = await sb.auth.signInWithPassword({ email: email, password: pass });
+        if (result.error) throw result.error;
+        currentUser = result.data.user;
         await fetchProfile();
         showDashboard();
     } catch (err) {
@@ -920,9 +925,9 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
 
 async function fetchProfile() {
     try {
-        const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-        if (error) throw error;
-        userProfile = data;
+        var result = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+        if (result.error) throw result.error;
+        userProfile = result.data;
     } catch (err) {
         console.warn('Profile fetch error:', err.message);
         userProfile = { role: 'investor', full_name: currentUser.email, email: currentUser.email, status: 'active' };
@@ -930,22 +935,19 @@ async function fetchProfile() {
 }
 
 function showDashboard() {
-    ['authContainer','forgotContainer','resetContainer','registerContainer','invalidInviteContainer'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-    });
+    hideAllAuth();
     document.getElementById('logoutBtn').classList.remove('hidden');
-    const badge = document.getElementById('userBadge');
+    var badge = document.getElementById('userBadge');
     badge.classList.remove('hidden');
-    badge.textContent = userProfile?.full_name || currentUser.email;
+    badge.textContent = userProfile && userProfile.full_name ? userProfile.full_name : currentUser.email;
 
-    const role = userProfile?.role;
+    var role = userProfile && userProfile.role;
     if (role === 'admin' || role === 'compliance') {
         document.getElementById('adminDashboard').classList.add('active');
         loadAdminStats(); loadInvestors(); loadInvitations(); loadAdminDocs(); loadWatchlist(); loadOpps('admin');
     } else {
         document.getElementById('investorDashboard').classList.add('active');
-        document.getElementById('invName').textContent = userProfile?.full_name || '';
+        document.getElementById('invName').textContent = userProfile && userProfile.full_name ? userProfile.full_name : '';
         loadInvOverview(); loadDocTypes(); loadInvDocs(); loadOpps('investor'); loadInvestments(); fillProfile();
     }
 }
@@ -953,7 +955,7 @@ function showDashboard() {
 async function logout() {
     await sb.auth.signOut();
     currentUser = null; userProfile = null;
-    ['adminDashboard','investorDashboard'].forEach(id => document.getElementById(id).classList.remove('active'));
+    ['adminDashboard','investorDashboard'].forEach(function(id) { document.getElementById(id).classList.remove('active'); });
     showLogin();
     document.getElementById('logoutBtn').classList.add('hidden');
     document.getElementById('userBadge').classList.add('hidden');
@@ -966,15 +968,15 @@ async function logout() {
 // NAVIGATION
 // ============================================================
 function adminNav(el) {
-    document.querySelectorAll('#adminDashboard .nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('#adminDashboard .nav-item').forEach(function(n) { n.classList.remove('active'); });
     el.classList.add('active');
-    document.querySelectorAll('#adminDashboard .dashboard-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#adminDashboard .dashboard-section').forEach(function(s) { s.classList.remove('active'); });
     document.getElementById(el.dataset.section).classList.add('active');
 }
 function investorNav(el) {
-    document.querySelectorAll('#investorDashboard .nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('#investorDashboard .nav-item').forEach(function(n) { n.classList.remove('active'); });
     el.classList.add('active');
-    document.querySelectorAll('#investorDashboard .dashboard-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#investorDashboard .dashboard-section').forEach(function(s) { s.classList.remove('active'); });
     document.getElementById(el.dataset.section).classList.add('active');
     if (el.dataset.section === 'invNews') loadNews();
 }
@@ -986,24 +988,25 @@ function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateStrin
 function fmtMoney(n) { if (!n) return '—'; return Number(n).toLocaleString('en-US'); }
 function fmtSize(b) { if (!b) return ''; if (b < 1024) return b + ' B'; if (b < 1048576) return (b/1024).toFixed(1) + ' KB'; return (b/1048576).toFixed(1) + ' MB'; }
 function statusBadge(s) {
-    const map = { active:'badge-success', pending:'badge-warning', suspended:'badge-danger', inactive:'badge-muted', approved:'badge-success', rejected:'badge-danger' };
-    return `<span class="badge ${map[s]||'badge-muted'}">${s||'—'}</span>`;
+    var map = { active:'badge-success', pending:'badge-warning', suspended:'badge-danger', inactive:'badge-muted', approved:'badge-success', rejected:'badge-danger' };
+    return '<span class="badge ' + (map[s]||'badge-muted') + '">' + (s||'—') + '</span>';
 }
 function invBadge(s) {
-    const map = { pending:'badge-warning', accepted:'badge-success', expired:'badge-muted' };
-    return `<span class="badge ${map[s]||'badge-muted'}">${s||'—'}</span>`;
+    var map = { pending:'badge-warning', accepted:'badge-success', expired:'badge-muted' };
+    return '<span class="badge ' + (map[s]||'badge-muted') + '">' + (s||'—') + '</span>';
 }
 function oppBadge(s) {
-    const map = { active:'badge-success', coming_soon:'badge-purple', closed:'badge-muted' };
-    const labels = { active:'Active', coming_soon:'Coming Soon', closed:'Closed' };
-    return `<span class="badge ${map[s]||'badge-muted'}">${labels[s]||s}</span>`;
+    var map = { active:'badge-success', coming_soon:'badge-purple', closed:'badge-muted' };
+    var labels = { active:'Active', coming_soon:'Coming Soon', closed:'Closed' };
+    return '<span class="badge ' + (map[s]||'badge-muted') + '">' + (labels[s]||s) + '</span>';
 }
 function docUrl(path) {
-    const { data } = sb.storage.from(BUCKET).getPublicUrl(path);
-    return data?.publicUrl || '#';
+    var result = sb.storage.from(BUCKET).getPublicUrl(path);
+    return (result.data && result.data.publicUrl) ? result.data.publicUrl : '#';
 }
-function emptyState(icon, title, sub = '') {
-    return `<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div>${sub ? `<div class="empty-sub">${sub}</div>` : ''}</div>`;
+function emptyState(icon, title, sub) {
+    sub = sub || '';
+    return '<div class="empty-state"><div class="empty-icon">' + icon + '</div><div class="empty-title">' + title + '</div>' + (sub ? '<div class="empty-sub">' + sub + '</div>' : '') + '</div>';
 }
 
 // ============================================================
@@ -1011,13 +1014,14 @@ function emptyState(icon, title, sub = '') {
 // ============================================================
 async function loadAdminStats() {
     try {
-        const { data, error } = await sb.from('admin_stats').select('*').single();
-        if (error) throw error;
-        document.getElementById('sTotalInv').textContent    = data.total_investors ?? 0;
-        document.getElementById('sActiveInv').textContent   = data.active_investors ?? 0;
-        document.getElementById('sPendingDocs').textContent  = data.pending_documents ?? 0;
-        document.getElementById('sPendingInv').textContent   = data.pending_invitations ?? 0;
-        document.getElementById('sAcceptedInv').textContent  = data.accepted_invitations ?? 0;
+        var result = await sb.from('admin_stats').select('*').single();
+        if (result.error) throw result.error;
+        var data = result.data;
+        document.getElementById('sTotalInv').textContent    = data.total_investors != null ? data.total_investors : 0;
+        document.getElementById('sActiveInv').textContent   = data.active_investors != null ? data.active_investors : 0;
+        document.getElementById('sPendingDocs').textContent  = data.pending_documents != null ? data.pending_documents : 0;
+        document.getElementById('sPendingInv').textContent   = data.pending_invitations != null ? data.pending_invitations : 0;
+        document.getElementById('sAcceptedInv').textContent  = data.accepted_invitations != null ? data.accepted_invitations : 0;
     } catch (err) { console.error('Stats:', err.message); }
 }
 
@@ -1026,29 +1030,26 @@ async function loadAdminStats() {
 // ============================================================
 async function loadInvestors() {
     try {
-        const { data, error } = await sb.from('profiles').select('*').eq('role','investor').order('created_at', { ascending: false });
-        if (error) throw error;
-        const tbody = document.getElementById('investorsBody');
-        if (!data?.length) { tbody.innerHTML = `<tr><td colspan="5">${emptyState('👥','No investors yet','Invite investors using the button above')}</td></tr>`; return; }
-        tbody.innerHTML = data.map(r => `<tr>
-            <td><strong>${r.full_name||'—'}</strong></td>
-            <td>${r.email}</td>
-            <td>${statusBadge(r.status)}</td>
-            <td>${fmtDate(r.created_at)}</td>
-            <td><div class="action-group">
-                ${r.status === 'active'
-                    ? `<button class="btn btn-warning btn-sm" onclick="setInvestorStatus('${r.id}','suspended')">🚫 Suspend</button>`
-                    : `<button class="btn btn-success btn-sm" onclick="setInvestorStatus('${r.id}','active')">✅ Activate</button>`}
-            </div></td>
-        </tr>`).join('');
-    } catch (err) { document.getElementById('investorsBody').innerHTML = `<tr><td colspan="5">Error: ${err.message}</td></tr>`; }
+        var result = await sb.from('profiles').select('*').eq('role','investor').order('created_at', { ascending: false });
+        if (result.error) throw result.error;
+        var data = result.data;
+        var tbody = document.getElementById('investorsBody');
+        if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="5">' + emptyState('👥','No investors yet','Invite investors using the button above') + '</td></tr>'; return; }
+        tbody.innerHTML = data.map(function(r) {
+            return '<tr><td><strong>' + (r.full_name||'—') + '</strong></td><td>' + r.email + '</td><td>' + statusBadge(r.status) + '</td><td>' + fmtDate(r.created_at) + '</td><td><div class="action-group">' +
+                (r.status === 'active'
+                    ? '<button class="btn btn-warning btn-sm" onclick="setInvestorStatus(\'' + r.id + '\',\'suspended\')">🚫 Suspend</button>'
+                    : '<button class="btn btn-success btn-sm" onclick="setInvestorStatus(\'' + r.id + '\',\'active\')">✅ Activate</button>') +
+                '</div></td></tr>';
+        }).join('');
+    } catch (err) { document.getElementById('investorsBody').innerHTML = '<tr><td colspan="5">Error: ' + err.message + '</td></tr>'; }
 }
 
 async function setInvestorStatus(id, status) {
     try {
-        const { error } = await sb.from('profiles').update({ status }).eq('id', id);
-        if (error) throw error;
-        notify(`Investor ${status === 'active' ? 'activated' : 'suspended'}`, 'success');
+        var result = await sb.from('profiles').update({ status: status }).eq('id', id);
+        if (result.error) throw result.error;
+        notify('Investor ' + (status === 'active' ? 'activated' : 'suspended'), 'success');
         loadInvestors(); loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
 }
@@ -1058,34 +1059,24 @@ async function setInvestorStatus(id, status) {
 // ============================================================
 async function loadInvitations() {
     try {
-        const { data, error } = await sb.from('invitations')
-            .select('*')
-            .is('deleted_at', null)
-            .order('created_at', { ascending: false });
-        if (error) throw error;
-        const tbody = document.getElementById('invitationsBody');
-        if (!data?.length) { tbody.innerHTML = `<tr><td colspan="5">${emptyState('✉️','No invitations sent yet')}</td></tr>`; return; }
-        tbody.innerHTML = data.map(r => `<tr>
-            <td>${r.name}</td>
-            <td>${r.email}</td>
-            <td>${invBadge(r.status)}</td>
-            <td>${fmtDate(r.expires_at)}</td>
-            <td>
-                <button class="btn btn-danger btn-sm" onclick="softDeleteInvitation('${r.id}', '${r.email}')">🗑️ Delete</button>
-            </td>
-        </tr>`).join('');
+        var result = await sb.from('invitations').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+        if (result.error) throw result.error;
+        var data = result.data;
+        var tbody = document.getElementById('invitationsBody');
+        if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="5">' + emptyState('✉️','No invitations sent yet') + '</td></tr>'; return; }
+        tbody.innerHTML = data.map(function(r) {
+            return '<tr><td>' + r.name + '</td><td>' + r.email + '</td><td>' + invBadge(r.status) + '</td><td>' + fmtDate(r.expires_at) + '</td><td><button class="btn btn-danger btn-sm" onclick="softDeleteInvitation(\'' + r.id + '\', \'' + r.email + '\')">🗑️ Delete</button></td></tr>';
+        }).join('');
     } catch (err) { console.error('Invitations:', err.message); }
 }
 
 async function softDeleteInvitation(id, email) {
-    if (!confirm(`Hide invitation for ${email}? You will be able to resend a new invitation to this address.`)) return;
+    if (!confirm('Hide invitation for ' + email + '? You will be able to resend a new invitation to this address.')) return;
     try {
-        const deletedEmail = email + '_deleted_' + Date.now();
-        const { error } = await sb.from('invitations')
-            .update({ deleted_at: new Date().toISOString(), email: deletedEmail })
-            .eq('id', id);
-        if (error) throw error;
-        notify(`Invitation for ${email} removed. You can now resend an invitation to this address.`, 'success');
+        var deletedEmail = email + '_deleted_' + Date.now();
+        var result = await sb.from('invitations').update({ deleted_at: new Date().toISOString(), email: deletedEmail }).eq('id', id);
+        if (result.error) throw result.error;
+        notify('Invitation for ' + email + ' removed. You can now resend an invitation to this address.', 'success');
         loadInvitations(); loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
 }
@@ -1094,49 +1085,41 @@ async function softDeleteInvitation(id, email) {
 // SEND INVITE
 // ============================================================
 async function sendInvite() {
-    const name   = document.getElementById('iName').value.trim();
-    const email  = document.getElementById('iEmail').value.trim();
-    const expiry = parseInt(document.getElementById('iExpiry').value);
+    var name   = document.getElementById('iName').value.trim();
+    var email  = document.getElementById('iEmail').value.trim();
+    var expiry = parseInt(document.getElementById('iExpiry').value);
 
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
 
     try {
-        const { data: existing } = await sb.from('invitations')
-            .select('id').eq('email', email).is('deleted_at', null).maybeSingle();
-
-        if (existing) {
-            notify(`An active invitation for ${email} already exists. Please delete it first before resending.`, 'warning');
+        var existResult = await sb.from('invitations').select('id').eq('email', email).is('deleted_at', null).maybeSingle();
+        if (existResult.data) {
+            notify('An active invitation for ' + email + ' already exists. Please delete it first before resending.', 'warning');
             return;
         }
 
-        const array = new Uint8Array(32);
+        var array = new Uint8Array(32);
         crypto.getRandomValues(array);
-        const token = btoa(String.fromCharCode(...array))
-            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        var token = btoa(String.fromCharCode.apply(null, array)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
-        const expiresAt = new Date();
+        var expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + expiry);
 
-        const { error } = await sb.from('invitations').insert({
-            name, email, token,
+        var insertResult = await sb.from('invitations').insert({
+            name: name, email: email, token: token,
             expires_at: expiresAt.toISOString(),
-            created_by: currentUser.id,
-            status: 'pending'
+            created_by: currentUser.id, status: 'pending'
         });
 
-        if (error) throw error;
+        if (insertResult.error) throw insertResult.error;
 
-        const sent = await sendEmailViaBackend(name, email, token, expiry);
+        var sent = await sendEmailViaBackend(name, email, token, expiry);
 
         closeModal('inviteModal');
         document.getElementById('iName').value  = '';
         document.getElementById('iEmail').value = '';
 
-        notify(
-            sent ? `Invitation sent to ${email}` : `Invitation created but email failed.`,
-            sent ? 'success' : 'warning',
-            sent ? 5000 : 10000
-        );
+        notify(sent ? 'Invitation sent to ' + email : 'Invitation created but email failed. Please check the Railway backend.', sent ? 'success' : 'warning', sent ? 5000 : 10000);
 
         loadInvitations(); loadAdminStats();
     } catch (err) {
@@ -1145,14 +1128,14 @@ async function sendInvite() {
 }
 
 async function sendEmailViaBackend(name, email, token, expiry) {
-    const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;
+    var inviteUrl = window.location.origin + window.location.pathname + '?invite=' + token;
     try {
-        const res = await fetch(BACKEND_URL, {
+        var res = await fetch(BACKEND_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, token, expiry, inviteUrl })
+            body: JSON.stringify({ name: name, email: email, token: token, expiry: expiry, inviteUrl: inviteUrl })
         });
-        if (!res.ok) { console.error('Backend error:', await res.json().catch(() => ({}))); return false; }
+        if (!res.ok) { console.error('Backend error:', await res.json().catch(function() { return {}; })); return false; }
         return true;
     } catch (err) { console.error('Backend call failed:', err); return false; }
 }
@@ -1161,44 +1144,31 @@ async function sendEmailViaBackend(name, email, token, expiry) {
 // ADMIN: DOCUMENTS
 // ============================================================
 async function loadAdminDocs() {
-    const filter = document.getElementById('docFilter').value;
+    var filter = document.getElementById('docFilter').value;
     try {
-        let q = sb.from('documents').select(`*,profiles!documents_user_id_fkey(full_name,email),document_types(name)`).order('uploaded_at', { ascending: false });
+        var q = sb.from('documents').select('*,profiles!documents_user_id_fkey(full_name,email),document_types(name)').order('uploaded_at', { ascending: false });
         if (filter !== 'all') q = q.eq('status', filter);
-        const { data, error } = await q;
-        if (error) throw error;
-        const el = document.getElementById('adminDocsList');
-        if (!data?.length) { el.innerHTML = emptyState('📄','No documents found'); return; }
-        el.innerHTML = data.map(d => `
-            <div class="doc-item">
-                <div class="doc-info">
-                    <span class="doc-icon">📄</span>
-                    <div>
-                        <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
-                        <div class="doc-meta">👤 ${d.profiles?.full_name || d.profiles?.email || 'Unknown'} • ${fmtDate(d.uploaded_at)} • ${fmtSize(d.file_size)}</div>
-                        ${d.rejection_reason ? `<div class="doc-rejection">Reason: ${d.rejection_reason}</div>` : ''}
-                    </div>
-                </div>
-                <div class="action-group">
-                    ${statusBadge(d.status)}
-                    <a href="${docUrl(d.file_path)}" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>
-                    ${d.status === 'pending' ? `
-                        <button class="btn btn-success btn-sm" onclick="reviewDoc('${d.id}','approved')">✅ Approve</button>
-                        <button class="btn btn-danger btn-sm" onclick="openReject('${d.id}')">❌ Reject</button>
-                    ` : ''}
-                </div>
-            </div>
-        `).join('');
-    } catch (err) { document.getElementById('adminDocsList').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+        var result = await q;
+        if (result.error) throw result.error;
+        var data = result.data;
+        var el = document.getElementById('adminDocsList');
+        if (!data || !data.length) { el.innerHTML = emptyState('📄','No documents found'); return; }
+        el.innerHTML = data.map(function(d) {
+            var typeName = d.document_types && d.document_types.name ? d.document_types.name.replace(/_/g,' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); }) : d.file_name;
+            var profileName = (d.profiles && (d.profiles.full_name || d.profiles.email)) || 'Unknown';
+            return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">📄</span><div><div class="doc-name">' + typeName + '</div><div class="doc-meta">👤 ' + profileName + ' • ' + fmtDate(d.uploaded_at) + ' • ' + fmtSize(d.file_size) + '</div>' + (d.rejection_reason ? '<div class="doc-rejection">Reason: ' + d.rejection_reason + '</div>' : '') + '</div></div><div class="action-group">' + statusBadge(d.status) + '<a href="' + docUrl(d.file_path) + '" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>' + (d.status === 'pending' ? '<button class="btn btn-success btn-sm" onclick="reviewDoc(\'' + d.id + '\',\'approved\')">✅ Approve</button><button class="btn btn-danger btn-sm" onclick="openReject(\'' + d.id + '\')">❌ Reject</button>' : '') + '</div></div>';
+        }).join('');
+    } catch (err) { document.getElementById('adminDocsList').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
 }
 
-async function reviewDoc(id, status, reason = null) {
+async function reviewDoc(id, status, reason) {
+    reason = reason || null;
     try {
-        const upd = { status, reviewed_by: currentUser.id, reviewed_at: new Date().toISOString() };
+        var upd = { status: status, reviewed_by: currentUser.id, reviewed_at: new Date().toISOString() };
         if (reason) upd.rejection_reason = reason;
-        const { error } = await sb.from('documents').update(upd).eq('id', id);
-        if (error) throw error;
-        notify(`Document ${status}`, 'success');
+        var result = await sb.from('documents').update(upd).eq('id', id);
+        if (result.error) throw result.error;
+        notify('Document ' + status, 'success');
         loadAdminDocs(); loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
 }
@@ -1209,8 +1179,8 @@ function openReject(id) {
     openModal('rejectModal');
 }
 function confirmReject() {
-    const id = document.getElementById('rejectDocId').value;
-    const reason = document.getElementById('rejectReason').value.trim();
+    var id = document.getElementById('rejectDocId').value;
+    var reason = document.getElementById('rejectReason').value.trim();
     if (!reason) { notify('Please provide a rejection reason', 'warning'); return; }
     closeModal('rejectModal');
     reviewDoc(id, 'rejected', reason);
@@ -1221,32 +1191,24 @@ function confirmReject() {
 // ============================================================
 async function loadWatchlist() {
     try {
-        const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
-        if (error) throw error;
-        const el = document.getElementById('watchlistList');
-        if (!data?.length) { el.innerHTML = emptyState('👁️','No companies in watchlist','Add companies above to track their news'); return; }
-        el.innerHTML = data.map(w => `
-            <div class="watchlist-item">
-                <div>
-                    <div class="watchlist-name">${w.company_name}</div>
-                    ${w.ticker ? `<div class="watchlist-ticker">$${w.ticker}</div>` : ''}
-                </div>
-                <div class="action-group">
-                    <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank" class="btn btn-secondary btn-sm">📰 News</a>
-                    <button class="btn btn-danger btn-sm" onclick="removeWatchlist('${w.id}')">🗑️</button>
-                </div>
-            </div>
-        `).join('');
+        var result = await sb.from('news_watchlist').select('*').order('created_at');
+        if (result.error) throw result.error;
+        var data = result.data;
+        var el = document.getElementById('watchlistList');
+        if (!data || !data.length) { el.innerHTML = emptyState('👁️','No companies in watchlist','Add companies above to track their news'); return; }
+        el.innerHTML = data.map(function(w) {
+            return '<div class="watchlist-item"><div><div class="watchlist-name">' + w.company_name + '</div>' + (w.ticker ? '<div class="watchlist-ticker">$' + w.ticker + '</div>' : '') + '</div><div class="action-group"><a href="https://news.google.com/search?q=' + encodeURIComponent(w.company_name) + '" target="_blank" class="btn btn-secondary btn-sm">📰 News</a><button class="btn btn-danger btn-sm" onclick="removeWatchlist(\'' + w.id + '\')">🗑️</button></div></div>';
+        }).join('');
     } catch (err) { console.error('Watchlist:', err.message); }
 }
 
 async function addWatchlist() {
-    const company = document.getElementById('wlCompany').value.trim();
-    const ticker  = document.getElementById('wlTicker').value.trim();
+    var company = document.getElementById('wlCompany').value.trim();
+    var ticker  = document.getElementById('wlTicker').value.trim();
     if (!company) { notify('Please enter a company name', 'warning'); return; }
     try {
-        const { error } = await sb.from('news_watchlist').insert({ company_name: company, ticker: ticker || null, added_by: currentUser.id });
-        if (error) throw error;
+        var result = await sb.from('news_watchlist').insert({ company_name: company, ticker: ticker || null, added_by: currentUser.id });
+        if (result.error) throw result.error;
         document.getElementById('wlCompany').value = '';
         document.getElementById('wlTicker').value = '';
         notify('Added to watchlist', 'success');
@@ -1256,8 +1218,8 @@ async function addWatchlist() {
 
 async function removeWatchlist(id) {
     try {
-        const { error } = await sb.from('news_watchlist').delete().eq('id', id);
-        if (error) throw error;
+        var result = await sb.from('news_watchlist').delete().eq('id', id);
+        if (result.error) throw result.error;
         notify('Removed from watchlist', 'success');
         loadWatchlist();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
@@ -1267,65 +1229,47 @@ async function removeWatchlist(id) {
 // OPPORTUNITIES
 // ============================================================
 async function loadOpps(view) {
-    const elId = view === 'admin' ? 'adminOppList' : 'invOppList';
+    var elId = view === 'admin' ? 'adminOppList' : 'invOppList';
     try {
-        const { data, error } = await sb.from('opportunities').select('*').order('created_at', { ascending: false });
-        if (error) { document.getElementById(elId).innerHTML = `<div class="alert alert-warning">⚠️ Opportunities table not found.</div>`; return; }
-        const el = document.getElementById(elId);
-        if (!data?.length) {
+        var result = await sb.from('opportunities').select('*').order('created_at', { ascending: false });
+        if (result.error) { document.getElementById(elId).innerHTML = '<div class="alert alert-warning">⚠️ Opportunities table not found.</div>'; return; }
+        var data = result.data;
+        var el = document.getElementById(elId);
+        if (!data || !data.length) {
             el.innerHTML = emptyState('💡', 'No opportunities yet', view === 'admin' ? 'Click "New Opportunity" to add one' : 'Check back soon for new investment opportunities');
             return;
         }
         if (view === 'admin') {
-            el.innerHTML = data.map(o => `
-                <div class="doc-item">
-                    <div class="doc-info">
-                        <span class="doc-icon">💡</span>
-                        <div>
-                            <div class="doc-name">${o.title}</div>
-                            <div class="doc-meta">${o.sector||''}${o.location ? ' • '+o.location : ''} • Min: $${fmtMoney(o.minimum_investment)}</div>
-                        </div>
-                    </div>
-                    <div class="action-group">
-                        ${oppBadge(o.status)}
-                        <button class="btn btn-secondary btn-sm" onclick="editOpp('${o.id}')">✏️ Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteOpp('${o.id}')">🗑️ Delete</button>
-                    </div>
-                </div>
-            `).join('');
+            el.innerHTML = data.map(function(o) {
+                return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">💡</span><div><div class="doc-name">' + o.title + '</div><div class="doc-meta">' + (o.sector||'') + (o.location ? ' • '+o.location : '') + ' • Min: $' + fmtMoney(o.minimum_investment) + '</div></div></div><div class="action-group">' + oppBadge(o.status) + '<button class="btn btn-secondary btn-sm" onclick="editOpp(\'' + o.id + '\')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteOpp(\'' + o.id + '\')">🗑️ Delete</button></div></div>';
+            }).join('');
         } else {
-            const visible = data.filter(o => o.status !== 'closed');
+            var visible = data.filter(function(o) { return o.status !== 'closed'; });
             if (!visible.length) { el.innerHTML = emptyState('💡','No active opportunities','Check back soon'); return; }
-            el.innerHTML = `<div class="opp-grid">${visible.map(o => `
-                <div class="opp-card">
-                    <div class="opp-header">
-                        <div class="opp-title">${o.title}</div>
-                        <div class="opp-sub">${o.sector||''}${o.location ? ' • '+o.location : ''}</div>
-                    </div>
-                    <div class="opp-body">
-                        ${o.description ? `<div class="opp-desc">${o.description}</div>` : ''}
-                        ${o.target_amount ? `<div class="opp-row"><span class="opp-label">Target</span><span class="opp-val">$${fmtMoney(o.target_amount)}</span></div>` : ''}
-                        ${o.minimum_investment ? `<div class="opp-row"><span class="opp-label">Minimum</span><span class="opp-val">$${fmtMoney(o.minimum_investment)}</span></div>` : ''}
-                        ${o.expected_return ? `<div class="opp-row"><span class="opp-label">Expected Return</span><span class="opp-val">${o.expected_return}</span></div>` : ''}
-                        ${o.timeline ? `<div class="opp-row"><span class="opp-label">Timeline</span><span class="opp-val">${o.timeline}</span></div>` : ''}
-                        <div style="margin-top:1rem;">${oppBadge(o.status)}</div>
-                    </div>
-                </div>
-            `).join('')}</div>`;
+            el.innerHTML = '<div class="opp-grid">' + visible.map(function(o) {
+                return '<div class="opp-card"><div class="opp-header"><div class="opp-title">' + o.title + '</div><div class="opp-sub">' + (o.sector||'') + (o.location ? ' • '+o.location : '') + '</div></div><div class="opp-body">' +
+                    (o.description ? '<div class="opp-desc">' + o.description + '</div>' : '') +
+                    (o.target_amount ? '<div class="opp-row"><span class="opp-label">Target</span><span class="opp-val">$' + fmtMoney(o.target_amount) + '</span></div>' : '') +
+                    (o.minimum_investment ? '<div class="opp-row"><span class="opp-label">Minimum</span><span class="opp-val">$' + fmtMoney(o.minimum_investment) + '</span></div>' : '') +
+                    (o.expected_return ? '<div class="opp-row"><span class="opp-label">Expected Return</span><span class="opp-val">' + o.expected_return + '</span></div>' : '') +
+                    (o.timeline ? '<div class="opp-row"><span class="opp-label">Timeline</span><span class="opp-val">' + o.timeline + '</span></div>' : '') +
+                    '<div style="margin-top:1rem;">' + oppBadge(o.status) + '</div></div></div>';
+            }).join('') + '</div>';
         }
-    } catch (err) { document.getElementById(elId).innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+    } catch (err) { document.getElementById(elId).innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
 }
 
 function openOppModal() {
     document.getElementById('oppId').value = '';
     document.getElementById('oppModalTitle').textContent = 'New Opportunity';
-    ['oppTitle','oppSector','oppLocation','oppDesc','oppTarget','oppMin','oppReturn','oppTimeline'].forEach(id => document.getElementById(id).value = '');
+    ['oppTitle','oppSector','oppLocation','oppDesc','oppTarget','oppMin','oppReturn','oppTimeline'].forEach(function(id) { document.getElementById(id).value = ''; });
     document.getElementById('oppStatus').value = 'active';
     openModal('oppModal');
 }
 
 async function editOpp(id) {
-    const { data } = await sb.from('opportunities').select('*').eq('id', id).single();
+    var result = await sb.from('opportunities').select('*').eq('id', id).single();
+    var data = result.data;
     if (!data) return;
     document.getElementById('oppId').value       = data.id;
     document.getElementById('oppTitle').value    = data.title || '';
@@ -1342,8 +1286,8 @@ async function editOpp(id) {
 }
 
 async function saveOpp() {
-    const id = document.getElementById('oppId').value;
-    const payload = {
+    var id = document.getElementById('oppId').value;
+    var payload = {
         title: document.getElementById('oppTitle').value.trim(),
         sector: document.getElementById('oppSector').value.trim(),
         location: document.getElementById('oppLocation').value.trim(),
@@ -1357,12 +1301,10 @@ async function saveOpp() {
     };
     if (!payload.title) { notify('Title is required', 'warning'); return; }
     try {
-        const { error } = id
-            ? await sb.from('opportunities').update(payload).eq('id', id)
-            : await sb.from('opportunities').insert(payload);
-        if (error) throw error;
+        var result = id ? await sb.from('opportunities').update(payload).eq('id', id) : await sb.from('opportunities').insert(payload);
+        if (result.error) throw result.error;
         closeModal('oppModal');
-        notify(`Opportunity ${id ? 'updated' : 'created'}`, 'success');
+        notify('Opportunity ' + (id ? 'updated' : 'created'), 'success');
         loadOpps('admin');
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
 }
@@ -1370,8 +1312,8 @@ async function saveOpp() {
 async function deleteOpp(id) {
     if (!confirm('Delete this opportunity?')) return;
     try {
-        const { error } = await sb.from('opportunities').delete().eq('id', id);
-        if (error) throw error;
+        var result = await sb.from('opportunities').delete().eq('id', id);
+        if (result.error) throw result.error;
         notify('Opportunity deleted', 'success');
         loadOpps('admin');
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
@@ -1382,22 +1324,23 @@ async function deleteOpp(id) {
 // ============================================================
 async function loadInvOverview() {
     try {
-        const { data, error } = await sb.from('documents').select('status').eq('user_id', currentUser.id);
-        if (error) throw error;
-        const total    = data.length;
-        const approved = data.filter(d => d.status === 'approved').length;
-        const pending  = data.filter(d => d.status === 'pending').length;
-        const rejected = data.filter(d => d.status === 'rejected').length;
+        var result = await sb.from('documents').select('status').eq('user_id', currentUser.id);
+        if (result.error) throw result.error;
+        var data = result.data;
+        var total    = data.length;
+        var approved = data.filter(function(d) { return d.status === 'approved'; }).length;
+        var pending  = data.filter(function(d) { return d.status === 'pending'; }).length;
+        var rejected = data.filter(function(d) { return d.status === 'rejected'; }).length;
         document.getElementById('iDocTotal').textContent    = total;
         document.getElementById('iDocApproved').textContent = approved;
         document.getElementById('iDocPending').textContent  = pending;
         document.getElementById('iDocRejected').textContent = rejected;
-        const alerts = document.getElementById('invAlerts');
+        var alerts = document.getElementById('invAlerts');
         alerts.innerHTML = '';
-        if (rejected > 0) alerts.innerHTML += `<div class="alert alert-danger">❌ You have ${rejected} rejected document(s). Please re-upload them.</div>`;
-        if (pending  > 0) alerts.innerHTML += `<div class="alert alert-warning">⏳ ${pending} document(s) are pending review.</div>`;
-        if (approved === total && total > 0) alerts.innerHTML += `<div class="alert alert-success">✅ All your documents have been approved!</div>`;
-        if (total === 0) alerts.innerHTML += `<div class="alert alert-info">ℹ️ No documents uploaded yet. Go to the Documents tab to get started.</div>`;
+        if (rejected > 0) alerts.innerHTML += '<div class="alert alert-danger">❌ You have ' + rejected + ' rejected document(s). Please re-upload them.</div>';
+        if (pending  > 0) alerts.innerHTML += '<div class="alert alert-warning">⏳ ' + pending + ' document(s) are pending review.</div>';
+        if (approved === total && total > 0) alerts.innerHTML += '<div class="alert alert-success">✅ All your documents have been approved!</div>';
+        if (total === 0) alerts.innerHTML += '<div class="alert alert-info">ℹ️ No documents uploaded yet. Go to the Documents tab to get started.</div>';
     } catch (err) { console.error('Overview:', err.message); }
 }
 
@@ -1406,35 +1349,37 @@ async function loadInvOverview() {
 // ============================================================
 async function loadDocTypes() {
     try {
-        const { data, error } = await sb.from('document_types').select('*').order('display_order');
-        if (error) throw error;
-        const sel = document.getElementById('uploadDocType');
+        var result = await sb.from('document_types').select('*').order('display_order');
+        if (result.error) throw result.error;
+        var sel = document.getElementById('uploadDocType');
         sel.innerHTML = '<option value="">— Select type —</option>';
-        data.forEach(dt => { sel.innerHTML += `<option value="${dt.id}">${dt.name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}</option>`; });
+        result.data.forEach(function(dt) {
+            sel.innerHTML += '<option value="' + dt.id + '">' + dt.name.replace(/_/g,' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); }) + '</option>';
+        });
     } catch (err) { console.error('DocTypes:', err.message); }
 }
 
 function handleFile(input) {
-    const f = input.files[0];
-    document.getElementById('uploadFileName').textContent = f ? `📎 ${f.name} (${fmtSize(f.size)})` : '';
+    var f = input.files[0];
+    document.getElementById('uploadFileName').textContent = f ? '📎 ' + f.name + ' (' + fmtSize(f.size) + ')' : '';
 }
 
 async function uploadDoc() {
-    const typeId = document.getElementById('uploadDocType').value;
-    const file   = document.getElementById('fileInput').files[0];
+    var typeId = document.getElementById('uploadDocType').value;
+    var file   = document.getElementById('fileInput').files[0];
     if (!typeId) { notify('Please select a document type', 'warning'); return; }
     if (!file)   { notify('Please select a file', 'warning'); return; }
     if (file.size > 10 * 1024 * 1024) { notify('File must be under 10MB', 'warning'); return; }
     try {
-        const path = `${currentUser.id}/${Date.now()}_${file.name}`;
-        const { error: upErr } = await sb.storage.from(BUCKET).upload(path, file);
-        if (upErr) throw upErr;
-        const { error: dbErr } = await sb.from('documents').insert({
+        var path = currentUser.id + '/' + Date.now() + '_' + file.name;
+        var upResult = await sb.storage.from(BUCKET).upload(path, file);
+        if (upResult.error) throw upResult.error;
+        var dbResult = await sb.from('documents').insert({
             user_id: currentUser.id, document_type_id: typeId,
             file_name: file.name, file_path: path,
             file_size: file.size, mime_type: file.type, status: 'pending'
         });
-        if (dbErr) throw dbErr;
+        if (dbResult.error) throw dbResult.error;
         document.getElementById('fileInput').value = '';
         document.getElementById('uploadFileName').textContent = '';
         document.getElementById('uploadDocType').value = '';
@@ -1445,82 +1390,62 @@ async function uploadDoc() {
 
 async function loadInvDocs() {
     try {
-        const { data, error } = await sb.from('documents').select(`*,document_types(name)`).eq('user_id', currentUser.id).order('uploaded_at', { ascending: false });
-        if (error) throw error;
-        const el = document.getElementById('invDocsList');
-        if (!data?.length) { el.innerHTML = emptyState('📄','No documents uploaded yet','Use the form above to upload your first document'); return; }
-        el.innerHTML = data.map(d => `
-            <div class="doc-item">
-                <div class="doc-info">
-                    <span class="doc-icon">📄</span>
-                    <div>
-                        <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
-                        <div class="doc-meta">${d.file_name} • ${fmtDate(d.uploaded_at)} • ${fmtSize(d.file_size)}</div>
-                        ${d.rejection_reason ? `<div class="doc-rejection">❌ Rejection reason: ${d.rejection_reason}</div>` : ''}
-                    </div>
-                </div>
-                <div class="action-group">
-                    ${statusBadge(d.status)}
-                    <a href="${docUrl(d.file_path)}" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>
-                </div>
-            </div>
-        `).join('');
-    } catch (err) { document.getElementById('invDocsList').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+        var result = await sb.from('documents').select('*,document_types(name)').eq('user_id', currentUser.id).order('uploaded_at', { ascending: false });
+        if (result.error) throw result.error;
+        var data = result.data;
+        var el = document.getElementById('invDocsList');
+        if (!data || !data.length) { el.innerHTML = emptyState('📄','No documents uploaded yet','Use the form above to upload your first document'); return; }
+        el.innerHTML = data.map(function(d) {
+            var typeName = d.document_types && d.document_types.name ? d.document_types.name.replace(/_/g,' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); }) : d.file_name;
+            return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">📄</span><div><div class="doc-name">' + typeName + '</div><div class="doc-meta">' + d.file_name + ' • ' + fmtDate(d.uploaded_at) + ' • ' + fmtSize(d.file_size) + '</div>' + (d.rejection_reason ? '<div class="doc-rejection">❌ Rejection reason: ' + d.rejection_reason + '</div>' : '') + '</div></div><div class="action-group">' + statusBadge(d.status) + '<a href="' + docUrl(d.file_path) + '" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a></div></div>';
+        }).join('');
+    } catch (err) { document.getElementById('invDocsList').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
 }
 
 // ============================================================
-// INVESTOR: NEWS — Real headlines via RSS2JSON
+// INVESTOR: NEWS — Real headlines via RSS2JSON (free)
 // ============================================================
 async function loadNews() {
-    const el = document.getElementById('newsContent');
+    var el = document.getElementById('newsContent');
     el.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading headlines...</p></div>';
     try {
-        const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
-        if (error) throw error;
-        if (!data?.length) {
+        var result = await sb.from('news_watchlist').select('*').order('created_at');
+        if (result.error) throw result.error;
+        var data = result.data;
+        if (!data || !data.length) {
             el.innerHTML = emptyState('📰','No watchlist companies','The admin has not added any companies to the watchlist yet');
             return;
         }
 
-        // Fetch news for each company
-        const newsPromises = data.map(async (w) => {
+        var newsPromises = data.map(async function(w) {
             try {
-                const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(w.company_name)}&hl=en-US&gl=US&ceid=US:en`;
-                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=5`;
-                const res = await fetch(apiUrl);
-                const json = await res.json();
+                var rssUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(w.company_name) + '&hl=en-US&gl=US&ceid=US:en';
+                var apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&count=5';
+                var res = await fetch(apiUrl);
+                var json = await res.json();
                 return { company: w, items: json.items || [] };
             } catch (e) {
                 return { company: w, items: [] };
             }
         });
 
-        const results = await Promise.all(newsPromises);
+        var results = await Promise.all(newsPromises);
 
-        let html = '';
-        for (const { company, items } of results) {
-            html += `<div class="news-company-section">
-                <div class="news-company-header">
-                    📈 ${company.company_name}${company.ticker ? ` <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">($${company.ticker})</span>` : ''}
-                </div>`;
+        var html = '';
+        for (var i = 0; i < results.length; i++) {
+            var company = results[i].company;
+            var items = results[i].items;
+            html += '<div class="news-company-section"><div class="news-company-header">📈 ' + company.company_name + (company.ticker ? ' <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">($' + company.ticker + ')</span>' : '') + '</div>';
 
             if (!items.length) {
-                html += `<div class="news-item"><div class="news-headline" style="color:var(--muted);">No recent headlines found.</div></div>`;
+                html += '<div class="news-item"><div class="news-headline" style="color:var(--muted);">No recent headlines found.</div></div>';
             } else {
-                for (const item of items) {
-                    const pubDate = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                    const source = item.author || item.source || '';
-                    // Clean up title (Google News sometimes adds source at end)
-                    const title = item.title ? item.title.replace(/ - [^-]+$/, '') : 'Read article';
-                    html += `<div class="news-item">
-                        <div class="news-headline">
-                            <a href="${item.link}" target="_blank" rel="noopener noreferrer">${title} ↗</a>
-                        </div>
-                        <div class="news-meta">
-                            ${source ? `<span class="news-source">${source}</span>` : ''}
-                            ${pubDate ? `<span>${pubDate}</span>` : ''}
-                        </div>
-                    </div>`;
+                for (var j = 0; j < items.length; j++) {
+                    var item = items[j];
+                    var pubDate = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                    var source = item.author || item.source || '';
+                    var title = item.title ? item.title.replace(/ - [^-]+$/, '') : 'Read article';
+                    html += '<div class="news-item"><div class="news-headline"><a href="' + item.link + '" target="_blank" rel="noopener noreferrer">' + title + ' ↗</a></div><div class="news-meta">' + (source ? '<span class="news-source">' + source + '</span>' : '') + (pubDate ? '<span>' + pubDate + '</span>' : '') + '</div></div>';
                 }
             }
             html += '</div>';
@@ -1528,7 +1453,7 @@ async function loadNews() {
 
         el.innerHTML = html;
     } catch (err) {
-        el.innerHTML = `<div class="alert alert-danger">Error loading news: ${err.message}</div>`;
+        el.innerHTML = '<div class="alert alert-danger">Error loading news: ' + err.message + '</div>';
     }
 }
 
@@ -1537,16 +1462,106 @@ async function loadNews() {
 // ============================================================
 async function loadInvestments() {
     try {
-        const { data, error } = await sb.from('investments').select(`*,opportunities(title,sector)`).eq('investor_id', currentUser.id).order('investment_date', { ascending: false });
-        if (error) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-warning">⚠️ Investments table not found.</div>`; return; }
-        const el = document.getElementById('invInvestments');
-        if (!data?.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
-        el.innerHTML = data.map(inv => `
-            <div class="inv-card">
-                <div class="inv-header">
-                    <div>
-                        <div class="inv-title">${inv.opportunities?.title || 'Investment'}</div>
-                        ${inv.opportunities?.sector ? `<div style="color:var(--muted);font-size:0.85rem;">${inv.opportunities.sector}</div>` : ''}
-                    </div>
-                    <div>
-                        <div class="inv-amount">$${fmtMoney(inv.
+        var result = await sb.from('investments').select('*,opportunities(title,sector)').eq('investor_id', currentUser.id).order('investment_date', { ascending: false });
+        if (result.error) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-warning">⚠️ Investments table not found.</div>'; return; }
+        var data = result.data;
+        var el = document.getElementById('invInvestments');
+        if (!data || !data.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
+        el.innerHTML = data.map(function(inv) {
+            return '<div class="inv-card"><div class="inv-header"><div><div class="inv-title">' + ((inv.opportunities && inv.opportunities.title) || 'Investment') + '</div>' + (inv.opportunities && inv.opportunities.sector ? '<div style="color:var(--muted);font-size:0.85rem;">' + inv.opportunities.sector + '</div>' : '') + '</div><div><div class="inv-amount">$' + fmtMoney(inv.amount) + '</div>' + statusBadge(inv.status) + '</div></div><div class="inv-details"><div>```html
+                        <div class="inv-detail-label">Investment Date</div>
+                        <div class="inv-detail-value">' + fmtDate(inv.investment_date) + '</div>
+                    </div>' + (inv.notes ? '<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">' + inv.notes + '</div></div>' : '') + '</div></div>';
+        }).join('');
+    } catch (err) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
+}
+
+// ============================================================
+// INVESTOR: PROFILE
+// ============================================================
+function fillProfile() {
+    document.getElementById('pName').value   = userProfile?.full_name || '';
+    document.getElementById('pEmail').value  = userProfile?.email || currentUser?.email || '';
+    document.getElementById('pPhone').value  = userProfile?.phone || '';
+    document.getElementById('pStatus').value = userProfile?.status || '';
+}
+
+async function saveProfile(e) {
+    e.preventDefault();
+    try {
+        const { error } = await sb.from('profiles').update({
+            full_name: document.getElementById('pName').value.trim(),
+            phone: document.getElementById('pPhone').value.trim(),
+            updated_at: new Date().toISOString()
+        }).eq('id', currentUser.id);
+        if (error) throw error;
+        userProfile.full_name = document.getElementById('pName').value.trim();
+        document.getElementById('invName').textContent = userProfile.full_name;
+        document.getElementById('userBadge').textContent = userProfile.full_name;
+        notify('Profile updated successfully', 'success');
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+// ============================================================
+// DRAG & DROP UPLOAD
+// ============================================================
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length) {
+        document.getElementById('fileInput').files = files;
+        handleFile(document.getElementById('fileInput'));
+    }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    updateLang();
+
+    // Check for password reset token in URL hash
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+        // Supabase password reset flow
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                showResetPassword();
+            }
+        });
+        return;
+    }
+
+    // Check for invitation token in URL
+    const params = new URLSearchParams(window.location.search);
+    const inviteToken = params.get('invite');
+
+    if (inviteToken) {
+        document.getElementById('authContainer').classList.add('hidden');
+        checkInviteToken();
+    } else {
+        // Check if already logged in
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                currentUser = session.user;
+                fetchProfile().then(() => showDashboard());
+            }
+        });
+    }
+
+    // Listen for auth state changes (handles password reset redirect)
+    sb.auth.onAuthStateChange((event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+            showResetPassword();
+        }
+    });
+});
+</script>
+</body>
+</html>
+```
+

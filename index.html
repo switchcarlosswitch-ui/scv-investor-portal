@@ -245,6 +245,7 @@
     </p>
 </div>
 
+<!-- ADMIN DASHBOARD -->
 <div id="adminDashboard" class="dashboard">
     <nav class="dashboard-nav">
         <div class="nav-item active" data-section="adminStats" onclick="adminNav(this)">📊 <span data-en="Statistics" data-es="Estadísticas">Statistics</span></div>
@@ -264,7 +265,7 @@
         </div>
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Admin Dashboard" data-es="Panel de Administración">Admin Dashboard</h3></div>
-            <p style="color:var(--muted);" data-en="Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities." data-es="Bienvenido al panel de administración. Use la navegación de arriba para gestionar inversores, revisar documentos, gestionar la lista de seguimiento y publicar nuevas oportunidades de inversión.">
+            <p style="color:var(--muted);" data-en="Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities." data-es="Bienvenido al panel de administración.">
                 Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities.
             </p>
         </div>
@@ -298,8 +299,9 @@
                         <th data-en="Email" data-es="Correo">Email</th>
                         <th data-en="Status" data-es="Estado">Status</th>
                         <th data-en="Expires" data-es="Expira">Expires</th>
+                        <th data-en="Actions" data-es="Acciones">Actions</th>
                     </tr></thead>
-                    <tbody id="invitationsBody"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+                    <tbody id="invitationsBody"><tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -343,6 +345,7 @@
     </section>
 </div>
 
+<!-- INVESTOR DASHBOARD -->
 <div id="investorDashboard" class="dashboard">
     <nav class="dashboard-nav">
         <div class="nav-item active" data-section="invOverview" onclick="investorNav(this)">🏠 <span data-en="Overview" data-es="Resumen">Overview</span></div>
@@ -509,11 +512,11 @@
 
 <script>
 // ============================================================
-// CONFIG — Update BACKEND_URL with your Railway URL
+// CONFIG
 // ============================================================
 const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-// ⬇️ Email handled securely via Railway backend — API key never exposed here
+// Email handled securely via Railway backend — API key never exposed here
 const BACKEND_URL   = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
 const BUCKET        = 'investor-documents';
 
@@ -715,19 +718,35 @@ async function setInvestorStatus(id, status) {
 }
 
 // ============================================================
-// ADMIN: INVITATIONS
+// ADMIN: INVITATIONS (with Delete button)
 // ============================================================
 async function loadInvitations() {
     try {
         const { data, error } = await sb.from('invitations').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         const tbody = document.getElementById('invitationsBody');
-        if (!data?.length) { tbody.innerHTML = `<tr><td colspan="4">${emptyState('✉️','No invitations sent yet')}</td></tr>`; return; }
+        if (!data?.length) { tbody.innerHTML = `<tr><td colspan="5">${emptyState('✉️','No invitations sent yet')}</td></tr>`; return; }
         tbody.innerHTML = data.map(r => `<tr>
-            <td>${r.name}</td><td>${r.email}</td>
-            <td>${invBadge(r.status)}</td><td>${fmtDate(r.expires_at)}</td>
+            <td>${r.name}</td>
+            <td>${r.email}</td>
+            <td>${invBadge(r.status)}</td>
+            <td>${fmtDate(r.expires_at)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteInvitation('${r.id}', '${r.email}')">🗑️ Delete</button>
+            </td>
         </tr>`).join('');
     } catch (err) { console.error('Invitations:', err.message); }
+}
+
+async function deleteInvitation(id, email) {
+    if (!confirm(`Delete invitation for ${email}?`)) return;
+    try {
+        const { error } = await sb.from('invitations').delete().eq('id', id);
+        if (error) throw error;
+        notify(`Invitation for ${email} deleted`, 'success');
+        loadInvitations();
+        loadAdminStats();
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
 }
 
 // ============================================================
@@ -762,7 +781,6 @@ async function sendInvite() {
 
         if (error) throw error;
 
-        // Send email via Railway backend (API key stays secure on server)
         const sent = await sendEmailViaBackend(name, email, token, expiry);
 
         closeModal('inviteModal');
@@ -790,7 +808,7 @@ async function sendInvite() {
 }
 
 // ============================================================
-// EMAIL VIA RAILWAY BACKEND (API key is secure server-side)
+// EMAIL VIA RAILWAY BACKEND
 // ============================================================
 async function sendEmailViaBackend(name, email, token, expiry) {
     const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;

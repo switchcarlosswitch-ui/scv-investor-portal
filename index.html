@@ -718,7 +718,7 @@ async function setInvestorStatus(id, status) {
 }
 
 // ============================================================
-// ADMIN: INVITATIONS (with Soft Delete)
+// ADMIN: INVITATIONS (with Soft Delete + Compliance Check)
 // ============================================================
 async function loadInvitations() {
     try {
@@ -741,16 +741,15 @@ async function loadInvitations() {
     } catch (err) { console.error('Invitations:', err.message); }
 }
 
-// Soft delete: marks deleted_at and resets email so it can be reused
+// Soft delete: marks deleted_at and renames email to free up the unique constraint
 async function softDeleteInvitation(id, email) {
     if (!confirm(`Hide invitation for ${email}? You will be able to resend a new invitation to this address.`)) return;
     try {
-        // Mark as deleted AND append a timestamp to the email so the unique constraint allows resending
         const deletedEmail = email + '_deleted_' + Date.now();
         const { error } = await sb.from('invitations')
             .update({
                 deleted_at: new Date().toISOString(),
-                email: deletedEmail  // Free up the email for future invitations
+                email: deletedEmail
             })
             .eq('id', id);
         if (error) throw error;
@@ -761,7 +760,7 @@ async function softDeleteInvitation(id, email) {
 }
 
 // ============================================================
-// SEND INVITE — uses Railway backend for secure email
+// SEND INVITE — Compliance check + Railway backend
 // ============================================================
 async function sendInvite() {
     const name   = document.getElementById('iName').value.trim();
@@ -771,6 +770,18 @@ async function sendInvite() {
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
 
     try {
+        // ✅ COMPLIANCE CHECK: Verify no active invitation exists for this email
+        const { data: existing } = await sb.from('invitations')
+            .select('id')
+            .eq('email', email)
+            .is('deleted_at', null)
+            .maybeSingle();
+
+        if (existing) {
+            notify(`An active invitation for ${email} already exists. Please delete it first before resending.`, 'warning');
+            return;
+        }
+
         const array = new Uint8Array(32);
         crypto.getRandomValues(array);
         const token = btoa(String.fromCharCode(...array))
@@ -810,11 +821,7 @@ async function sendInvite() {
         loadAdminStats();
 
     } catch (err) {
-        if (err.message.includes('unique') || err.code === '23505') {
-            notify(`An active invitation for ${email} already exists. Delete the existing one first.`, 'warning');
-        } else {
-            notify('Error sending invitation: ' + err.message, 'danger');
-        }
+        notify('Error sending invitation: ' + err.message, 'danger');
     }
 }
 

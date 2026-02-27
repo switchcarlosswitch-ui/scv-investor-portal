@@ -722,7 +722,6 @@ async function setInvestorStatus(id, status) {
 // ============================================================
 async function loadInvitations() {
     try {
-        // Only show invitations that have NOT been soft-deleted
         const { data, error } = await sb.from('invitations')
             .select('*')
             .is('deleted_at', null)
@@ -742,15 +741,20 @@ async function loadInvitations() {
     } catch (err) { console.error('Invitations:', err.message); }
 }
 
-// Soft delete: marks deleted_at instead of actually deleting
+// Soft delete: marks deleted_at and resets email so it can be reused
 async function softDeleteInvitation(id, email) {
-    if (!confirm(`Hide invitation for ${email}? (The record will be kept for audit purposes)`)) return;
+    if (!confirm(`Hide invitation for ${email}? You will be able to resend a new invitation to this address.`)) return;
     try {
+        // Mark as deleted AND append a timestamp to the email so the unique constraint allows resending
+        const deletedEmail = email + '_deleted_' + Date.now();
         const { error } = await sb.from('invitations')
-            .update({ deleted_at: new Date().toISOString() })
+            .update({
+                deleted_at: new Date().toISOString(),
+                email: deletedEmail  // Free up the email for future invitations
+            })
             .eq('id', id);
         if (error) throw error;
-        notify(`Invitation for ${email} removed from view`, 'success');
+        notify(`Invitation for ${email} removed. You can now resend an invitation to this address.`, 'success');
         loadInvitations();
         loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
@@ -807,7 +811,7 @@ async function sendInvite() {
 
     } catch (err) {
         if (err.message.includes('unique') || err.code === '23505') {
-            notify(`An invitation for ${email} already exists`, 'warning');
+            notify(`An active invitation for ${email} already exists. Delete the existing one first.`, 'warning');
         } else {
             notify('Error sending invitation: ' + err.message, 'danger');
         }

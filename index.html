@@ -718,11 +718,15 @@ async function setInvestorStatus(id, status) {
 }
 
 // ============================================================
-// ADMIN: INVITATIONS (with Delete button)
+// ADMIN: INVITATIONS (with Soft Delete)
 // ============================================================
 async function loadInvitations() {
     try {
-        const { data, error } = await sb.from('invitations').select('*').order('created_at', { ascending: false });
+        // Only show invitations that have NOT been soft-deleted
+        const { data, error } = await sb.from('invitations')
+            .select('*')
+            .is('deleted_at', null)
+            .order('created_at', { ascending: false });
         if (error) throw error;
         const tbody = document.getElementById('invitationsBody');
         if (!data?.length) { tbody.innerHTML = `<tr><td colspan="5">${emptyState('✉️','No invitations sent yet')}</td></tr>`; return; }
@@ -732,18 +736,21 @@ async function loadInvitations() {
             <td>${invBadge(r.status)}</td>
             <td>${fmtDate(r.expires_at)}</td>
             <td>
-                <button class="btn btn-danger btn-sm" onclick="deleteInvitation('${r.id}', '${r.email}')">🗑️ Delete</button>
+                <button class="btn btn-danger btn-sm" onclick="softDeleteInvitation('${r.id}', '${r.email}')">🗑️ Delete</button>
             </td>
         </tr>`).join('');
     } catch (err) { console.error('Invitations:', err.message); }
 }
 
-async function deleteInvitation(id, email) {
-    if (!confirm(`Delete invitation for ${email}?`)) return;
+// Soft delete: marks deleted_at instead of actually deleting
+async function softDeleteInvitation(id, email) {
+    if (!confirm(`Hide invitation for ${email}? (The record will be kept for audit purposes)`)) return;
     try {
-        const { error } = await sb.from('invitations').delete().eq('id', id);
+        const { error } = await sb.from('invitations')
+            .update({ deleted_at: new Date().toISOString() })
+            .eq('id', id);
         if (error) throw error;
-        notify(`Invitation for ${email} deleted`, 'success');
+        notify(`Invitation for ${email} removed from view`, 'success');
         loadInvitations();
         loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }

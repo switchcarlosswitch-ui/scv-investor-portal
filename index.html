@@ -5,14 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silicon Corridor Ventures - Investor Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --purple: #6B3FA0;
             --purple-dark: #4A2570;
-            --sky: #4AABCF;
-            --teal: #3BBFAD;
             --grad: linear-gradient(135deg, #6B3FA0 0%, #4AABCF 50%, #3BBFAD 100%);
             --light: #F7F8FC;
             --white: #fff;
@@ -22,8 +18,218 @@
             --shadow: 0 4px 20px rgba(107,63,160,0.15);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .container { max-width: 600px; width: 100%; padding: 2rem; text-align: center; }
+        .logo-box { background: var(--grad); border-radius: 20px; padding: 3rem 2rem; margin-bottom: 2rem; color: white; }
+        .logo-box h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .logo-box p { opacity: 0.9; font-size: 1rem; }
+        .card { background: white; border-radius: 16px; padding: 2rem; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 1.5rem; text-align: left; }
+        .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--purple-dark); display: flex; align-items: center; gap: 0.5rem; }
+        .step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+        .step:last-child { border-bottom: none; }
+        .step-num { background: var(--grad); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; margin-top: 2px; }
+        .step-content { flex: 1; }
+        .step-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .step-desc { font-size: 0.82rem; color: var(--muted); }
+        code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.82rem; color: var(--purple-dark); }
+        .btn { display: inline-block; background: var(--grad); color: white; padding: 1rem 2rem; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; border: none; font-family: inherit; margin-top: 1rem; width: 100%; }
+        .btn:hover { opacity: 0.9; }
+        .alert { padding: 0.875rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem; }
+        .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .alert-info { background: #f0f4ff; border: 1px solid #c7d2fe; color: #3730a3; }
+        textarea { width: 100%; height: 120px; padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; font-family: monospace; font-size: 0.8rem; resize: vertical; }
+        .copy-btn { background: #f1f5f9; border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: inherit; margin-top: 0.5rem; }
+        .copy-btn:hover { background: var(--border); }
+        #status { margin-top: 1rem; }
+    </style>
 
+    <script>
+      
+      const files = {
+        
+      }
+    
+
+
+      window.fs = {}
+      window.fs.readFile = (fileName) => {
+        // return array buffer
+        return new Promise((resolve) => {
+          const content = files[fileName]
+          const decoded = atob(content)
+          const arr = new Uint8Array(decoded.length)
+          for (let i = 0; i < decoded.length; i++) {
+            arr[i] = decoded.charCodeAt(i)
+          }
+          resolve(arr)
+        })
+      }
+
+      // stub out window.user.get, window.db.get and window.db.set so that it works when you download the html doc
+      window.db = {}
+      window.db.get = (key) => {
+        // use localStorage to store the artifact
+        const value = localStorage.getItem(key)
+        if (value) {
+          return JSON.parse(value)
+        }
+
+        return null
+      }
+
+      window.db.set = (key, value) => {
+        // use localStorage to store the artifact
+        localStorage.setItem(key, JSON.stringify(value))
+      }
+
+      window.user = {}
+      window.user.get = () => {
+        return {
+          userId: "user-id-placeholder",
+          email: "placeholder@test.com"
+        }
+      }
+
+    </script>
+    </head>
+<body>
+<div class="container">
+    <div class="logo-box">
+        <h1>🏗️ Portal File Generator</h1>
+        <p>Silicon Corridor Ventures — Investor Portal</p>
+        <p style="font-size:0.85rem;opacity:0.8;margin-top:0.5rem;">This tool generates your complete index.html file for download</p>
+    </div>
+
+    <div class="card">
+        <h2>⚠️ Why this helper exists</h2>
+        <div class="alert alert-warning">
+            The full portal HTML is too large to generate directly without getting cut off. This page assembles all the pieces and lets you download the complete file safely.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📋 What's included in the generated file</h2>
+        <div class="step">
+            <div class="step-num">✅</div>
+            <div class="step-content">
+                <div class="step-title">Password Recovery</div>
+                <div class="step-desc">"Forgot Password?" link → reset email → new password form</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">✅</div>
+            <div class="step-content">
+                <div class="step-title">Real News Headlines</div>
+                <div class="step-desc">Actual articles from Google News RSS, grouped by company, click to open in new tab</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">✅</div>
+            <div class="step-content">
+                <div class="step-title">Invitation Registration Flow</div>
+                <div class="step-desc">Investors click invite link → create account with password → auto login</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">✅</div>
+            <div class="step-content">
+                <div class="step-title">Soft Delete Invitations</div>
+                <div class="step-desc">Delete button hides invitations, frees up email for resending</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">✅</div>
+            <div class="step-content">
+                <div class="step-title">Correct Spanish Translations</div>
+                <div class="step-desc">Inversionista / Inversionistas throughout</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">✅</div>
+            <div class="step-content">
+                <div class="step-title">Railway Backend for Email</div>
+                <div class="step-desc">Brevo API key stored securely server-side, never in GitHub</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🔧 Your Configuration</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <div class="step-title">Supabase URL & Key</div>
+                <div class="step-desc"><code>wrojhaduvtpilxdmqryp.supabase.co</code> — already embedded</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <div class="step-title">Railway Backend</div>
+                <div class="step-desc"><code>silicon-corridor-backend-production.up.railway.app</code> — already embedded</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <div class="step-title">Storage Bucket</div>
+                <div class="step-desc"><code>investor-documents</code> — already embedded</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn" id="generateBtn">⬇️ Generate & Download index.html</button>
+    <div id="status"></div>
+</div>
+
+<script>
+document.getElementById('generateBtn').addEventListener('click', function() {
+    var btn = document.getElementById('generateBtn');
+    var status = document.getElementById('status');
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating...';
+    status.innerHTML = '<div class="alert alert-info">Building your complete portal file...</div>';
+
+    setTimeout(function() {
+        try {
+            var html = buildPortalHTML();
+            var blob = new Blob([html], { type: 'text/html' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            status.innerHTML = '<div class="alert alert-success">✅ Downloaded! Replace your old index.html with this file, then commit and push to GitHub.</div>';
+        } catch(e) {
+            status.innerHTML = '<div class="alert alert-warning">❌ Error: ' + e.message + '</div>';
+        }
+        btn.disabled = false;
+        btn.textContent = '⬇️ Generate & Download index.html';
+    }, 100);
+});
+
+function buildPortalHTML() {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silicon Corridor Ventures - Investor Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>
+    <style>
+        :root {
+            --purple: #6B3FA0; --purple-dark: #4A2570; --sky: #4AABCF; --teal: #3BBFAD;
+            --grad: linear-gradient(135deg, #6B3FA0 0%, #4AABCF 50%, #3BBFAD 100%);
+            --light: #F7F8FC; --white: #fff; --text: #1e293b; --muted: #64748b;
+            --border: #e2e8f0; --shadow: 0 4px 20px rgba(107,63,160,0.15);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; }
         .header { background: var(--grad); color: white; padding: 1rem 0; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
         .header-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
         .logo { display: flex; align-items: center; gap: 1rem; }
@@ -33,16 +239,12 @@
         .logo-text p { font-size: 0.8rem; opacity: 0.9; margin: 0; }
         .header-actions { display: flex; align-items: center; gap: 0.75rem; }
         .user-badge { background: rgba(255,255,255,0.2); color: white; padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-        .lang-toggle { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; font-family: inherit; }
-        .lang-toggle:hover { background: rgba(255,255,255,0.35); }
-
+        .lang-toggle { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
         .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-
         .auth-container { max-width: 420px; margin: 4rem auto; background: var(--white); border-radius: 16px; padding: 2.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .auth-header { text-align: center; margin-bottom: 2rem; }
         .auth-header h2 { color: var(--purple-dark); margin-bottom: 0.5rem; font-size: 1.5rem; }
         .auth-header p { color: var(--muted); font-size: 0.875rem; }
-
         .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--text); font-size: 0.9rem; }
         .form-input { width: 100%; padding: 0.8rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; transition: all 0.2s; font-family: inherit; background: white; color: var(--text); }
@@ -50,7 +252,6 @@
         .form-input:disabled { background: var(--light); cursor: not-allowed; }
         select.form-input { cursor: pointer; }
         textarea.form-input { resize: vertical; min-height: 90px; }
-
         .btn { padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: inherit; text-decoration: none; }
         .btn-primary { background: var(--grad); color: white; }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(107,63,160,0.3); }
@@ -65,8 +266,6 @@
         .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
         .btn-full { width: 100%; }
         .btn-link { background: none; border: none; color: var(--purple); cursor: pointer; font-size: 0.875rem; padding: 0; text-decoration: underline; font-family: inherit; }
-        .btn-link:hover { color: var(--purple-dark); }
-
         .dashboard { display: none; }
         .dashboard.active { display: block; }
         .dashboard-nav { background: var(--white); border-radius: 12px; padding: 0.875rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); display: flex; gap: 0.5rem; flex-wrap: wrap; }
@@ -75,23 +274,19 @@
         .nav-item:hover:not(.active) { background: var(--light); }
         .dashboard-section { display: none; }
         .dashboard-section.active { display: block; }
-
         .card { background: var(--white); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
         .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text); }
-
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; }
         .stat-card { background: var(--white); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
         .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--purple); margin-bottom: 0.4rem; }
         .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
-
         .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
         th { background: var(--light); padding: 0.75rem 1rem; text-align: left; font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
         td { padding: 0.875rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafbff; }
-
         .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
         .badge-success { background: #dcfce7; color: #166534; }
         .badge-warning { background: #fef9c3; color: #854d0e; }
@@ -99,13 +294,11 @@
         .badge-info { background: #dbeafe; color: #1e40af; }
         .badge-muted { background: var(--light); color: var(--muted); }
         .badge-purple { background: #f3e8ff; color: #6B3FA0; }
-
         .alert { padding: 0.875rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; }
         .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
         .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
         .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
         .alert-info { background: #f0f4ff; border: 1px solid #c7d2fe; color: #3730a3; }
-
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--white); border-radius: 16px; padding: 2rem; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.25); }
@@ -113,10 +306,8 @@
         .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
         .modal-title { font-size: 1.15rem; font-weight: 700; }
         .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0.25rem; }
-        .modal-close:hover { color: var(--text); }
         .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
         .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
         .upload-area:hover { border-color: var(--purple); background: rgba(107,63,160,0.04); }
         .upload-area input[type="file"] { display: none; }
@@ -124,7 +315,6 @@
         .upload-text { font-weight: 600; margin-bottom: 0.25rem; }
         .upload-hint { font-size: 0.8rem; color: var(--muted); }
         .upload-selected { margin-top: 0.75rem; font-weight: 600; color: var(--purple); font-size: 0.9rem; }
-
         .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); flex-wrap: wrap; gap: 0.75rem; transition: all 0.2s; }
         .doc-item:hover { border-color: var(--purple); }
         .doc-info { display: flex; align-items: center; gap: 0.875rem; }
@@ -133,7 +323,6 @@
         .doc-meta { font-size: 0.78rem; color: var(--muted); }
         .doc-rejection { font-size: 0.78rem; color: #dc2626; margin-top: 0.2rem; }
         .action-group { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-
         .opp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
         .opp-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; box-shadow: var(--shadow); }
         .opp-card:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(107,63,160,0.2); }
@@ -146,13 +335,11 @@
         .opp-label { color: var(--muted); font-weight: 500; }
         .opp-val { font-weight: 700; }
         .opp-desc { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
-
         .watchlist-item { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; background: var(--white); }
         .watchlist-name { font-weight: 600; font-size: 0.9rem; }
         .watchlist-ticker { font-size: 0.8rem; color: var(--purple); font-weight: 700; }
-
         .news-company-section { margin-bottom: 2rem; }
-        .news-company-header { font-size: 1rem; font-weight: 700; color: var(--purple); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+        .news-company-header { font-size: 1rem; font-weight: 700; color: var(--purple); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
         .news-item { padding: 0.875rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.5rem; background: var(--white); transition: all 0.2s; }
         .news-item:hover { border-color: var(--purple); background: #fafbff; }
         .news-headline { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
@@ -160,7 +347,6 @@
         .news-headline a:hover { color: var(--purple); }
         .news-meta { font-size: 0.75rem; color: var(--muted); display: flex; gap: 1rem; }
         .news-source { font-weight: 600; }
-
         .inv-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
         .inv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
         .inv-title { font-size: 1.05rem; font-weight: 700; }
@@ -168,7 +354,6 @@
         .inv-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; }
         .inv-detail-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
         .inv-detail-value { font-weight: 600; margin-top: 0.2rem; font-size: 0.9rem; }
-
         .loading { text-align: center; padding: 2.5rem; color: var(--muted); }
         .spinner { width: 36px; height: 36px; border: 4px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.75rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -176,16 +361,13 @@
         .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
         .empty-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
         .empty-sub { font-size: 0.875rem; }
-
         .hidden { display: none !important; }
         .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
         @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
         .password-strength { margin-top: 0.5rem; }
         .strength-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
         .strength-fill { height: 100%; border-radius: 2px; transition: all 0.3s; }
         .strength-text { font-size: 0.75rem; margin-top: 0.25rem; }
-
         @media (max-width: 768px) {
             .header-content { padding: 0 1rem; }
             .logo-text h1 { font-size: 1rem; }
@@ -219,9 +401,9 @@
             </div>
         </div>
         <div class="header-actions">
-            <button class="lang-toggle" onclick="toggleLanguage()"><span id="langText">ES</span></button>
+            <button class="lang-toggle" id="langToggleBtn"><span id="langText">ES</span></button>
             <span id="userBadge" class="user-badge hidden"></span>
-            <button id="logoutBtn" class="btn btn-secondary btn-sm hidden" onclick="logout()">
+            <button id="logoutBtn" class="btn btn-secondary btn-sm hidden">
                 <span data-en="Logout" data-es="Cerrar Sesión">Logout</span>
             </button>
         </div>
@@ -310,7 +492,7 @@
     <div class="auth-header">
         <div style="font-size:2.5rem;margin-bottom:0.5rem;">🎉</div>
         <h2 data-en="Create Your Account" data-es="Crear Su Cuenta">Create Your Account</h2>
-        <p id="registerSubtitle" data-en="You've been invited to join Silicon Corridor Ventures" data-es="Ha sido invitado a unirse a Silicon Corridor Ventures">You've been invited to join Silicon Corridor Ventures</p>
+        <p data-en="You've been invited to join Silicon Corridor Ventures" data-es="Ha sido invitado a unirse a Silicon Corridor Ventures">You've been invited to join Silicon Corridor Ventures</p>
     </div>
     <div class="alert alert-info" style="margin-bottom:1.5rem;">
         ℹ️ <span id="inviteWelcomeMsg">Welcome! Please create your password to access the investor portal.</span>
@@ -382,7 +564,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title" data-en="Investor Management" data-es="Gestión de Inversionistas">Investor Management</h3>
-                <button class="btn btn-primary btn-sm" onclick="openModal('inviteModal')">✉️ <span data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</span></button>
+                <button class="btn btn-primary btn-sm" id="openInviteModalBtn">✉️ <span data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</span></button>
             </div>
             <div class="table-wrap">
                 <table>
@@ -435,7 +617,7 @@
             <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
                 <input type="text" class="form-input" id="wlCompany" placeholder="Company name..." style="flex:1;min-width:180px;">
                 <input type="text" class="form-input" id="wlTicker" placeholder="Ticker (optional)" style="width:140px;">
-                <button class="btn btn-primary" onclick="addWatchlist()">➕ <span data-en="Add" data-es="Agregar">Add</span></button>
+                <button class="btn btn-primary" id="addWatchlistBtn">➕ <span data-en="Add" data-es="Agregar">Add</span></button>
             </div>
             <div id="watchlistList"><div class="loading"><div class="spinner"></div></div></div>
         </div>
@@ -445,7 +627,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title" data-en="Investment Opportunities" data-es="Oportunidades de Inversión">Investment Opportunities</h3>
-                <button class="btn btn-primary btn-sm" onclick="openOppModal()">➕ <span data-en="New Opportunity" data-es="Nueva Oportunidad">New Opportunity</span></button>
+                <button class="btn btn-primary btn-sm" id="openOppModalBtn">➕ <span data-en="New Opportunity" data-es="Nueva Oportunidad">New Opportunity</span></button>
             </div>
             <div id="adminOppList"><div class="loading"><div class="spinner"></div></div></div>
         </div>
@@ -488,14 +670,14 @@
                 <label data-en="Document Type" data-es="Tipo de Documento">Document Type</label>
                 <select class="form-input" id="uploadDocType"><option value="">— Select type —</option></select>
             </div>
-            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFile(this)">
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
                 <div class="upload-icon">📁</div>
                 <div class="upload-text" data-en="Click to upload or drag & drop" data-es="Haga clic para subir o arrastre">Click to upload or drag & drop</div>
                 <div class="upload-hint" data-en="PDF, JPG, PNG, DOC — max 10MB" data-es="PDF, JPG, PNG, DOC — máx 10MB">PDF, JPG, PNG, DOC — max 10MB</div>
                 <div class="upload-selected" id="uploadFileName"></div>
             </div>
-            <button class="btn btn-primary" style="margin-top:1rem;" onclick="uploadDoc()">⬆️ <span data-en="Upload" data-es="Subir">Upload</span></button>
+            <button class="btn btn-primary" style="margin-top:1rem;" id="uploadDocBtn">⬆️ <span data-en="Upload" data-es="Subir">Upload</span></button>
         </div>
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="My Documents" data-es="Mis Documentos">My Documents</h3></div>
@@ -507,7 +689,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h3>
-                <button class="btn btn-secondary btn-sm" onclick="loadNews()">🔄 Refresh</button>
+                <button class="btn btn-secondary btn-sm" id="refreshNewsBtn">🔄 Refresh</button>
             </div>
             <div id="newsContent"><div class="loading"><div class="spinner"></div></div></div>
         </div>
@@ -530,7 +712,7 @@
     <section id="invProfile" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="My Profile" data-es="Mi Perfil">My Profile</h3></div>
-            <form id="profileForm" onsubmit="saveProfile(event)">
+            <form id="profileForm">
                 <div class="form-group"><label data-en="Full Name" data-es="Nombre Completo">Full Name</label><input type="text" class="form-input" id="pName"></div>
                 <div class="form-group"><label data-en="Email" data-es="Correo">Email</label><input type="email" class="form-input" id="pEmail" disabled></div>
                 <div class="form-group"><label data-en="Phone" data-es="Teléfono">Phone</label><input type="tel" class="form-input" id="pPhone"></div>
@@ -548,7 +730,7 @@
     <div class="modal">
         <div class="modal-header">
             <h3 class="modal-title" data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</h3>
-            <button class="modal-close" onclick="closeModal('inviteModal')">×</button>
+            <button class="modal-close" id="closeInviteModalBtn">×</button>
         </div>
         <div class="form-group"><label data-en="Full Name" data-es="Nombre Completo">Full Name</label><input type="text" class="form-input" id="iName" placeholder="John Doe"></div>
         <div class="form-group"><label data-en="Email Address" data-es="Correo Electrónico">Email Address</label><input type="email" class="form-input" id="iEmail" placeholder="investor@example.com"></div>
@@ -561,8 +743,8 @@
             </select>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('inviteModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="sendInvite()">✉️ <span data-en="Send Invitation" data-es="Enviar Invitación">Send Invitation</span></button>
+            <button class="btn btn-secondary" id="cancelInviteBtn">Cancel</button>
+            <button class="btn btn-primary" id="sendInviteBtn">✉️ <span data-en="Send Invitation" data-es="Enviar Invitación">Send Invitation</span></button>
         </div>
     </div>
 </div>
@@ -572,13 +754,13 @@
     <div class="modal">
         <div class="modal-header">
             <h3 class="modal-title" data-en="Reject Document" data-es="Rechazar Documento">Reject Document</h3>
-            <button class="modal-close" onclick="closeModal('rejectModal')">×</button>
+            <button class="modal-close" id="closeRejectModalBtn">×</button>
         </div>
         <div class="form-group"><label data-en="Reason for Rejection" data-es="Razón del Rechazo">Reason for Rejection</label><textarea class="form-input" id="rejectReason" placeholder="Please provide a clear reason..."></textarea></div>
         <input type="hidden" id="rejectDocId">
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('rejectModal')">Cancel</button>
-            <button class="btn btn-danger" onclick="confirmReject()">❌ <span data-en="Reject" data-es="Rechazar">Reject</span></button>
+            <button class="btn btn-secondary" id="cancelRejectBtn">Cancel</button>
+            <button class="btn btn-danger" id="confirmRejectBtn">❌ <span data-en="Reject" data-es="Rechazar">Reject</span></button>
         </div>
     </div>
 </div>
@@ -588,7 +770,7 @@
     <div class="modal modal-lg">
         <div class="modal-header">
             <h3 class="modal-title" id="oppModalTitle">New Opportunity</h3>
-            <button class="modal-close" onclick="closeModal('oppModal')">×</button>
+            <button class="modal-close" id="closeOppModalBtn">×</button>
         </div>
         <input type="hidden" id="oppId">
         <div class="form-group"><label>Title</label><input type="text" class="form-input" id="oppTitle" placeholder="Investment opportunity title"></div>
@@ -614,321 +796,225 @@
             </select>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('oppModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="saveOpp()">💾 Save</button>
+            <button class="btn btn-secondary" id="cancelOppBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveOppBtn">💾 Save</button>
         </div>
     </div>
 </div>
 
 <script>
-// ============================================================
-// CONFIG
-// ============================================================
-const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-const BACKEND_URL   = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
-const BUCKET        = 'investor-documents';
+var SUPABASE_URL = 'https://wrojhaduvtpilxdmqryp.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
+var BACKEND_URL = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
+var BUCKET = 'investor-documents';
 
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser = null, userProfile = null, lang = 'en';
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var currentUser = null, userProfile = null, lang = 'en';
 
-// ============================================================
 // LANGUAGE
-// ============================================================
 function toggleLanguage() {
     lang = lang === 'en' ? 'es' : 'en';
     document.getElementById('langText').textContent = lang === 'en' ? 'ES' : 'EN';
     updateLang();
 }
 function updateLang() {
-    document.querySelectorAll('[data-en][data-es]').forEach(el => {
-        const t = el.getAttribute('data-' + lang);
+    document.querySelectorAll('[data-en][data-es]').forEach(function(el) {
+        var t = el.getAttribute('data-' + lang);
         if (t) el.textContent = t;
     });
 }
 
-// ============================================================
 // NOTIFICATIONS
-// ============================================================
 function notify(msg, type, ms) {
-    type = type || 'info';
-    ms = ms || 5000;
+    type = type || 'info'; ms = ms || 5000;
     var icons = { success:'✅', warning:'⚠️', danger:'❌', info:'ℹ️' };
     var n = document.createElement('div');
     n.className = 'alert alert-' + type;
     n.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;min-width:300px;max-width:480px;animation:slideIn 0.3s ease;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.15);';
-    n.innerHTML = '<span>' + (icons[type]||'ℹ️') + '</span><span style="flex:1">' + msg + '</span><button onclick="this.parentElement.remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:inherit;">×</button>';
+    n.innerHTML = '<span>' + (icons[type]||'ℹ️') + '</span><span style="flex:1">' + msg + '</span><button style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:inherit;" onclick="this.parentElement.remove()">×</button>';
     document.body.appendChild(n);
     setTimeout(function() { if (n.isConnected) n.remove(); }, ms);
     n.addEventListener('click', function() { n.remove(); });
 }
 
-// ============================================================
 // MODALS
-// ============================================================
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 document.querySelectorAll('.modal-overlay').forEach(function(o) {
     o.addEventListener('click', function(e) { if (e.target === o) o.classList.remove('active'); });
 });
 
-// ============================================================
-// SHOW/HIDE CONTAINERS
-// ============================================================
-var allAuthContainers = ['authContainer','forgotContainer','resetContainer','registerContainer','invalidInviteContainer'];
-
-function hideAllAuth() {
-    allAuthContainers.forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-    });
-}
-
-function showLogin() {
-    hideAllAuth();
-    document.getElementById('authContainer').classList.remove('hidden');
-}
-function showForgotPassword() {
-    hideAllAuth();
-    document.getElementById('forgotContainer').classList.remove('hidden');
-}
-function showResetPassword() {
-    hideAllAuth();
-    document.getElementById('resetContainer').classList.remove('hidden');
-}
-function showRegister() {
-    hideAllAuth();
-    document.getElementById('registerContainer').classList.remove('hidden');
-}
+// AUTH CONTAINERS
+var AUTH_IDS = ['authContainer','forgotContainer','resetContainer','registerContainer','invalidInviteContainer'];
+function hideAllAuth() { AUTH_IDS.forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.add('hidden'); }); }
+function showLogin() { hideAllAuth(); document.getElementById('authContainer').classList.remove('hidden'); }
+function showForgotPassword() { hideAllAuth(); document.getElementById('forgotContainer').classList.remove('hidden'); }
+function showResetPassword() { hideAllAuth(); document.getElementById('resetContainer').classList.remove('hidden'); }
+function showRegister() { hideAllAuth(); document.getElementById('registerContainer').classList.remove('hidden'); }
 function showInvalidInvite(msg) {
     hideAllAuth();
     document.getElementById('invalidInviteContainer').classList.remove('hidden');
     document.getElementById('invalidInviteMsg').textContent = msg || 'This invitation link is invalid or has expired.';
 }
 
-// Wire up buttons
+// WIRE UP BUTTONS
+document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
+document.getElementById('logoutBtn').addEventListener('click', logout);
 document.getElementById('forgotPasswordLink').addEventListener('click', showForgotPassword);
 document.getElementById('backToLoginLink').addEventListener('click', showLogin);
 document.getElementById('backFromInvalidBtn').addEventListener('click', showLogin);
+document.getElementById('openInviteModalBtn').addEventListener('click', function() { openModal('inviteModal'); });
+document.getElementById('closeInviteModalBtn').addEventListener('click', function() { closeModal('inviteModal'); });
+document.getElementById('cancelInviteBtn').addEventListener('click', function() { closeModal('inviteModal'); });
+document.getElementById('sendInviteBtn').addEventListener('click', sendInvite);
+document.getElementById('closeRejectModalBtn').addEventListener('click', function() { closeModal('rejectModal'); });
+document.getElementById('cancelRejectBtn').addEventListener('click', function() { closeModal('rejectModal'); });
+document.getElementById('confirmRejectBtn').addEventListener('click', confirmReject);
+document.getElementById('openOppModalBtn').addEventListener('click', openOppModal);
+document.getElementById('closeOppModalBtn').addEventListener('click', function() { closeModal('oppModal'); });
+document.getElementById('cancelOppBtn').addEventListener('click', function() { closeModal('oppModal'); });
+document.getElementById('saveOppBtn').addEventListener('click', saveOpp);
+document.getElementById('addWatchlistBtn').addEventListener('click', addWatchlist);
+document.getElementById('uploadArea').addEventListener('click', function() { document.getElementById('fileInput').click(); });
+document.getElementById('fileInput').addEventListener('change', function() { handleFile(this); });
+document.getElementById('uploadDocBtn').addEventListener('click', uploadDoc);
+document.getElementById('refreshNewsBtn').addEventListener('click', loadNews);
 
-// ============================================================
 // PASSWORD STRENGTH
-// ============================================================
 function checkStrength(password, fillId, textId) {
     var fill = document.getElementById(fillId);
     var text = document.getElementById(textId);
-    var strength = 0;
-    if (password.length >= 8) strength++;
-    if (password.length >= 12) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    var s = 0;
+    if (password.length >= 8) s++;
+    if (password.length >= 12) s++;
+    if (/[A-Z]/.test(password)) s++;
+    if (/[0-9]/.test(password)) s++;
+    if (/[^A-Za-z0-9]/.test(password)) s++;
     var levels = [
-        { pct: '20%', color: '#dc2626', label: 'Very Weak' },
-        { pct: '40%', color: '#f97316', label: 'Weak' },
-        { pct: '60%', color: '#eab308', label: 'Fair' },
-        { pct: '80%', color: '#22c55e', label: 'Strong' },
-        { pct: '100%', color: '#16a34a', label: 'Very Strong' }
+        {pct:'20%',color:'#dc2626',label:'Very Weak'},
+        {pct:'40%',color:'#f97316',label:'Weak'},
+        {pct:'60%',color:'#eab308',label:'Fair'},
+        {pct:'80%',color:'#22c55e',label:'Strong'},
+        {pct:'100%',color:'#16a34a',label:'Very Strong'}
     ];
-    var level = levels[Math.min(strength - 1, 4)] || { pct: '0%', color: '#dc2626', label: '' };
-    fill.style.width = password.length > 0 ? level.pct : '0%';
-    fill.style.background = level.color;
-    text.textContent = password.length > 0 ? level.label : '';
-    text.style.color = level.color;
+    var lv = levels[Math.min(s-1,4)] || {pct:'0%',color:'#dc2626',label:''};
+    fill.style.width = password.length > 0 ? lv.pct : '0%';
+    fill.style.background = lv.color;
+    text.textContent = password.length > 0 ? lv.label : '';
+    text.style.color = lv.color;
 }
+document.getElementById('regPassword').addEventListener('input', function() { checkStrength(this.value,'strengthFill','strengthText'); });
+document.getElementById('resetPassword').addEventListener('input', function() { checkStrength(this.value,'strengthFill2','strengthText2'); });
 
-document.getElementById('regPassword').addEventListener('input', function() {
-    checkStrength(this.value, 'strengthFill', 'strengthText');
-});
-document.getElementById('resetPassword').addEventListener('input', function() {
-    checkStrength(this.value, 'strengthFill2', 'strengthText2');
-});
-
-// ============================================================
 // FORGOT PASSWORD
-// ============================================================
 document.getElementById('forgotForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     var email = document.getElementById('forgotEmail').value.trim();
     var btn = document.getElementById('forgotBtn');
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
+    btn.disabled = true; btn.textContent = 'Sending...';
     try {
-        var redirectTo = window.location.origin + window.location.pathname;
-        var result = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
-        if (result.error) throw result.error;
+        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
+        if (r.error) throw r.error;
         notify('Password reset link sent to ' + email + '. Please check your inbox.', 'success', 10000);
         showLogin();
-    } catch (err) {
-        notify('Error: ' + err.message, 'danger');
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '📧 <span>Send Reset Link</span>';
-    }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
+    finally { btn.disabled = false; btn.innerHTML = '📧 <span>Send Reset Link</span>'; }
 });
 
-// ============================================================
 // RESET PASSWORD
-// ============================================================
 document.getElementById('resetForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    var password = document.getElementById('resetPassword').value;
-    var passwordConfirm = document.getElementById('resetPasswordConfirm').value;
+    var pw = document.getElementById('resetPassword').value;
+    var pw2 = document.getElementById('resetPasswordConfirm').value;
     var btn = document.getElementById('resetBtn');
-    if (password.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
-    if (password !== passwordConfirm) { notify('Passwords do not match', 'warning'); return; }
-    btn.disabled = true;
-    btn.textContent = 'Updating...';
+    if (pw.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
+    if (pw !== pw2) { notify('Passwords do not match', 'warning'); return; }
+    btn.disabled = true; btn.textContent = 'Updating...';
     try {
-        var result = await sb.auth.updateUser({ password: password });
-        if (result.error) throw result.error;
+        var r = await sb.auth.updateUser({ password: pw });
+        if (r.error) throw r.error;
         notify('Password updated successfully! Please log in.', 'success', 8000);
         window.history.replaceState({}, document.title, window.location.pathname);
         showLogin();
-    } catch (err) {
-        notify('Error: ' + err.message, 'danger');
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '🔐 <span>Update Password</span>';
-    }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
+    finally { btn.disabled = false; btn.innerHTML = '🔐 <span>Update Password</span>'; }
 });
 
-// ============================================================
 // INVITATION FLOW
-// ============================================================
 async function checkInviteToken() {
     var params = new URLSearchParams(window.location.search);
     var token = params.get('invite');
     if (!token) return false;
-
     try {
-        var result = await sb.from('invitations')
-            .select('*')
-            .eq('token', token)
-            .is('deleted_at', null)
-            .single();
-
-        var data = result.data;
-        var error = result.error;
-
-        if (error || !data) {
-            showInvalidInvite('This invitation link is invalid. Please contact your administrator.');
-            return true;
-        }
-        if (new Date(data.expires_at) < new Date()) {
-            showInvalidInvite('This invitation has expired. Please ask your administrator to send a new one.');
-            return true;
-        }
-        if (data.status === 'accepted') {
-            showInvalidInvite('This invitation has already been used. Please log in with your existing account.');
-            return true;
-        }
-
+        var r = await sb.from('invitations').select('*').eq('token', token).is('deleted_at', null).single();
+        if (r.error || !r.data) { showInvalidInvite('This invitation link is invalid. Please contact your administrator.'); return true; }
+        var data = r.data;
+        if (new Date(data.expires_at) < new Date()) { showInvalidInvite('This invitation has expired. Please ask your administrator to send a new one.'); return true; }
+        if (data.status === 'accepted') { showInvalidInvite('This invitation has already been used. Please log in with your existing account.'); return true; }
         document.getElementById('regName').value = data.name || '';
         document.getElementById('regEmail').value = data.email || '';
         document.getElementById('inviteWelcomeMsg').textContent = 'Welcome, ' + data.name + '! Please create your password to access the Silicon Corridor Ventures Investor Portal.';
-
-        window._inviteToken = token;
         window._inviteId = data.id;
         window._inviteEmail = data.email;
         window._inviteName = data.name;
-
         showRegister();
         return true;
-    } catch (err) {
-        showInvalidInvite('An error occurred validating your invitation. Please try again.');
-        return true;
-    }
+    } catch(err) { showInvalidInvite('An error occurred validating your invitation. Please try again.'); return true; }
 }
 
-// ============================================================
-// REGISTRATION FORM
-// ============================================================
+// REGISTRATION
 document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     var name = document.getElementById('regName').value.trim();
     var email = document.getElementById('regEmail').value.trim();
-    var password = document.getElementById('regPassword').value;
-    var passwordConfirm = document.getElementById('regPasswordConfirm').value;
+    var pw = document.getElementById('regPassword').value;
+    var pw2 = document.getElementById('regPasswordConfirm').value;
     var btn = document.getElementById('registerBtn');
-
     if (!name) { notify('Please enter your full name', 'warning'); return; }
-    if (password.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
-    if (password !== passwordConfirm) { notify('Passwords do not match', 'warning'); return; }
-
-    btn.disabled = true;
-    btn.textContent = 'Creating account...';
-
+    if (pw.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
+    if (pw !== pw2) { notify('Passwords do not match', 'warning'); return; }
+    btn.disabled = true; btn.textContent = 'Creating account...';
     try {
-        var authResult = await sb.auth.signUp({
-            email: email,
-            password: password,
-            options: { data: { full_name: name } }
-        });
-
-        if (authResult.error) throw authResult.error;
-        var userId = authResult.data.user && authResult.data.user.id;
+        var ar = await sb.auth.signUp({ email: email, password: pw, options: { data: { full_name: name } } });
+        if (ar.error) throw ar.error;
+        var userId = ar.data.user && ar.data.user.id;
         if (!userId) throw new Error('Failed to create user account');
-
-        await sb.from('profiles').upsert({
-            id: userId, full_name: name, email: email,
-            role: 'investor', status: 'active',
-            created_at: new Date().toISOString()
-        });
-
-        await sb.from('invitations').update({
-            status: 'accepted', user_id: userId,
-            used_at: new Date().toISOString()
-        }).eq('id', window._inviteId);
-
-        var signInResult = await sb.auth.signInWithPassword({ email: email, password: password });
-        if (signInResult.error) throw signInResult.error;
-
-        currentUser = signInResult.data.user;
+        await sb.from('profiles').upsert({ id: userId, full_name: name, email: email, role: 'investor', status: 'active', created_at: new Date().toISOString() });
+        await sb.from('invitations').update({ status: 'accepted', user_id: userId, used_at: new Date().toISOString() }).eq('id', window._inviteId);
+        var sr = await sb.auth.signInWithPassword({ email: email, password: pw });
+        if (sr.error) throw sr.error;
+        currentUser = sr.data.user;
         userProfile = { id: userId, full_name: name, email: email, role: 'investor', status: 'active' };
-
         window.history.replaceState({}, document.title, window.location.pathname);
         notify('Welcome to Silicon Corridor Ventures, ' + name + '! 🎉', 'success', 8000);
         showDashboard();
-    } catch (err) {
-        notify('Registration failed: ' + err.message, 'danger');
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '🚀 <span>Create Account & Sign In</span>';
-    }
+    } catch(err) { notify('Registration failed: ' + err.message, 'danger'); }
+    finally { btn.disabled = false; btn.innerHTML = '🚀 <span>Create Account & Sign In</span>'; }
 });
 
-// ============================================================
-// AUTH
-// ============================================================
+// LOGIN
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     var email = document.getElementById('loginEmail').value.trim();
-    var pass  = document.getElementById('loginPassword').value;
-    var btn   = document.getElementById('loginBtn');
-    btn.disabled = true;
-    btn.textContent = '...';
+    var pass = document.getElementById('loginPassword').value;
+    var btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.textContent = '...';
     try {
-        var result = await sb.auth.signInWithPassword({ email: email, password: pass });
-        if (result.error) throw result.error;
-        currentUser = result.data.user;
+        var r = await sb.auth.signInWithPassword({ email: email, password: pass });
+        if (r.error) throw r.error;
+        currentUser = r.data.user;
         await fetchProfile();
         showDashboard();
-    } catch (err) {
-        notify('Login failed: ' + err.message, 'danger');
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>';
-        updateLang();
-    }
+    } catch(err) { notify('Login failed: ' + err.message, 'danger'); }
+    finally { btn.disabled = false; btn.innerHTML = '<span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>'; updateLang(); }
 });
 
 async function fetchProfile() {
     try {
-        var result = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-        if (result.error) throw result.error;
-        userProfile = result.data;
-    } catch (err) {
+        var r = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+        if (r.error) throw r.error;
+        userProfile = r.data;
+    } catch(err) {
         console.warn('Profile fetch error:', err.message);
         userProfile = { role: 'investor', full_name: currentUser.email, email: currentUser.email, status: 'active' };
     }
@@ -939,15 +1025,14 @@ function showDashboard() {
     document.getElementById('logoutBtn').classList.remove('hidden');
     var badge = document.getElementById('userBadge');
     badge.classList.remove('hidden');
-    badge.textContent = userProfile && userProfile.full_name ? userProfile.full_name : currentUser.email;
-
+    badge.textContent = (userProfile && userProfile.full_name) ? userProfile.full_name : currentUser.email;
     var role = userProfile && userProfile.role;
     if (role === 'admin' || role === 'compliance') {
         document.getElementById('adminDashboard').classList.add('active');
         loadAdminStats(); loadInvestors(); loadInvitations(); loadAdminDocs(); loadWatchlist(); loadOpps('admin');
     } else {
         document.getElementById('investorDashboard').classList.add('active');
-        document.getElementById('invName').textContent = userProfile && userProfile.full_name ? userProfile.full_name : '';
+        document.getElementById('invName').textContent = (userProfile && userProfile.full_name) ? userProfile.full_name : '';
         loadInvOverview(); loadDocTypes(); loadInvDocs(); loadOpps('investor'); loadInvestments(); fillProfile();
     }
 }
@@ -964,9 +1049,7 @@ async function logout() {
     notify('Logged out successfully', 'success');
 }
 
-// ============================================================
 // NAVIGATION
-// ============================================================
 function adminNav(el) {
     document.querySelectorAll('#adminDashboard .nav-item').forEach(function(n) { n.classList.remove('active'); });
     el.classList.add('active');
@@ -981,9 +1064,7 @@ function investorNav(el) {
     if (el.dataset.section === 'invNews') loadNews();
 }
 
-// ============================================================
 // HELPERS
-// ============================================================
 function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }); }
 function fmtMoney(n) { if (!n) return '—'; return Number(n).toLocaleString('en-US'); }
 function fmtSize(b) { if (!b) return ''; if (b < 1024) return b + ' B'; if (b < 1048576) return (b/1024).toFixed(1) + ' KB'; return (b/1048576).toFixed(1) + ' MB'; }
@@ -1001,164 +1082,124 @@ function oppBadge(s) {
     return '<span class="badge ' + (map[s]||'badge-muted') + '">' + (labels[s]||s) + '</span>';
 }
 function docUrl(path) {
-    var result = sb.storage.from(BUCKET).getPublicUrl(path);
-    return (result.data && result.data.publicUrl) ? result.data.publicUrl : '#';
+    var r = sb.storage.from(BUCKET).getPublicUrl(path);
+    return (r.data && r.data.publicUrl) ? r.data.publicUrl : '#';
 }
 function emptyState(icon, title, sub) {
-    sub = sub || '';
     return '<div class="empty-state"><div class="empty-icon">' + icon + '</div><div class="empty-title">' + title + '</div>' + (sub ? '<div class="empty-sub">' + sub + '</div>' : '') + '</div>';
 }
 
-// ============================================================
-// ADMIN: STATS
-// ============================================================
+// ADMIN STATS
 async function loadAdminStats() {
     try {
-        var result = await sb.from('admin_stats').select('*').single();
-        if (result.error) throw result.error;
-        var data = result.data;
-        document.getElementById('sTotalInv').textContent    = data.total_investors != null ? data.total_investors : 0;
-        document.getElementById('sActiveInv').textContent   = data.active_investors != null ? data.active_investors : 0;
-        document.getElementById('sPendingDocs').textContent  = data.pending_documents != null ? data.pending_documents : 0;
-        document.getElementById('sPendingInv').textContent   = data.pending_invitations != null ? data.pending_invitations : 0;
-        document.getElementById('sAcceptedInv').textContent  = data.accepted_invitations != null ? data.accepted_invitations : 0;
-    } catch (err) { console.error('Stats:', err.message); }
+        var r = await sb.from('admin_stats').select('*').single();
+        if (r.error) throw r.error;
+        var d = r.data;
+        document.getElementById('sTotalInv').textContent = d.total_investors != null ? d.total_investors : 0;
+        document.getElementById('sActiveInv').textContent = d.active_investors != null ? d.active_investors : 0;
+        document.getElementById('sPendingDocs').textContent = d.pending_documents != null ? d.pending_documents : 0;
+        document.getElementById('sPendingInv').textContent = d.pending_invitations != null ? d.pending_invitations : 0;
+        document.getElementById('sAcceptedInv').textContent = d.accepted_invitations != null ? d.accepted_invitations : 0;
+    } catch(err) { console.error('Stats:', err.message); }
 }
 
-// ============================================================
-// ADMIN: INVESTORS
-// ============================================================
+// ADMIN INVESTORS
 async function loadInvestors() {
     try {
-        var result = await sb.from('profiles').select('*').eq('role','investor').order('created_at', { ascending: false });
-        if (result.error) throw result.error;
-        var data = result.data;
+        var r = await sb.from('profiles').select('*').eq('role','investor').order('created_at', { ascending: false });
+        if (r.error) throw r.error;
         var tbody = document.getElementById('investorsBody');
-        if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="5">' + emptyState('👥','No investors yet','Invite investors using the button above') + '</td></tr>'; return; }
-        tbody.innerHTML = data.map(function(r) {
-            return '<tr><td><strong>' + (r.full_name||'—') + '</strong></td><td>' + r.email + '</td><td>' + statusBadge(r.status) + '</td><td>' + fmtDate(r.created_at) + '</td><td><div class="action-group">' +
-                (r.status === 'active'
-                    ? '<button class="btn btn-warning btn-sm" onclick="setInvestorStatus(\'' + r.id + '\',\'suspended\')">🚫 Suspend</button>'
-                    : '<button class="btn btn-success btn-sm" onclick="setInvestorStatus(\'' + r.id + '\',\'active\')">✅ Activate</button>') +
-                '</div></td></tr>';
+        if (!r.data || !r.data.length) { tbody.innerHTML = '<tr><td colspan="5">' + emptyState('👥','No investors yet','Invite investors using the button above') + '</td></tr>'; return; }
+        tbody.innerHTML = r.data.map(function(row) {
+            return '<tr><td><strong>' + (row.full_name||'—') + '</strong></td><td>' + row.email + '</td><td>' + statusBadge(row.status) + '</td><td>' + fmtDate(row.created_at) + '</td><td>' +
+                (row.status === 'active'
+                    ? '<button class="btn btn-warning btn-sm" onclick="setInvestorStatus(\'' + row.id + '\',\'suspended\')">🚫 Suspend</button>'
+                    : '<button class="btn btn-success btn-sm" onclick="setInvestorStatus(\'' + row.id + '\',\'active\')">✅ Activate</button>') +
+                '</td></tr>';
         }).join('');
-    } catch (err) { document.getElementById('investorsBody').innerHTML = '<tr><td colspan="5">Error: ' + err.message + '</td></tr>'; }
+    } catch(err) { document.getElementById('investorsBody').innerHTML = '<tr><td colspan="5">Error: ' + err.message + '</td></tr>'; }
 }
 
 async function setInvestorStatus(id, status) {
     try {
-        var result = await sb.from('profiles').update({ status: status }).eq('id', id);
-        if (result.error) throw result.error;
+        var r = await sb.from('profiles').update({ status: status }).eq('id', id);
+        if (r.error) throw r.error;
         notify('Investor ' + (status === 'active' ? 'activated' : 'suspended'), 'success');
         loadInvestors(); loadAdminStats();
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
-// ============================================================
-// ADMIN: INVITATIONS
-// ============================================================
+// ADMIN INVITATIONS
 async function loadInvitations() {
     try {
-        var result = await sb.from('invitations').select('*').is('deleted_at', null).order('created_at', { ascending: false });
-        if (result.error) throw result.error;
-        var data = result.data;
+        var r = await sb.from('invitations').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+        if (r.error) throw r.error;
         var tbody = document.getElementById('invitationsBody');
-        if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="5">' + emptyState('✉️','No invitations sent yet') + '</td></tr>'; return; }
-        tbody.innerHTML = data.map(function(r) {
-            return '<tr><td>' + r.name + '</td><td>' + r.email + '</td><td>' + invBadge(r.status) + '</td><td>' + fmtDate(r.expires_at) + '</td><td><button class="btn btn-danger btn-sm" onclick="softDeleteInvitation(\'' + r.id + '\', \'' + r.email + '\')">🗑️ Delete</button></td></tr>';
+        if (!r.data || !r.data.length) { tbody.innerHTML = '<tr><td colspan="5">' + emptyState('✉️','No invitations sent yet') + '</td></tr>'; return; }
+        tbody.innerHTML = r.data.map(function(row) {
+            return '<tr><td>' + row.name + '</td><td>' + row.email + '</td><td>' + invBadge(row.status) + '</td><td>' + fmtDate(row.expires_at) + '</td><td><button class="btn btn-danger btn-sm" onclick="softDeleteInvitation(\'' + row.id + '\',\'' + row.email + '\')">🗑️ Delete</button></td></tr>';
         }).join('');
-    } catch (err) { console.error('Invitations:', err.message); }
+    } catch(err) { console.error('Invitations:', err.message); }
 }
 
 async function softDeleteInvitation(id, email) {
     if (!confirm('Hide invitation for ' + email + '? You will be able to resend a new invitation to this address.')) return;
     try {
-        var deletedEmail = email + '_deleted_' + Date.now();
-        var result = await sb.from('invitations').update({ deleted_at: new Date().toISOString(), email: deletedEmail }).eq('id', id);
-        if (result.error) throw result.error;
+        var r = await sb.from('invitations').update({ deleted_at: new Date().toISOString(), email: email + '_deleted_' + Date.now() }).eq('id', id);
+        if (r.error) throw r.error;
         notify('Invitation for ' + email + ' removed. You can now resend an invitation to this address.', 'success');
         loadInvitations(); loadAdminStats();
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
-// ============================================================
-// SEND INVITE
-// ============================================================
 async function sendInvite() {
-    var name   = document.getElementById('iName').value.trim();
-    var email  = document.getElementById('iEmail').value.trim();
+    var name = document.getElementById('iName').value.trim();
+    var email = document.getElementById('iEmail').value.trim();
     var expiry = parseInt(document.getElementById('iExpiry').value);
-
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
-
     try {
-        var existResult = await sb.from('invitations').select('id').eq('email', email).is('deleted_at', null).maybeSingle();
-        if (existResult.data) {
-            notify('An active invitation for ' + email + ' already exists. Please delete it first before resending.', 'warning');
-            return;
-        }
-
-        var array = new Uint8Array(32);
-        crypto.getRandomValues(array);
-        var token = btoa(String.fromCharCode.apply(null, array)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-
-        var expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + expiry);
-
-        var insertResult = await sb.from('invitations').insert({
-            name: name, email: email, token: token,
-            expires_at: expiresAt.toISOString(),
-            created_by: currentUser.id, status: 'pending'
-        });
-
-        if (insertResult.error) throw insertResult.error;
-
+        var er = await sb.from('invitations').select('id').eq('email', email).is('deleted_at', null).maybeSingle();
+        if (er.data) { notify('An active invitation for ' + email + ' already exists. Please delete it first before resending.', 'warning'); return; }
+        var arr = new Uint8Array(32);
+        crypto.getRandomValues(arr);
+        var token = btoa(String.fromCharCode.apply(null, arr)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+        var exp = new Date(); exp.setDate(exp.getDate() + expiry);
+        var ir = await sb.from('invitations').insert({ name: name, email: email, token: token, expires_at: exp.toISOString(), created_by: currentUser.id, status: 'pending' });
+        if (ir.error) throw ir.error;
         var sent = await sendEmailViaBackend(name, email, token, expiry);
-
         closeModal('inviteModal');
-        document.getElementById('iName').value  = '';
+        document.getElementById('iName').value = '';
         document.getElementById('iEmail').value = '';
-
         notify(sent ? 'Invitation sent to ' + email : 'Invitation created but email failed. Please check the Railway backend.', sent ? 'success' : 'warning', sent ? 5000 : 10000);
-
         loadInvitations(); loadAdminStats();
-    } catch (err) {
-        notify('Error sending invitation: ' + err.message, 'danger');
-    }
+    } catch(err) { notify('Error sending invitation: ' + err.message, 'danger'); }
 }
 
 async function sendEmailViaBackend(name, email, token, expiry) {
     var inviteUrl = window.location.origin + window.location.pathname + '?invite=' + token;
     try {
-        var res = await fetch(BACKEND_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name, email: email, token: token, expiry: expiry, inviteUrl: inviteUrl })
-        });
-        if (!res.ok) { console.error('Backend error:', await res.json().catch(function() { return {}; })); return false; }
+        var res = await fetch(BACKEND_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: name, email: email, token: token, expiry: expiry, inviteUrl: inviteUrl }) });
+        if (!res.ok) { console.error('Backend error'); return false; }
         return true;
-    } catch (err) { console.error('Backend call failed:', err); return false; }
+    } catch(err) { console.error('Backend call failed:', err); return false; }
 }
 
-// ============================================================
-// ADMIN: DOCUMENTS
-// ============================================================
+// ADMIN DOCUMENTS
 async function loadAdminDocs() {
     var filter = document.getElementById('docFilter').value;
     try {
         var q = sb.from('documents').select('*,profiles!documents_user_id_fkey(full_name,email),document_types(name)').order('uploaded_at', { ascending: false });
         if (filter !== 'all') q = q.eq('status', filter);
-        var result = await q;
-        if (result.error) throw result.error;
-        var data = result.data;
+        var r = await q;
+        if (r.error) throw r.error;
         var el = document.getElementById('adminDocsList');
-        if (!data || !data.length) { el.innerHTML = emptyState('📄','No documents found'); return; }
-        el.innerHTML = data.map(function(d) {
-            var typeName = d.document_types && d.document_types.name ? d.document_types.name.replace(/_/g,' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); }) : d.file_name;
-            var profileName = (d.profiles && (d.profiles.full_name || d.profiles.email)) || 'Unknown';
-            return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">📄</span><div><div class="doc-name">' + typeName + '</div><div class="doc-meta">👤 ' + profileName + ' • ' + fmtDate(d.uploaded_at) + ' • ' + fmtSize(d.file_size) + '</div>' + (d.rejection_reason ? '<div class="doc-rejection">Reason: ' + d.rejection_reason + '</div>' : '') + '</div></div><div class="action-group">' + statusBadge(d.status) + '<a href="' + docUrl(d.file_path) + '" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>' + (d.status === 'pending' ? '<button class="btn btn-success btn-sm" onclick="reviewDoc(\'' + d.id + '\',\'approved\')">✅ Approve</button><button class="btn btn-danger btn-sm" onclick="openReject(\'' + d.id + '\')">❌ Reject</button>' : '') + '</div></div>';
+        if (!r.data || !r.data.length) { el.innerHTML = emptyState('📄','No documents found'); return; }
+        el.innerHTML = r.data.map(function(d) {
+            var tn = (d.document_types && d.document_types.name) ? d.document_types.name.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) : d.file_name;
+            var pn = (d.profiles && (d.profiles.full_name || d.profiles.email)) || 'Unknown';
+            return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">📄</span><div><div class="doc-name">' + tn + '</div><div class="doc-meta">👤 ' + pn + ' • ' + fmtDate(d.uploaded_at) + ' • ' + fmtSize(d.file_size) + '</div>' + (d.rejection_reason ? '<div class="doc-rejection">Reason: ' + d.rejection_reason + '</div>' : '') + '</div></div><div class="action-group">' + statusBadge(d.status) + '<a href="' + docUrl(d.file_path) + '" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>' + (d.status === 'pending' ? '<button class="btn btn-success btn-sm" onclick="reviewDoc(\'' + d.id + '\',\'approved\')">✅ Approve</button><button class="btn btn-danger btn-sm" onclick="openReject(\'' + d.id + '\')">❌ Reject</button>' : '') + '</div></div>';
         }).join('');
-    } catch (err) { document.getElementById('adminDocsList').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
+    } catch(err) { document.getElementById('adminDocsList').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
 }
 
 async function reviewDoc(id, status, reason) {
@@ -1166,11 +1207,11 @@ async function reviewDoc(id, status, reason) {
     try {
         var upd = { status: status, reviewed_by: currentUser.id, reviewed_at: new Date().toISOString() };
         if (reason) upd.rejection_reason = reason;
-        var result = await sb.from('documents').update(upd).eq('id', id);
-        if (result.error) throw result.error;
+        var r = await sb.from('documents').update(upd).eq('id', id);
+        if (r.error) throw r.error;
         notify('Document ' + status, 'success');
         loadAdminDocs(); loadAdminStats();
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
 function openReject(id) {
@@ -1186,65 +1227,56 @@ function confirmReject() {
     reviewDoc(id, 'rejected', reason);
 }
 
-// ============================================================
-// ADMIN: WATCHLIST
-// ============================================================
+// WATCHLIST
 async function loadWatchlist() {
     try {
-        var result = await sb.from('news_watchlist').select('*').order('created_at');
-        if (result.error) throw result.error;
-        var data = result.data;
+        var r = await sb.from('news_watchlist').select('*').order('created_at');
+        if (r.error) throw r.error;
         var el = document.getElementById('watchlistList');
-        if (!data || !data.length) { el.innerHTML = emptyState('👁️','No companies in watchlist','Add companies above to track their news'); return; }
-        el.innerHTML = data.map(function(w) {
+        if (!r.data || !r.data.length) { el.innerHTML = emptyState('👁️','No companies in watchlist','Add companies above to track their news'); return; }
+        el.innerHTML = r.data.map(function(w) {
             return '<div class="watchlist-item"><div><div class="watchlist-name">' + w.company_name + '</div>' + (w.ticker ? '<div class="watchlist-ticker">$' + w.ticker + '</div>' : '') + '</div><div class="action-group"><a href="https://news.google.com/search?q=' + encodeURIComponent(w.company_name) + '" target="_blank" class="btn btn-secondary btn-sm">📰 News</a><button class="btn btn-danger btn-sm" onclick="removeWatchlist(\'' + w.id + '\')">🗑️</button></div></div>';
         }).join('');
-    } catch (err) { console.error('Watchlist:', err.message); }
+    } catch(err) { console.error('Watchlist:', err.message); }
 }
 
 async function addWatchlist() {
     var company = document.getElementById('wlCompany').value.trim();
-    var ticker  = document.getElementById('wlTicker').value.trim();
+    var ticker = document.getElementById('wlTicker').value.trim();
     if (!company) { notify('Please enter a company name', 'warning'); return; }
     try {
-        var result = await sb.from('news_watchlist').insert({ company_name: company, ticker: ticker || null, added_by: currentUser.id });
-        if (result.error) throw result.error;
+        var r = await sb.from('news_watchlist').insert({ company_name: company, ticker: ticker || null, added_by: currentUser.id });
+        if (r.error) throw r.error;
         document.getElementById('wlCompany').value = '';
         document.getElementById('wlTicker').value = '';
         notify('Added to watchlist', 'success');
         loadWatchlist();
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
 async function removeWatchlist(id) {
     try {
-        var result = await sb.from('news_watchlist').delete().eq('id', id);
-        if (result.error) throw result.error;
+        var r = await sb.from('news_watchlist').delete().eq('id', id);
+        if (r.error) throw r.error;
         notify('Removed from watchlist', 'success');
         loadWatchlist();
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
-// ============================================================
 // OPPORTUNITIES
-// ============================================================
 async function loadOpps(view) {
     var elId = view === 'admin' ? 'adminOppList' : 'invOppList';
     try {
-        var result = await sb.from('opportunities').select('*').order('created_at', { ascending: false });
-        if (result.error) { document.getElementById(elId).innerHTML = '<div class="alert alert-warning">⚠️ Opportunities table not found.</div>'; return; }
-        var data = result.data;
+        var r = await sb.from('opportunities').select('*').order('created_at', { ascending: false });
+        if (r.error) { document.getElementById(elId).innerHTML = '<div class="alert alert-warning">⚠️ Opportunities table not found.</div>'; return; }
         var el = document.getElementById(elId);
-        if (!data || !data.length) {
-            el.innerHTML = emptyState('💡', 'No opportunities yet', view === 'admin' ? 'Click "New Opportunity" to add one' : 'Check back soon for new investment opportunities');
-            return;
-        }
+        if (!r.data || !r.data.length) { el.innerHTML = emptyState('💡','No opportunities yet', view === 'admin' ? 'Click "New Opportunity" to add one' : 'Check back soon for new investment opportunities'); return; }
         if (view === 'admin') {
-            el.innerHTML = data.map(function(o) {
+            el.innerHTML = r.data.map(function(o) {
                 return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">💡</span><div><div class="doc-name">' + o.title + '</div><div class="doc-meta">' + (o.sector||'') + (o.location ? ' • '+o.location : '') + ' • Min: $' + fmtMoney(o.minimum_investment) + '</div></div></div><div class="action-group">' + oppBadge(o.status) + '<button class="btn btn-secondary btn-sm" onclick="editOpp(\'' + o.id + '\')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteOpp(\'' + o.id + '\')">🗑️ Delete</button></div></div>';
             }).join('');
         } else {
-            var visible = data.filter(function(o) { return o.status !== 'closed'; });
+            var visible = r.data.filter(function(o) { return o.status !== 'closed'; });
             if (!visible.length) { el.innerHTML = emptyState('💡','No active opportunities','Check back soon'); return; }
             el.innerHTML = '<div class="opp-grid">' + visible.map(function(o) {
                 return '<div class="opp-card"><div class="opp-header"><div class="opp-title">' + o.title + '</div><div class="opp-sub">' + (o.sector||'') + (o.location ? ' • '+o.location : '') + '</div></div><div class="opp-body">' +
@@ -1256,7 +1288,7 @@ async function loadOpps(view) {
                     '<div style="margin-top:1rem;">' + oppBadge(o.status) + '</div></div></div>';
             }).join('') + '</div>';
         }
-    } catch (err) { document.getElementById(elId).innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
+    } catch(err) { document.getElementById(elId).innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
 }
 
 function openOppModal() {
@@ -1268,19 +1300,19 @@ function openOppModal() {
 }
 
 async function editOpp(id) {
-    var result = await sb.from('opportunities').select('*').eq('id', id).single();
-    var data = result.data;
-    if (!data) return;
-    document.getElementById('oppId').value       = data.id;
-    document.getElementById('oppTitle').value    = data.title || '';
-    document.getElementById('oppSector').value   = data.sector || '';
-    document.getElementById('oppLocation').value = data.location || '';
-    document.getElementById('oppDesc').value     = data.description || '';
-    document.getElementById('oppTarget').value   = data.target_amount || '';
-    document.getElementById('oppMin').value      = data.minimum_investment || '';
-    document.getElementById('oppReturn').value   = data.expected_return || '';
-    document.getElementById('oppTimeline').value = data.timeline || '';
-    document.getElementById('oppStatus').value   = data.status || 'active';
+    var r = await sb.from('opportunities').select('*').eq('id', id).single();
+    if (!r.data) return;
+    var d = r.data;
+    document.getElementById('oppId').value = d.id;
+    document.getElementById('oppTitle').value = d.title || '';
+    document.getElementById('oppSector').value = d.sector || '';
+    document.getElementById('oppLocation').value = d.location || '';
+    document.getElementById('oppDesc').value = d.description || '';
+    document.getElementById('oppTarget').value = d.target_amount || '';
+    document.getElementById('oppMin').value = d.minimum_investment || '';
+    document.getElementById('oppReturn').value = d.expected_return || '';
+    document.getElementById('oppTimeline').value = d.timeline || '';
+    document.getElementById('oppStatus').value = d.status || 'active';
     document.getElementById('oppModalTitle').textContent = 'Edit Opportunity';
     openModal('oppModal');
 }
@@ -1301,36 +1333,34 @@ async function saveOpp() {
     };
     if (!payload.title) { notify('Title is required', 'warning'); return; }
     try {
-        var result = id ? await sb.from('opportunities').update(payload).eq('id', id) : await sb.from('opportunities').insert(payload);
-        if (result.error) throw result.error;
+        var r = id ? await sb.from('opportunities').update(payload).eq('id', id) : await sb.from('opportunities').insert(payload);
+        if (r.error) throw r.error;
         closeModal('oppModal');
         notify('Opportunity ' + (id ? 'updated' : 'created'), 'success');
         loadOpps('admin');
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
 async function deleteOpp(id) {
     if (!confirm('Delete this opportunity?')) return;
     try {
-        var result = await sb.from('opportunities').delete().eq('id', id);
-        if (result.error) throw result.error;
+        var r = await sb.from('opportunities').delete().eq('id', id);
+        if (r.error) throw r.error;
         notify('Opportunity deleted', 'success');
         loadOpps('admin');
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
-// ============================================================
-// INVESTOR: OVERVIEW
-// ============================================================
+// INVESTOR OVERVIEW
 async function loadInvOverview() {
     try {
-        var result = await sb.from('documents').select('status').eq('user_id', currentUser.id);
-        if (result.error) throw result.error;
-        var data = result.data;
-        var total    = data.length;
-        var approved = data.filter(function(d) { return d.status === 'approved'; }).length;
-        var pending  = data.filter(function(d) { return d.status === 'pending'; }).length;
-        var rejected = data.filter(function(d) { return d.status === 'rejected'; }).length;
+        var r = await sb.from('documents').select('status').eq('user_id', currentUser.id);
+        if (r.error) throw r.error;```javascript
+        var data = r.data;
+        var total = data.length;
+        var approved = data.filter(function(d){return d.status==='approved';}).length;
+        var pending  = data.filter(function(d){return d.status==='pending';}).length;
+        var rejected = data.filter(function(d){return d.status==='rejected';}).length;
         document.getElementById('iDocTotal').textContent    = total;
         document.getElementById('iDocApproved').textContent = approved;
         document.getElementById('iDocPending').textContent  = pending;
@@ -1341,22 +1371,20 @@ async function loadInvOverview() {
         if (pending  > 0) alerts.innerHTML += '<div class="alert alert-warning">⏳ ' + pending + ' document(s) are pending review.</div>';
         if (approved === total && total > 0) alerts.innerHTML += '<div class="alert alert-success">✅ All your documents have been approved!</div>';
         if (total === 0) alerts.innerHTML += '<div class="alert alert-info">ℹ️ No documents uploaded yet. Go to the Documents tab to get started.</div>';
-    } catch (err) { console.error('Overview:', err.message); }
+    } catch(err) { console.error('Overview:', err.message); }
 }
 
-// ============================================================
-// INVESTOR: DOCUMENTS
-// ============================================================
+// INVESTOR DOCUMENTS
 async function loadDocTypes() {
     try {
-        var result = await sb.from('document_types').select('*').order('display_order');
-        if (result.error) throw result.error;
+        var r = await sb.from('document_types').select('*').order('display_order');
+        if (r.error) throw r.error;
         var sel = document.getElementById('uploadDocType');
         sel.innerHTML = '<option value="">— Select type —</option>';
-        result.data.forEach(function(dt) {
-            sel.innerHTML += '<option value="' + dt.id + '">' + dt.name.replace(/_/g,' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); }) + '</option>';
+        r.data.forEach(function(dt) {
+            sel.innerHTML += '<option value="' + dt.id + '">' + dt.name.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) + '</option>';
         });
-    } catch (err) { console.error('DocTypes:', err.message); }
+    } catch(err) { console.error('DocTypes:', err.message); }
 }
 
 function handleFile(input) {
@@ -1369,192 +1397,399 @@ async function uploadDoc() {
     var file   = document.getElementById('fileInput').files[0];
     if (!typeId) { notify('Please select a document type', 'warning'); return; }
     if (!file)   { notify('Please select a file', 'warning'); return; }
-    if (file.size > 10 * 1024 * 1024) { notify('File must be under 10MB', 'warning'); return; }
+    if (file.size > 10*1024*1024) { notify('File must be under 10MB', 'warning'); return; }
     try {
         var path = currentUser.id + '/' + Date.now() + '_' + file.name;
-        var upResult = await sb.storage.from(BUCKET).upload(path, file);
-        if (upResult.error) throw upResult.error;
-        var dbResult = await sb.from('documents').insert({
+        var up = await sb.storage.from(BUCKET).upload(path, file);
+        if (up.error) throw up.error;
+        var db = await sb.from('documents').insert({
             user_id: currentUser.id, document_type_id: typeId,
             file_name: file.name, file_path: path,
             file_size: file.size, mime_type: file.type, status: 'pending'
         });
-        if (dbResult.error) throw dbResult.error;
+        if (db.error) throw db.error;
         document.getElementById('fileInput').value = '';
         document.getElementById('uploadFileName').textContent = '';
         document.getElementById('uploadDocType').value = '';
         notify('Document uploaded successfully!', 'success');
         loadInvDocs(); loadInvOverview();
-    } catch (err) { notify('Upload failed: ' + err.message, 'danger'); }
+    } catch(err) { notify('Upload failed: ' + err.message, 'danger'); }
 }
 
 async function loadInvDocs() {
     try {
-        var result = await sb.from('documents').select('*,document_types(name)').eq('user_id', currentUser.id).order('uploaded_at', { ascending: false });
-        if (result.error) throw result.error;
-        var data = result.data;
+        var r = await sb.from('documents').select('*,document_types(name)').eq('user_id', currentUser.id).order('uploaded_at', {ascending:false});
+        if (r.error) throw r.error;
         var el = document.getElementById('invDocsList');
-        if (!data || !data.length) { el.innerHTML = emptyState('📄','No documents uploaded yet','Use the form above to upload your first document'); return; }
-        el.innerHTML = data.map(function(d) {
-            var typeName = d.document_types && d.document_types.name ? d.document_types.name.replace(/_/g,' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); }) : d.file_name;
-            return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">📄</span><div><div class="doc-name">' + typeName + '</div><div class="doc-meta">' + d.file_name + ' • ' + fmtDate(d.uploaded_at) + ' • ' + fmtSize(d.file_size) + '</div>' + (d.rejection_reason ? '<div class="doc-rejection">❌ Rejection reason: ' + d.rejection_reason + '</div>' : '') + '</div></div><div class="action-group">' + statusBadge(d.status) + '<a href="' + docUrl(d.file_path) + '" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a></div></div>';
+        if (!r.data || !r.data.length) { el.innerHTML = emptyState('📄','No documents uploaded yet','Use the form above to upload your first document'); return; }
+        el.innerHTML = r.data.map(function(d) {
+            var tn = d.document_types && d.document_types.name ? d.document_types.name.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) : d.file_name;
+            return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">📄</span><div>' +
+                '<div class="doc-name">' + tn + '</div>' +
+                '<div class="doc-meta">' + d.file_name + ' • ' + fmtDate(d.uploaded_at) + ' • ' + fmtSize(d.file_size) + '</div>' +
+                (d.rejection_reason ? '<div class="doc-rejection">❌ Rejection reason: ' + d.rejection_reason + '</div>' : '') +
+                '</div></div><div class="action-group">' + statusBadge(d.status) +
+                '<a href="' + docUrl(d.file_path) + '" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>' +
+                '</div></div>';
         }).join('');
-    } catch (err) { document.getElementById('invDocsList').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
+    } catch(err) { document.getElementById('invDocsList').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
 }
 
-// ============================================================
-// INVESTOR: NEWS — Real headlines via RSS2JSON (free)
-// ============================================================
+// INVESTOR NEWS - Real headlines via RSS2JSON
 async function loadNews() {
     var el = document.getElementById('newsContent');
     el.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading headlines...</p></div>';
     try {
-        var result = await sb.from('news_watchlist').select('*').order('created_at');
-        if (result.error) throw result.error;
-        var data = result.data;
-        if (!data || !data.length) {
+        var r = await sb.from('news_watchlist').select('*').order('created_at');
+        if (r.error) throw r.error;
+        if (!r.data || !r.data.length) {
             el.innerHTML = emptyState('📰','No watchlist companies','The admin has not added any companies to the watchlist yet');
             return;
         }
-
-        var newsPromises = data.map(async function(w) {
+        var newsPromises = r.data.map(async function(w) {
             try {
                 var rssUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(w.company_name) + '&hl=en-US&gl=US&ceid=US:en';
                 var apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&count=5';
                 var res = await fetch(apiUrl);
                 var json = await res.json();
                 return { company: w, items: json.items || [] };
-            } catch (e) {
-                return { company: w, items: [] };
-            }
+            } catch(e) { return { company: w, items: [] }; }
         });
-
         var results = await Promise.all(newsPromises);
-
         var html = '';
         for (var i = 0; i < results.length; i++) {
             var company = results[i].company;
             var items = results[i].items;
-            html += '<div class="news-company-section"><div class="news-company-header">📈 ' + company.company_name + (company.ticker ? ' <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">($' + company.ticker + ')</span>' : '') + '</div>';
-
+            html += '<div class="news-company-section"><div class="news-company-header">📈 ' + company.company_name +
+                (company.ticker ? ' <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">($' + company.ticker + ')</span>' : '') + '</div>';
             if (!items.length) {
                 html += '<div class="news-item"><div class="news-headline" style="color:var(--muted);">No recent headlines found.</div></div>';
             } else {
                 for (var j = 0; j < items.length; j++) {
                     var item = items[j];
-                    var pubDate = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                    var pubDate = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
                     var source = item.author || item.source || '';
                     var title = item.title ? item.title.replace(/ - [^-]+$/, '') : 'Read article';
-                    html += '<div class="news-item"><div class="news-headline"><a href="' + item.link + '" target="_blank" rel="noopener noreferrer">' + title + ' ↗</a></div><div class="news-meta">' + (source ? '<span class="news-source">' + source + '</span>' : '') + (pubDate ? '<span>' + pubDate + '</span>' : '') + '</div></div>';
+                    html += '<div class="news-item"><div class="news-headline"><a href="' + item.link + '" target="_blank" rel="noopener noreferrer">' + title + ' ↗</a></div>' +
+                        '<div class="news-meta">' + (source ? '<span class="news-source">' + source + '</span>' : '') + (pubDate ? '<span>' + pubDate + '</span>' : '') + '</div></div>';
                 }
             }
             html += '</div>';
         }
-
         el.innerHTML = html;
-    } catch (err) {
-        el.innerHTML = '<div class="alert alert-danger">Error loading news: ' + err.message + '</div>';
-    }
+    } catch(err) { el.innerHTML = '<div class="alert alert-danger">Error loading news: ' + err.message + '</div>'; }
 }
 
-// ============================================================
-// INVESTOR: INVESTMENTS
-// ============================================================
+// INVESTOR INVESTMENTS
 async function loadInvestments() {
     try {
-        var result = await sb.from('investments').select('*,opportunities(title,sector)').eq('investor_id', currentUser.id).order('investment_date', { ascending: false });
-        if (result.error) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-warning">⚠️ Investments table not found.</div>'; return; }
-        var data = result.data;
+        var r = await sb.from('investments').select('*,opportunities(title,sector)').eq('investor_id', currentUser.id).order('investment_date',{ascending:false});
+        if (r.error) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-warning">⚠️ Investments table not found.</div>'; return; }
         var el = document.getElementById('invInvestments');
-        if (!data || !data.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
-        el.innerHTML = data.map(function(inv) {
-            return '<div class="inv-card"><div class="inv-header"><div><div class="inv-title">' + ((inv.opportunities && inv.opportunities.title) || 'Investment') + '</div>' + (inv.opportunities && inv.opportunities.sector ? '<div style="color:var(--muted);font-size:0.85rem;">' + inv.opportunities.sector + '</div>' : '') + '</div><div><div class="inv-amount">$' + fmtMoney(inv.amount) + '</div>' + statusBadge(inv.status) + '</div></div><div class="inv-details"><div>```html
-                        <div class="inv-detail-label">Investment Date</div>
-                        <div class="inv-detail-value">' + fmtDate(inv.investment_date) + '</div>
-                    </div>' + (inv.notes ? '<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">' + inv.notes + '</div></div>' : '') + '</div></div>';
+        if (!r.data || !r.data.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
+        el.innerHTML = r.data.map(function(inv) {
+            return '<div class="inv-card"><div class="inv-header"><div>' +
+                '<div class="inv-title">' + ((inv.opportunities && inv.opportunities.title) || 'Investment') + '</div>' +
+                (inv.opportunities && inv.opportunities.sector ? '<div style="color:var(--muted);font-size:0.85rem;">' + inv.opportunities.sector + '</div>' : '') +
+                '</div><div><div class="inv-amount">$' + fmtMoney(inv.amount) + '</div>' + statusBadge(inv.status) + '</div></div>' +
+                '<div class="inv-details"><div><div class="inv-detail-label">Investment Date</div><div class="inv-detail-value">' + fmtDate(inv.investment_date) + '</div></div>' +
+                (inv.notes ? '<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">' + inv.notes + '</div></div>' : '') +
+                '</div></div>';
         }).join('');
-    } catch (err) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
+    } catch(err) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
 }
 
-// ============================================================
-// INVESTOR: PROFILE
-// ============================================================
+// INVESTOR PROFILE
 function fillProfile() {
-    document.getElementById('pName').value   = userProfile?.full_name || '';
-    document.getElementById('pEmail').value  = userProfile?.email || currentUser?.email || '';
-    document.getElementById('pPhone').value  = userProfile?.phone || '';
-    document.getElementById('pStatus').value = userProfile?.status || '';
+    document.getElementById('pName').value   = (userProfile && userProfile.full_name) || '';
+    document.getElementById('pEmail').value  = (userProfile && userProfile.email) || (currentUser && currentUser.email) || '';
+    document.getElementById('pPhone').value  = (userProfile && userProfile.phone) || '';
+    document.getElementById('pStatus').value = (userProfile && userProfile.status) || '';
 }
 
 async function saveProfile(e) {
     e.preventDefault();
     try {
-        const { error } = await sb.from('profiles').update({
+        var r = await sb.from('profiles').update({
             full_name: document.getElementById('pName').value.trim(),
             phone: document.getElementById('pPhone').value.trim(),
             updated_at: new Date().toISOString()
         }).eq('id', currentUser.id);
-        if (error) throw error;
+        if (r.error) throw r.error;
         userProfile.full_name = document.getElementById('pName').value.trim();
         document.getElementById('invName').textContent = userProfile.full_name;
         document.getElementById('userBadge').textContent = userProfile.full_name;
         notify('Profile updated successfully', 'success');
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
 }
 
-// ============================================================
-// DRAG & DROP UPLOAD
-// ============================================================
-const uploadArea = document.getElementById('uploadArea');
-uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
-uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-uploadArea.addEventListener('drop', e => {
+// DRAG & DROP
+var uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', function(e) { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', function() { uploadArea.classList.remove('dragover'); });
+uploadArea.addEventListener('drop', function(e) {
     e.preventDefault();
     uploadArea.classList.remove('dragover');
-    const files = e.dataTransfer.files;
+    var files = e.dataTransfer.files;
     if (files.length) {
         document.getElementById('fileInput').files = files;
         handleFile(document.getElementById('fileInput'));
     }
 });
 
-// ============================================================
 // INIT
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     updateLang();
 
-    // Check for password reset token in URL hash
-    const hash = window.location.hash;
+    // Check for password reset in URL hash
+    var hash = window.location.hash;
     if (hash && hash.includes('type=recovery')) {
-        // Supabase password reset flow
-        sb.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
+        sb.auth.getSession().then(function(res) {
+            if (res.data && res.data.session) {
                 showResetPassword();
             }
         });
         return;
     }
 
-    // Check for invitation token in URL
-    const params = new URLSearchParams(window.location.search);
-    const inviteToken = params.get('invite');
+    // Check for invitation token
+    var params = new URLSearchParams(window.location.search);
+    var inviteToken = params.get('invite');
 
     if (inviteToken) {
         document.getElementById('authContainer').classList.add('hidden');
         checkInviteToken();
     } else {
-        // Check if already logged in
-        sb.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                currentUser = session.user;
-                fetchProfile().then(() => showDashboard());
+        sb.auth.getSession().then(function(res) {
+            if (res.data && res.data.session) {
+                currentUser = res.data.session.user;
+                fetchProfile().then(function() { showDashboard(); });
             }
         });
     }
 
-    // Listen for auth state changes (handles password reset redirect)
-    sb.auth.onAuthStateChange((event, session) => {
+    // Listen for auth state changes
+    sb.auth.onAuthStateChange(function(event, session) {
+        if (event === 'PASSWORD_RECOVERY') {
+            showResetPassword();
+        }
+    });
+});
+</script>
+</body>
+</html>var data = r.data || [];
+        var total    = data.length;
+        var approved = data.filter(function(d){return d.status==='approved';}).length;
+        var pending  = data.filter(function(d){return d.status==='pending';}).length;
+        var rejected = data.filter(function(d){return d.status==='rejected';}).length;
+        document.getElementById('iDocTotal').textContent    = total;
+        document.getElementById('iDocApproved').textContent = approved;
+        document.getElementById('iDocPending').textContent  = pending;
+        document.getElementById('iDocRejected').textContent = rejected;
+        var alerts = document.getElementById('invAlerts');
+        alerts.innerHTML = '';
+        if (rejected > 0) alerts.innerHTML += '<div class="alert alert-danger">❌ You have ' + rejected + ' rejected document(s). Please re-upload them.</div>';
+        if (pending  > 0) alerts.innerHTML += '<div class="alert alert-warning">⏳ ' + pending + ' document(s) are pending review.</div>';
+        if (approved === total && total > 0) alerts.innerHTML += '<div class="alert alert-success">✅ All your documents have been approved!</div>';
+        if (total === 0) alerts.innerHTML += '<div class="alert alert-info">ℹ️ No documents uploaded yet. Go to the Documents tab to get started.</div>';
+    } catch(err) { console.error('Overview:', err.message); }
+}
+
+// INVESTOR DOCUMENTS
+async function loadDocTypes() {
+    try {
+        var r = await sb.from('document_types').select('*').order('display_order');
+        if (r.error) throw r.error;
+        var sel = document.getElementById('uploadDocType');
+        sel.innerHTML = '<option value="">— Select type —</option>';
+        (r.data||[]).forEach(function(dt){
+            sel.innerHTML += '<option value="' + dt.id + '">' + dt.name.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) + '</option>';
+        });
+    } catch(err) { console.error('DocTypes:', err.message); }
+}
+
+function handleFile(input) {
+    var f = input.files[0];
+    document.getElementById('uploadFileName').textContent = f ? '📎 ' + f.name + ' (' + fmtSize(f.size) + ')' : '';
+}
+
+async function uploadDoc() {
+    var typeId = document.getElementById('uploadDocType').value;
+    var file   = document.getElementById('fileInput').files[0];
+    if (!typeId) { notify('Please select a document type', 'warning'); return; }
+    if (!file)   { notify('Please select a file', 'warning'); return; }
+    if (file.size > 10*1024*1024) { notify('File must be under 10MB', 'warning'); return; }
+    try {
+        var path = currentUser.id + '/' + Date.now() + '_' + file.name;
+        var up = await sb.storage.from(BUCKET).upload(path, file);
+        if (up.error) throw up.error;
+        var db = await sb.from('documents').insert({
+            user_id: currentUser.id, document_type_id: typeId,
+            file_name: file.name, file_path: path,
+            file_size: file.size, mime_type: file.type, status: 'pending'
+        });
+        if (db.error) throw db.error;
+        document.getElementById('fileInput').value = '';
+        document.getElementById('uploadFileName').textContent = '';
+        document.getElementById('uploadDocType').value = '';
+        notify('Document uploaded successfully!', 'success');
+        loadInvDocs(); loadInvOverview();
+    } catch(err) { notify('Upload failed: ' + err.message, 'danger'); }
+}
+
+async function loadInvDocs() {
+    try {
+        var r = await sb.from('documents').select('*,document_types(name)').eq('user_id', currentUser.id).order('uploaded_at',{ascending:false});
+        if (r.error) throw r.error;
+        var el = document.getElementById('invDocsList');
+        if (!r.data||!r.data.length) { el.innerHTML = emptyState('📄','No documents uploaded yet','Use the form above to upload your first document'); return; }
+        el.innerHTML = (r.data||[]).map(function(d){
+            var tn = d.document_types&&d.document_types.name ? d.document_types.name.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) : d.file_name;
+            return '<div class="doc-item"><div class="doc-info"><span class="doc-icon">📄</span><div>' +
+                '<div class="doc-name">' + tn + '</div>' +
+                '<div class="doc-meta">' + d.file_name + ' • ' + fmtDate(d.uploaded_at) + ' • ' + fmtSize(d.file_size) + '</div>' +
+                (d.rejection_reason ? '<div class="doc-rejection">❌ Rejection reason: ' + d.rejection_reason + '</div>' : '') +
+                '</div></div><div class="action-group">' + statusBadge(d.status) +
+                '<a href="' + docUrl(d.file_path) + '" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>' +
+                '</div></div>';
+        }).join('');
+    } catch(err) { document.getElementById('invDocsList').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
+}
+
+// INVESTOR NEWS — Real headlines via RSS2JSON (free)
+async function loadNews() {
+    var el = document.getElementById('newsContent');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top:0.5rem;">Loading headlines...</p></div>';
+    try {
+        var r = await sb.from('news_watchlist').select('*').order('created_at');
+        if (r.error) throw r.error;
+        var data = r.data || [];
+        if (!data.length) {
+            el.innerHTML = emptyState('📰','No watchlist companies','The admin has not added any companies to the watchlist yet');
+            return;
+        }
+        var results = await Promise.all(data.map(async function(w){
+            try {
+                var rssUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(w.company_name) + '&hl=en-US&gl=US&ceid=US:en';
+                var apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&count=5';
+                var res = await fetch(apiUrl);
+                var json = await res.json();
+                return { company: w, items: json.items || [] };
+            } catch(e) { return { company: w, items: [] }; }
+        }));
+        var html = '';
+        for (var i = 0; i < results.length; i++) {
+            var co = results[i].company;
+            var items = results[i].items;
+            html += '<div class="news-company-section"><div class="news-company-header">📈 ' + co.company_name +
+                (co.ticker ? ' <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">($' + co.ticker + ')</span>' : '') + '</div>';
+            if (!items.length) {
+                html += '<div class="news-item"><div class="news-headline" style="color:var(--muted);">No recent headlines found.</div></div>';
+            } else {
+                for (var j = 0; j < items.length; j++) {
+                    var item = items[j];
+                    var pd = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+                    var src = item.author || item.source || '';
+                    var title = item.title ? item.title.replace(/ - [^-]+$/,'') : 'Read article';
+                    html += '<div class="news-item"><div class="news-headline"><a href="' + item.link + '" target="_blank" rel="noopener noreferrer">' + title + ' ↗</a></div>' +
+                        '<div class="news-meta">' + (src ? '<span class="news-source">' + src + '</span>' : '') + (pd ? '<span>' + pd + '</span>' : '') + '</div></div>';
+                }
+            }
+            html += '</div>';
+        }
+        el.innerHTML = html;
+    } catch(err) { el.innerHTML = '<div class="alert alert-danger">Error loading news: ' + err.message + '</div>'; }
+}
+
+// INVESTOR INVESTMENTS
+async function loadInvestments() {
+    try {
+        var r = await sb.from('investments').select('*,opportunities(title,sector)').eq('investor_id', currentUser.id).order('investment_date',{ascending:false});
+        if (r.error) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-warning">⚠️ Investments table not found.</div>'; return; }
+        var el = document.getElementById('invInvestments');
+        if (!r.data||!r.data.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
+        el.innerHTML = (r.data||[]).map(function(inv){
+            var title = (inv.opportunities && inv.opportunities.title) || 'Investment';
+            var sector = inv.opportunities && inv.opportunities.sector ? inv.opportunities.sector : '';
+            return '<div class="inv-card"><div class="inv-header"><div>' +
+                '<div class="inv-title">' + title + '</div>' +
+                (sector ? '<div style="color:var(--muted);font-size:0.85rem;">' + sector + '</div>' : '') +
+                '</div><div><div class="inv-amount">$' + fmtMoney(inv.amount) + '</div>' + statusBadge(inv.status) + '</div></div>' +
+                '<div class="inv-details"><div><div class="inv-detail-label">Investment Date</div><div class="inv-detail-value">' + fmtDate(inv.investment_date) + '</div></div>' +
+                (inv.notes ? '<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">' + inv.notes + '</div></div>' : '') +
+                '</div></div>';
+        }).join('');
+    } catch(err) { document.getElementById('invInvestments').innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>'; }
+}
+
+// INVESTOR PROFILE
+function fillProfile() {
+    document.getElementById('pName').value   = (userProfile && userProfile.full_name) || '';
+    document.getElementById('pEmail').value  = (userProfile && userProfile.email) || (currentUser && currentUser.email) || '';
+    document.getElementById('pPhone').value  = (userProfile && userProfile.phone) || '';
+    document.getElementById('pStatus').value = (userProfile && userProfile.status) || '';
+}
+
+async function saveProfile(e) {
+    e.preventDefault();
+    try {
+        var r = await sb.from('profiles').update({
+            full_name: document.getElementById('pName').value.trim(),
+            phone: document.getElementById('pPhone').value.trim(),
+            updated_at: new Date().toISOString()
+        }).eq('id', currentUser.id);
+        if (r.error) throw r.error;
+        userProfile.full_name = document.getElementById('pName').value.trim();
+        document.getElementById('invName').textContent = userProfile.full_name;
+        document.getElementById('userBadge').textContent = userProfile.full_name;
+        notify('Profile updated successfully', 'success');
+    } catch(err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+// DRAG & DROP
+var uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', function(e){ e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', function(){ uploadArea.classList.remove('dragover'); });
+uploadArea.addEventListener('drop', function(e){
+    e.preventDefault(); uploadArea.classList.remove('dragover');
+    var files = e.dataTransfer.files;
+    if (files.length) { document.getElementById('fileInput').files = files; handleFile(document.getElementById('fileInput')); }
+});
+
+// INIT
+document.addEventListener('DOMContentLoaded', function() {
+    updateLang();
+
+    // Check for password reset (Supabase sends #access_token=...&type=recovery)
+    var hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+        sb.auth.getSession().then(function(res) {
+            if (res.data && res.data.session) {
+                showResetPassword();
+            }
+        });
+        return;
+    }
+
+    // Check for invitation token
+    var params = new URLSearchParams(window.location.search);
+    var inviteToken = params.get('invite');
+    if (inviteToken) {
+        document.getElementById('authContainer').classList.add('hidden');
+        checkInviteToken();
+        return;
+    }
+
+    // Check if already logged in
+    sb.auth.getSession().then(function(res) {
+        if (res.data && res.data.session) {
+            currentUser = res.data.session.user;
+            fetchProfile().then(function(){ showDashboard(); });
+        }
+    });
+
+    // Listen for auth state changes
+    sb.auth.onAuthStateChange(function(event, session) {
         if (event === 'PASSWORD_RECOVERY') {
             showResetPassword();
         }
@@ -1563,5 +1798,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-```
 

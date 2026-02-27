@@ -177,6 +177,12 @@
         .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
         @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
+        /* Password strength indicator */
+        .password-strength { margin-top: 0.5rem; }
+        .strength-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
+        .strength-fill { height: 100%; border-radius: 2px; transition: all 0.3s; }
+        .strength-text { font-size: 0.75rem; margin-top: 0.25rem; }
+
         @media (max-width: 768px) {
             .header-content { padding: 0 1rem; }
             .logo-text h1 { font-size: 1rem; }
@@ -221,6 +227,7 @@
 
 <main class="main-content">
 
+<!-- LOGIN -->
 <div id="authContainer" class="auth-container">
     <div class="auth-header">
         <h2 data-en="Investor Login" data-es="Inicio de Sesión">Investor Login</h2>
@@ -243,6 +250,53 @@
     <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversor? Debe ser invitado por un administrador para crear una cuenta.">
         New investor? You must be invited by an admin to create an account.
     </p>
+</div>
+
+<!-- INVITATION REGISTRATION -->
+<div id="registerContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🎉</div>
+        <h2 data-en="Create Your Account" data-es="Crear Su Cuenta">Create Your Account</h2>
+        <p id="registerSubtitle" data-en="You've been invited to join Silicon Corridor Ventures" data-es="Ha sido invitado a unirse a Silicon Corridor Ventures">You've been invited to join Silicon Corridor Ventures</p>
+    </div>
+    <div class="alert alert-info" style="margin-bottom:1.5rem;">
+        ℹ️ <span id="inviteWelcomeMsg">Welcome! Please create your password to access the investor portal.</span>
+    </div>
+    <form id="registerForm">
+        <div class="form-group">
+            <label data-en="Full Name" data-es="Nombre Completo">Full Name</label>
+            <input type="text" class="form-input" id="regName" required>
+        </div>
+        <div class="form-group">
+            <label data-en="Email" data-es="Correo Electrónico">Email</label>
+            <input type="email" class="form-input" id="regEmail" disabled>
+        </div>
+        <div class="form-group">
+            <label data-en="Password" data-es="Contraseña">Password</label>
+            <input type="password" class="form-input" id="regPassword" required minlength="8" oninput="checkPasswordStrength(this.value)" placeholder="Minimum 8 characters">
+            <div class="password-strength">
+                <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%;background:#dc2626;"></div></div>
+                <div class="strength-text" id="strengthText" style="color:var(--muted);"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-en="Confirm Password" data-es="Confirmar Contraseña">Confirm Password</label>
+            <input type="password" class="form-input" id="regPasswordConfirm" required placeholder="Re-enter your password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="registerBtn">
+            🚀 <span data-en="Create Account & Sign In" data-es="Crear Cuenta e Iniciar Sesión">Create Account & Sign In</span>
+        </button>
+    </form>
+</div>
+
+<!-- INVALID INVITATION -->
+<div id="invalidInviteContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">❌</div>
+        <h2 style="color:#dc2626;">Invalid Invitation</h2>
+        <p id="invalidInviteMsg" style="color:var(--muted);">This invitation link is invalid or has expired.</p>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="showLogin()">← Back to Login</button>
 </div>
 
 <!-- ADMIN DASHBOARD -->
@@ -516,7 +570,7 @@
 // ============================================================
 const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-// Email handled securely via Railway backend — API key never exposed here
+// Email handled securely via Railway backend
 const BACKEND_URL   = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
 const BUCKET        = 'investor-documents';
 
@@ -560,6 +614,191 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
 
 // ============================================================
+// SHOW/HIDE CONTAINERS
+// ============================================================
+function showLogin() {
+    document.getElementById('authContainer').classList.remove('hidden');
+    document.getElementById('registerContainer').classList.add('hidden');
+    document.getElementById('invalidInviteContainer').classList.add('hidden');
+}
+function showRegister() {
+    document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('registerContainer').classList.remove('hidden');
+    document.getElementById('invalidInviteContainer').classList.add('hidden');
+}
+function showInvalidInvite(msg) {
+    document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('registerContainer').classList.add('hidden');
+    document.getElementById('invalidInviteContainer').classList.remove('hidden');
+    document.getElementById('invalidInviteMsg').textContent = msg || 'This invitation link is invalid or has expired.';
+}
+
+// ============================================================
+// PASSWORD STRENGTH
+// ============================================================
+function checkPasswordStrength(password) {
+    const fill = document.getElementById('strengthFill');
+    const text = document.getElementById('strengthText');
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (password.length >= 12) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+    const levels = [
+        { pct: '20%', color: '#dc2626', label: 'Very Weak' },
+        { pct: '40%', color: '#f97316', label: 'Weak' },
+        { pct: '60%', color: '#eab308', label: 'Fair' },
+        { pct: '80%', color: '#22c55e', label: 'Strong' },
+        { pct: '100%', color: '#16a34a', label: 'Very Strong' }
+    ];
+    const level = levels[Math.min(strength - 1, 4)] || { pct: '0%', color: '#dc2626', label: '' };
+    fill.style.width = password.length > 0 ? level.pct : '0%';
+    fill.style.background = level.color;
+    text.textContent = password.length > 0 ? level.label : '';
+    text.style.color = level.color;
+}
+
+// ============================================================
+// INVITATION FLOW
+// ============================================================
+async function checkInviteToken() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('invite');
+    if (!token) return; // No token, show normal login
+
+    // Token found — validate it
+    try {
+        const { data, error } = await sb.from('invitations')
+            .select('*')
+            .eq('token', token)
+            .is('deleted_at', null)
+            .single();
+
+        if (error || !data) {
+            showInvalidInvite('This invitation link is invalid. Please contact your administrator.');
+            return;
+        }
+
+        // Check if expired
+        if (new Date(data.expires_at) < new Date()) {
+            showInvalidInvite('This invitation has expired. Please ask your administrator to send a new one.');
+            return;
+        }
+
+        // Check if already accepted
+        if (data.status === 'accepted') {
+            showInvalidInvite('This invitation has already been used. Please log in with your existing account.');
+            return;
+        }
+
+        // Valid invitation — show registration form
+        document.getElementById('regName').value = data.name || '';
+        document.getElementById('regEmail').value = data.email || '';
+        document.getElementById('inviteWelcomeMsg').textContent = `Welcome, ${data.name}! Please create your password to access the Silicon Corridor Ventures Investor Portal.`;
+
+        // Store token for use during registration
+        window._inviteToken = token;
+        window._inviteId = data.id;
+        window._inviteEmail = data.email;
+        window._inviteName = data.name;
+
+        showRegister();
+    } catch (err) {
+        showInvalidInvite('An error occurred validating your invitation. Please try again.');
+    }
+}
+
+// ============================================================
+// REGISTRATION FORM
+// ============================================================
+document.getElementById('registerForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+    const btn = document.getElementById('registerBtn');
+
+    if (!name) { notify('Please enter your full name', 'warning'); return; }
+    if (password.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
+    if (password !== passwordConfirm) { notify('Passwords do not match', 'warning'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Creating account...';
+
+    try {
+        // Create user account in Supabase Auth
+        const { data: authData, error: authError } = await sb.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: name
+                }
+            }
+        });
+
+        if (authError) throw authError;
+
+        const userId = authData.user?.id;
+        if (!userId) throw new Error('Failed to create user account');
+
+        // Create profile record
+        const { error: profileError } = await sb.from('profiles').upsert({
+            id: userId,
+            full_name: name,
+            email: email,
+            role: 'investor',
+            status: 'active',
+            created_at: new Date().toISOString()
+        });
+
+        if (profileError) console.warn('Profile creation error:', profileError.message);
+
+        // Mark invitation as accepted
+        const { error: invError } = await sb.from('invitations').update({
+            status: 'accepted',
+            user_id: userId,
+            used_at: new Date().toISOString()
+        }).eq('id', window._inviteId);
+
+        if (invError) console.warn('Invitation update error:', invError.message);
+
+        // Sign in the user
+        const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (signInError) throw signInError;
+
+        currentUser = signInData.user;
+        userProfile = {
+            id: userId,
+            full_name: name,
+            email: email,
+            role: 'investor',
+            status: 'active'
+        };
+
+        // Clear invite token from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        notify(`Welcome to Silicon Corridor Ventures, ${name}! 🎉`, 'success', 8000);
+        showDashboard();
+
+    } catch (err) {
+        notify('Registration failed: ' + err.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🚀 <span>Create Account & Sign In</span>';
+    }
+});
+
+// ============================================================
 // AUTH
 // ============================================================
 document.getElementById('loginForm').addEventListener('submit', async e => {
@@ -598,6 +837,8 @@ async function fetchProfile() {
 
 function showDashboard() {
     document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('registerContainer').classList.add('hidden');
+    document.getElementById('invalidInviteContainer').classList.add('hidden');
     document.getElementById('logoutBtn').classList.remove('hidden');
     const badge = document.getElementById('userBadge');
     badge.classList.remove('hidden');
@@ -741,7 +982,6 @@ async function loadInvitations() {
     } catch (err) { console.error('Invitations:', err.message); }
 }
 
-// Soft delete: marks deleted_at and renames email to free up the unique constraint
 async function softDeleteInvitation(id, email) {
     if (!confirm(`Hide invitation for ${email}? You will be able to resend a new invitation to this address.`)) return;
     try {
@@ -770,7 +1010,7 @@ async function sendInvite() {
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
 
     try {
-        // ✅ COMPLIANCE CHECK: Verify no active invitation exists for this email
+        // COMPLIANCE CHECK: Verify no active invitation exists for this email
         const { data: existing } = await sb.from('invitations')
             .select('id')
             .eq('email', email)
@@ -833,24 +1073,14 @@ async function sendEmailViaBackend(name, email, token, expiry) {
     try {
         const res = await fetch(BACKEND_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name:      name,
-                email:     email,
-                token:     token,
-                expiry:    expiry,
-                inviteUrl: inviteUrl
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, token, expiry, inviteUrl })
         });
-
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
             console.error('Backend error:', errData);
             return false;
         }
-
         return true;
     } catch (err) {
         console.error('Backend call failed:', err);
@@ -1273,12 +1503,24 @@ uploadArea.addEventListener('drop', e => {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     updateLang();
-    sb.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-            currentUser = session.user;
-            fetchProfile().then(() => showDashboard());
-        }
-    });
+
+    // First check if there's an invitation token in the URL
+    const params = new URLSearchParams(window.location.search);
+    const inviteToken = params.get('invite');
+
+    if (inviteToken) {
+        // Show loading state while validating
+        document.getElementById('authContainer').classList.add('hidden');
+        checkInviteToken();
+    } else {
+        // Check if already logged in
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                currentUser = session.user;
+                fetchProfile().then(() => showDashboard());
+            }
+        });
+    }
 });
 </script>
 </body>

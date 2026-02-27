@@ -24,7 +24,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; }
 
-        /* HEADER */
         .header { background: var(--grad); color: white; padding: 1rem 0; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
         .header-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
         .logo { display: flex; align-items: center; gap: 1rem; }
@@ -37,16 +36,13 @@
         .lang-toggle { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; font-family: inherit; }
         .lang-toggle:hover { background: rgba(255,255,255,0.35); }
 
-        /* MAIN */
         .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 
-        /* AUTH */
         .auth-container { max-width: 420px; margin: 4rem auto; background: var(--white); border-radius: 16px; padding: 2.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .auth-header { text-align: center; margin-bottom: 2rem; }
         .auth-header h2 { color: var(--purple-dark); margin-bottom: 0.5rem; font-size: 1.5rem; }
         .auth-header p { color: var(--muted); font-size: 0.875rem; }
 
-        /* FORMS */
         .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--text); font-size: 0.9rem; }
         .form-input { width: 100%; padding: 0.8rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; transition: all 0.2s; font-family: inherit; background: white; color: var(--text); }
@@ -55,7 +51,6 @@
         select.form-input { cursor: pointer; }
         textarea.form-input { resize: vertical; min-height: 90px; }
 
-        /* BUTTONS */
         .btn { padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: inherit; text-decoration: none; }
         .btn-primary { background: var(--grad); color: white; }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(107,63,160,0.3); }
@@ -70,7 +65,6 @@
         .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
         .btn-full { width: 100%; }
 
-        /* DASHBOARD */
         .dashboard { display: none; }
         .dashboard.active { display: block; }
         .dashboard-nav { background: var(--white); border-radius: 12px; padding: 0.875rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); display: flex; gap: 0.5rem; flex-wrap: wrap; }
@@ -80,18 +74,15 @@
         .dashboard-section { display: none; }
         .dashboard-section.active { display: block; }
 
-        /* CARDS */
         .card { background: var(--white); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
         .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text); }
 
-        /* STATS */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; }
         .stat-card { background: var(--white); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
         .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--purple); margin-bottom: 0.4rem; }
         .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
 
-        /* TABLES */
         .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
         th { background: var(--light); padding: 0.75rem 1rem; text-align: left; font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
@@ -99,7 +90,6 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafbff; }
 
-        /* BADGES */
         .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
         .badge-success { background: #dcfce7; color: #166534; }
         .badge-warning { background: #fef9c3; color: #854d0e; }
@@ -108,14 +98,12 @@
         .badge-muted { background: var(--light); color: var(--muted); }
         .badge-purple { background: #f3e8ff; color: #6B3FA0; }
 
-        /* ALERTS */
         .alert { padding: 0.875rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; }
         .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
         .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
         .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
         .alert-info { background: #f0f4ff; border: 1px solid #c7d2fe; color: #3730a3; }
 
-        /* MODALS */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--white); border-radius: 16px; padding: 2rem; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.25); }
@@ -127,7 +115,6 @@
         .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-        /* FILE UPLOAD */
         .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
         .upload-area:hover { border-color: var(--purple); background: rgba(107,63,160,0.04); }
         .upload-area input[type="file"] { display: none; }
@@ -136,7 +123,6 @@
         .upload-hint { font-size: 0.8rem; color: var(--muted); }
         .upload-selected { margin-top: 0.75rem; font-weight: 600; color: var(--purple); font-size: 0.9rem; }
 
-        /* DOC ITEMS */
         .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); flex-wrap: wrap; gap: 0.75rem; transition: all 0.2s; }
         .doc-item:hover { border-color: var(--purple); }
         .doc-info { display: flex; align-items: center; gap: 0.875rem; }
@@ -146,7 +132,6 @@
         .doc-rejection { font-size: 0.78rem; color: #dc2626; margin-top: 0.2rem; }
         .action-group { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
 
-        /* OPPORTUNITY CARDS */
         .opp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
         .opp-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; box-shadow: var(--shadow); }
         .opp-card:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(107,63,160,0.2); }
@@ -160,12 +145,10 @@
         .opp-val { font-weight: 700; }
         .opp-desc { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
 
-        /* WATCHLIST */
         .watchlist-item { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; background: var(--white); }
         .watchlist-name { font-weight: 600; font-size: 0.9rem; }
         .watchlist-ticker { font-size: 0.8rem; color: var(--purple); font-weight: 700; }
 
-        /* NEWS */
         .news-item { padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); transition: all 0.2s; }
         .news-item:hover { border-color: var(--purple); }
         .news-tag { font-size: 0.72rem; color: var(--purple); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
@@ -174,7 +157,6 @@
         .news-title a:hover { color: var(--purple); }
         .news-date { font-size: 0.78rem; color: var(--muted); }
 
-        /* INVESTMENT CARDS */
         .inv-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
         .inv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
         .inv-title { font-size: 1.05rem; font-weight: 700; }
@@ -183,7 +165,6 @@
         .inv-detail-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
         .inv-detail-value { font-weight: 600; margin-top: 0.2rem; font-size: 0.9rem; }
 
-        /* LOADING & EMPTY */
         .loading { text-align: center; padding: 2.5rem; color: var(--muted); }
         .spinner { width: 36px; height: 36px; border: 4px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.75rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -192,7 +173,6 @@
         .empty-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
         .empty-sub { font-size: 0.875rem; }
 
-        /* MISC */
         .hidden { display: none !important; }
         .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
         @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -210,7 +190,6 @@
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
 <header class="header">
     <div class="header-content">
         <div class="logo">
@@ -240,10 +219,8 @@
     </div>
 </header>
 
-<!-- ===== MAIN ===== -->
 <main class="main-content">
 
-<!-- ===== LOGIN ===== -->
 <div id="authContainer" class="auth-container">
     <div class="auth-header">
         <h2 data-en="Investor Login" data-es="Inicio de Sesión">Investor Login</h2>
@@ -268,7 +245,6 @@
     </p>
 </div>
 
-<!-- ===== ADMIN DASHBOARD ===== -->
 <div id="adminDashboard" class="dashboard">
     <nav class="dashboard-nav">
         <div class="nav-item active" data-section="adminStats" onclick="adminNav(this)">📊 <span data-en="Statistics" data-es="Estadísticas">Statistics</span></div>
@@ -278,7 +254,6 @@
         <div class="nav-item" data-section="adminOpportunities" onclick="adminNav(this)">💡 <span data-en="Opportunities" data-es="Oportunidades">Opportunities</span></div>
     </nav>
 
-    <!-- Admin: Statistics -->
     <section id="adminStats" class="dashboard-section active">
         <div class="stats-grid">
             <div class="stat-card"><div class="stat-number" id="sTotalInv">—</div><div class="stat-label" data-en="Total Investors" data-es="Total Inversores">Total Investors</div></div>
@@ -295,7 +270,6 @@
         </div>
     </section>
 
-    <!-- Admin: Investors -->
     <section id="adminInvestors" class="dashboard-section">
         <div class="card">
             <div class="card-header">
@@ -331,23 +305,21 @@
         </div>
     </section>
 
-    <!-- Admin: Documents -->
     <section id="adminDocuments" class="dashboard-section">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title" data-en="Document Review" data-es="Revisión de Documentos">Document Review</h3>
                 <select id="docFilter" class="form-input" style="width:auto;padding:0.5rem 1rem;" onchange="loadAdminDocs()">
-                    <option value="all" data-en="All" data-es="Todos">All</option>
-                    <option value="pending" data-en="Pending" data-es="Pendiente">Pending</option>
-                    <option value="approved" data-en="Approved" data-es="Aprobado">Approved</option>
-                    <option value="rejected" data-en="Rejected" data-es="Rechazado">Rejected</option>
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
                 </select>
             </div>
             <div id="adminDocsList"><div class="loading"><div class="spinner"></div></div></div>
         </div>
     </section>
 
-    <!-- Admin: Watchlist -->
     <section id="adminWatchlist" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="News Watchlist" data-es="Lista de Seguimiento">News Watchlist</h3></div>
@@ -360,7 +332,6 @@
         </div>
     </section>
 
-    <!-- Admin: Opportunities -->
     <section id="adminOpportunities" class="dashboard-section">
         <div class="card">
             <div class="card-header">
@@ -372,7 +343,6 @@
     </section>
 </div>
 
-<!-- ===== INVESTOR DASHBOARD ===== -->
 <div id="investorDashboard" class="dashboard">
     <nav class="dashboard-nav">
         <div class="nav-item active" data-section="invOverview" onclick="investorNav(this)">🏠 <span data-en="Overview" data-es="Resumen">Overview</span></div>
@@ -383,7 +353,6 @@
         <div class="nav-item" data-section="invProfile" onclick="investorNav(this)">👤 <span data-en="Profile" data-es="Perfil">Profile</span></div>
     </nav>
 
-    <!-- Investor: Overview -->
     <section id="invOverview" class="dashboard-section active">
         <div class="card">
             <div class="card-header">
@@ -402,7 +371,6 @@
         <div id="invAlerts"></div>
     </section>
 
-    <!-- Investor: Documents -->
     <section id="invDocuments" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Upload Document" data-es="Subir Documento">Upload Document</h3></div>
@@ -425,7 +393,6 @@
         </div>
     </section>
 
-    <!-- Investor: News -->
     <section id="invNews" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h3></div>
@@ -433,7 +400,6 @@
         </div>
     </section>
 
-    <!-- Investor: Opportunities -->
     <section id="invOpportunities" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Investment Opportunities" data-es="Oportunidades de Inversión">Investment Opportunities</h3></div>
@@ -441,7 +407,6 @@
         </div>
     </section>
 
-    <!-- Investor: Account -->
     <section id="invAccount" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="My Active Investments" data-es="Mis Inversiones Activas">My Active Investments</h3></div>
@@ -449,7 +414,6 @@
         </div>
     </section>
 
-    <!-- Investor: Profile -->
     <section id="invProfile" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="My Profile" data-es="Mi Perfil">My Profile</h3></div>
@@ -466,8 +430,6 @@
 
 </main>
 
-<!-- ===== MODALS ===== -->
-
 <!-- Invite Modal -->
 <div class="modal-overlay" id="inviteModal">
     <div class="modal">
@@ -480,13 +442,13 @@
         <div class="form-group">
             <label data-en="Invitation Expires In" data-es="La Invitación Expira En">Invitation Expires In</label>
             <select class="form-input" id="iExpiry">
-                <option value="7" data-en="7 days" data-es="7 días">7 days</option>
-                <option value="14" data-en="14 days" data-es="14 días">14 days</option>
-                <option value="30" data-en="30 days" data-es="30 días">30 days</option>
+                <option value="7">7 days</option>
+                <option value="14">14 days</option>
+                <option value="30">30 days</option>
             </select>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('inviteModal')" data-en="Cancel" data-es="Cancelar">Cancel</button>
+            <button class="btn btn-secondary" onclick="closeModal('inviteModal')">Cancel</button>
             <button class="btn btn-primary" onclick="sendInvite()">✉️ <span data-en="Send Invitation" data-es="Enviar Invitación">Send Invitation</span></button>
         </div>
     </div>
@@ -502,7 +464,7 @@
         <div class="form-group"><label data-en="Reason for Rejection" data-es="Razón del Rechazo">Reason for Rejection</label><textarea class="form-input" id="rejectReason" placeholder="Please provide a clear reason..."></textarea></div>
         <input type="hidden" id="rejectDocId">
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('rejectModal')" data-en="Cancel" data-es="Cancelar">Cancel</button>
+            <button class="btn btn-secondary" onclick="closeModal('rejectModal')">Cancel</button>
             <button class="btn btn-danger" onclick="confirmReject()">❌ <span data-en="Reject" data-es="Rechazar">Reject</span></button>
         </div>
     </div>
@@ -512,52 +474,52 @@
 <div class="modal-overlay" id="oppModal">
     <div class="modal modal-lg">
         <div class="modal-header">
-            <h3 class="modal-title" id="oppModalTitle" data-en="New Opportunity" data-es="Nueva Oportunidad">New Opportunity</h3>
+            <h3 class="modal-title" id="oppModalTitle">New Opportunity</h3>
             <button class="modal-close" onclick="closeModal('oppModal')">×</button>
         </div>
         <input type="hidden" id="oppId">
-        <div class="form-group"><label data-en="Title" data-es="Título">Title</label><input type="text" class="form-input" id="oppTitle" placeholder="Investment opportunity title"></div>
+        <div class="form-group"><label>Title</label><input type="text" class="form-input" id="oppTitle" placeholder="Investment opportunity title"></div>
         <div class="grid-2">
-            <div class="form-group"><label data-en="Sector" data-es="Sector">Sector</label><input type="text" class="form-input" id="oppSector" placeholder="e.g. Technology"></div>
-            <div class="form-group"><label data-en="Location" data-es="Ubicación">Location</label><input type="text" class="form-input" id="oppLocation" placeholder="e.g. San Francisco, CA"></div>
+            <div class="form-group"><label>Sector</label><input type="text" class="form-input" id="oppSector" placeholder="e.g. Technology"></div>
+            <div class="form-group"><label>Location</label><input type="text" class="form-input" id="oppLocation" placeholder="e.g. San Francisco, CA"></div>
         </div>
-        <div class="form-group"><label data-en="Description" data-es="Descripción">Description</label><textarea class="form-input" id="oppDesc" placeholder="Describe the investment opportunity..."></textarea></div>
+        <div class="form-group"><label>Description</label><textarea class="form-input" id="oppDesc" placeholder="Describe the investment opportunity..."></textarea></div>
         <div class="grid-2">
-            <div class="form-group"><label data-en="Target Amount ($)" data-es="Monto Objetivo ($)">Target Amount ($)</label><input type="number" class="form-input" id="oppTarget" placeholder="1000000"></div>
-            <div class="form-group"><label data-en="Minimum Investment ($)" data-es="Inversión Mínima ($)">Minimum Investment ($)</label><input type="number" class="form-input" id="oppMin" placeholder="25000"></div>
+            <div class="form-group"><label>Target Amount ($)</label><input type="number" class="form-input" id="oppTarget" placeholder="1000000"></div>
+            <div class="form-group"><label>Minimum Investment ($)</label><input type="number" class="form-input" id="oppMin" placeholder="25000"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label data-en="Expected Return" data-es="Retorno Esperado">Expected Return</label><input type="text" class="form-input" id="oppReturn" placeholder="e.g. 15-20% IRR"></div>
-            <div class="form-group"><label data-en="Timeline" data-es="Plazo">Timeline</label><input type="text" class="form-input" id="oppTimeline" placeholder="e.g. 3-5 years"></div>
+            <div class="form-group"><label>Expected Return</label><input type="text" class="form-input" id="oppReturn" placeholder="e.g. 15-20% IRR"></div>
+            <div class="form-group"><label>Timeline</label><input type="text" class="form-input" id="oppTimeline" placeholder="e.g. 3-5 years"></div>
         </div>
         <div class="form-group">
-            <label data-en="Status" data-es="Estado">Status</label>
+            <label>Status</label>
             <select class="form-input" id="oppStatus">
-                <option value="active" data-en="Active" data-es="Activo">Active</option>
-                <option value="coming_soon" data-en="Coming Soon" data-es="Próximamente">Coming Soon</option>
-                <option value="closed" data-en="Closed" data-es="Cerrado">Closed</option>
+                <option value="active">Active</option>
+                <option value="coming_soon">Coming Soon</option>
+                <option value="closed">Closed</option>
             </select>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('oppModal')" data-en="Cancel" data-es="Cancelar">Cancel</button>
-            <button class="btn btn-primary" onclick="saveOpp()">💾 <span data-en="Save" data-es="Guardar">Save</span></button>
+            <button class="btn btn-secondary" onclick="closeModal('oppModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="saveOpp()">💾 Save</button>
         </div>
     </div>
 </div>
 
-<!-- ===== JAVASCRIPT ===== -->
 <script>
 // ============================================================
-// CONFIG
+// CONFIG — Update BACKEND_URL with your Railway URL
 // ============================================================
 const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-// Email is handled securely via Railway backend — no API key needed here
-const BACKEND_URL = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
-const BUCKET      = 'investor-documents';
+// ⬇️ Email handled securely via Railway backend — API key never exposed here
+const BACKEND_URL   = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
+const BUCKET        = 'investor-documents';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null, userProfile = null, lang = 'en';
+
 // ============================================================
 // LANGUAGE
 // ============================================================
@@ -769,7 +731,7 @@ async function loadInvitations() {
 }
 
 // ============================================================
-// SEND INVITE — uses Supabase Edge Function for secure email
+// SEND INVITE — uses Railway backend for secure email
 // ============================================================
 async function sendInvite() {
     const name   = document.getElementById('iName').value.trim();
@@ -779,7 +741,6 @@ async function sendInvite() {
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
 
     try {
-        // Generate secure token using Web Crypto API
         const array = new Uint8Array(32);
         crypto.getRandomValues(array);
         const token = btoa(String.fromCharCode(...array))
@@ -787,11 +748,9 @@ async function sendInvite() {
             .replace(/\//g, '_')
             .replace(/=/g, '');
 
-        // Calculate expiry date
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + expiry);
 
-        // Insert into invitations table
         const { error } = await sb.from('invitations').insert({
             name:       name,
             email:      email,
@@ -803,8 +762,8 @@ async function sendInvite() {
 
         if (error) throw error;
 
-        // Send email via Supabase Edge Function (API key stays secure on server)
-        const sent = await sendEmailViaEdgeFunction(name, email, token, expiry);
+        // Send email via Railway backend (API key stays secure on server)
+        const sent = await sendEmailViaBackend(name, email, token, expiry);
 
         closeModal('inviteModal');
         document.getElementById('iName').value  = '';
@@ -813,9 +772,9 @@ async function sendInvite() {
         notify(
             sent
                 ? `Invitation sent to ${email}`
-                : `Invitation created but email failed. Token: ${token}`,
+                : `Invitation created but email failed. Please check the Railway backend.`,
             sent ? 'success' : 'warning',
-            sent ? 5000 : 15000
+            sent ? 5000 : 10000
         );
 
         loadInvitations();
@@ -831,12 +790,12 @@ async function sendInvite() {
 }
 
 // ============================================================
-// EMAIL VIA SUPABASE EDGE FUNCTION (API key is secure server-side)
+// EMAIL VIA RAILWAY BACKEND (API key is secure server-side)
 // ============================================================
-async function sendEmailViaEdgeFunction(name, email, token, expiry) {
+async function sendEmailViaBackend(name, email, token, expiry) {
     const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;
     try {
-        const res = await fetch(EDGE_FUNCTION_URL, {
+        const res = await fetch(BACKEND_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -852,16 +811,17 @@ async function sendEmailViaEdgeFunction(name, email, token, expiry) {
 
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            console.error('Edge Function error:', errData);
+            console.error('Backend error:', errData);
             return false;
         }
 
         return true;
     } catch (err) {
-        console.error('Edge Function call failed:', err);
+        console.error('Backend call failed:', err);
         return false;
     }
 }
+
 // ============================================================
 // ADMIN: DOCUMENTS
 // ============================================================
@@ -969,13 +929,13 @@ async function removeWatchlist(id) {
 }
 
 // ============================================================
-// OPPORTUNITIES (Admin + Investor)
+// OPPORTUNITIES
 // ============================================================
 async function loadOpps(view) {
     const elId = view === 'admin' ? 'adminOppList' : 'invOppList';
     try {
         const { data, error } = await sb.from('opportunities').select('*').order('created_at', { ascending: false });
-        if (error) { document.getElementById(elId).innerHTML = `<div class="alert alert-warning">⚠️ Opportunities table not found. Please run the additional SQL provided.</div>`; return; }
+        if (error) { document.getElementById(elId).innerHTML = `<div class="alert alert-warning">⚠️ Opportunities table not found.</div>`; return; }
         const el = document.getElementById(elId);
         if (!data?.length) {
             el.innerHTML = emptyState('💡', 'No opportunities yet', view === 'admin' ? 'Click "New Opportunity" to add one' : 'Check back soon for new investment opportunities');
@@ -1201,12 +1161,12 @@ async function loadNews() {
 }
 
 // ============================================================
-// INVESTOR: INVESTMENTS (Account)
+// INVESTOR: INVESTMENTS
 // ============================================================
 async function loadInvestments() {
     try {
         const { data, error } = await sb.from('investments').select(`*,opportunities(title,sector)`).eq('investor_id', currentUser.id).order('investment_date', { ascending: false });
-        if (error) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-warning">⚠️ Investments table not found. Please run the additional SQL provided.</div>`; return; }
+        if (error) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-warning">⚠️ Investments table not found.</div>`; return; }
         const el = document.getElementById('invInvestments');
         if (!data?.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
         el.innerHTML = data.map(inv => `
@@ -1287,8 +1247,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
-
-
-

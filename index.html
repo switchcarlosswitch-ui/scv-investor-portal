@@ -64,6 +64,8 @@
         .btn-warning:hover { background: #b45309; }
         .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
         .btn-full { width: 100%; }
+        .btn-link { background: none; border: none; color: var(--purple); cursor: pointer; font-size: 0.875rem; padding: 0; text-decoration: underline; font-family: inherit; }
+        .btn-link:hover { color: var(--purple-dark); }
 
         .dashboard { display: none; }
         .dashboard.active { display: block; }
@@ -149,13 +151,16 @@
         .watchlist-name { font-weight: 600; font-size: 0.9rem; }
         .watchlist-ticker { font-size: 0.8rem; color: var(--purple); font-weight: 700; }
 
-        .news-item { padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); transition: all 0.2s; }
-        .news-item:hover { border-color: var(--purple); }
-        .news-tag { font-size: 0.72rem; color: var(--purple); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-        .news-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
-        .news-title a { color: var(--text); text-decoration: none; }
-        .news-title a:hover { color: var(--purple); }
-        .news-date { font-size: 0.78rem; color: var(--muted); }
+        /* NEWS HEADLINES */
+        .news-company-section { margin-bottom: 2rem; }
+        .news-company-header { font-size: 1rem; font-weight: 700; color: var(--purple); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+        .news-item { padding: 0.875rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.5rem; background: var(--white); transition: all 0.2s; }
+        .news-item:hover { border-color: var(--purple); background: #fafbff; }
+        .news-headline { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .news-headline a { color: var(--text); text-decoration: none; }
+        .news-headline a:hover { color: var(--purple); }
+        .news-meta { font-size: 0.75rem; color: var(--muted); display: flex; gap: 1rem; }
+        .news-source { font-weight: 600; }
 
         .inv-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
         .inv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
@@ -177,7 +182,6 @@
         .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
         @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        /* Password strength indicator */
         .password-strength { margin-top: 0.5rem; }
         .strength-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
         .strength-fill { height: 100%; border-radius: 2px; transition: all 0.3s; }
@@ -246,10 +250,60 @@
             <span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>
         </button>
     </form>
+    <div style="text-align:center;margin-top:1rem;">
+        <button class="btn-link" onclick="showForgotPassword()" data-en="Forgot your password?" data-es="¿Olvidó su contraseña?">Forgot your password?</button>
+    </div>
     <hr class="divider">
     <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversionista? Debe ser invitado por un administrador para crear una cuenta.">
         New investor? You must be invited by an admin to create an account.
     </p>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div id="forgotContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔑</div>
+        <h2 data-en="Reset Password" data-es="Restablecer Contraseña">Reset Password</h2>
+        <p data-en="Enter your email and we'll send you a reset link" data-es="Ingrese su correo y le enviaremos un enlace">Enter your email and we'll send you a reset link</p>
+    </div>
+    <form id="forgotForm">
+        <div class="form-group">
+            <label data-en="Email" data-es="Correo Electrónico">Email</label>
+            <input type="email" class="form-input" id="forgotEmail" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="forgotBtn">
+            📧 <span data-en="Send Reset Link" data-es="Enviar Enlace">Send Reset Link</span>
+        </button>
+    </form>
+    <div style="text-align:center;margin-top:1rem;">
+        <button class="btn-link" onclick="showLogin()">← <span data-en="Back to Login" data-es="Volver al Inicio">Back to Login</span></button>
+    </div>
+</div>
+
+<!-- RESET PASSWORD (after clicking email link) -->
+<div id="resetContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔐</div>
+        <h2 data-en="Create New Password" data-es="Crear Nueva Contraseña">Create New Password</h2>
+        <p data-en="Enter your new password below" data-es="Ingrese su nueva contraseña">Enter your new password below</p>
+    </div>
+    <form id="resetForm">
+        <div class="form-group">
+            <label data-en="New Password" data-es="Nueva Contraseña">New Password</label>
+            <input type="password" class="form-input" id="resetPassword" required minlength="8" oninput="checkPasswordStrength2(this.value)" placeholder="Minimum 8 characters">
+            <div class="password-strength">
+                <div class="strength-bar"><div class="strength-fill" id="strengthFill2" style="width:0%;background:#dc2626;"></div></div>
+                <div class="strength-text" id="strengthText2" style="color:var(--muted);"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-en="Confirm New Password" data-es="Confirmar Nueva Contraseña">Confirm New Password</label>
+            <input type="password" class="form-input" id="resetPasswordConfirm" required placeholder="Re-enter your password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="resetBtn">
+            🔐 <span data-en="Update Password" data-es="Actualizar Contraseña">Update Password</span>
+        </button>
+    </form>
 </div>
 
 <!-- INVITATION REGISTRATION -->
@@ -452,7 +506,10 @@
 
     <section id="invNews" class="dashboard-section">
         <div class="card">
-            <div class="card-header"><h3 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h3></div>
+            <div class="card-header">
+                <h3 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h3>
+                <button class="btn btn-secondary btn-sm" onclick="loadNews()">🔄 Refresh</button>
+            </div>
             <div id="newsContent"><div class="loading"><div class="spinner"></div></div></div>
         </div>
     </section>
@@ -570,7 +627,6 @@
 // ============================================================
 const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-// Email handled securely via Railway backend
 const BACKEND_URL   = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
 const BUCKET        = 'investor-documents';
 
@@ -618,16 +674,36 @@ document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('cli
 // ============================================================
 function showLogin() {
     document.getElementById('authContainer').classList.remove('hidden');
+    document.getElementById('forgotContainer').classList.add('hidden');
+    document.getElementById('resetContainer').classList.add('hidden');
+    document.getElementById('registerContainer').classList.add('hidden');
+    document.getElementById('invalidInviteContainer').classList.add('hidden');
+}
+function showForgotPassword() {
+    document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('forgotContainer').classList.remove('hidden');
+    document.getElementById('resetContainer').classList.add('hidden');
+    document.getElementById('registerContainer').classList.add('hidden');
+    document.getElementById('invalidInviteContainer').classList.add('hidden');
+}
+function showResetPassword() {
+    document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('forgotContainer').classList.add('hidden');
+    document.getElementById('resetContainer').classList.remove('hidden');
     document.getElementById('registerContainer').classList.add('hidden');
     document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
 function showRegister() {
     document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('forgotContainer').classList.add('hidden');
+    document.getElementById('resetContainer').classList.add('hidden');
     document.getElementById('registerContainer').classList.remove('hidden');
     document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
 function showInvalidInvite(msg) {
     document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('forgotContainer').classList.add('hidden');
+    document.getElementById('resetContainer').classList.add('hidden');
     document.getElementById('registerContainer').classList.add('hidden');
     document.getElementById('invalidInviteContainer').classList.remove('hidden');
     document.getElementById('invalidInviteMsg').textContent = msg || 'This invitation link is invalid or has expired.';
@@ -637,15 +713,20 @@ function showInvalidInvite(msg) {
 // PASSWORD STRENGTH
 // ============================================================
 function checkPasswordStrength(password) {
-    const fill = document.getElementById('strengthFill');
-    const text = document.getElementById('strengthText');
+    _checkStrength(password, 'strengthFill', 'strengthText');
+}
+function checkPasswordStrength2(password) {
+    _checkStrength(password, 'strengthFill2', 'strengthText2');
+}
+function _checkStrength(password, fillId, textId) {
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
     let strength = 0;
     if (password.length >= 8) strength++;
     if (password.length >= 12) strength++;
     if (/[A-Z]/.test(password)) strength++;
     if (/[0-9]/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
-
     const levels = [
         { pct: '20%', color: '#dc2626', label: 'Very Weak' },
         { pct: '40%', color: '#f97316', label: 'Weak' },
@@ -659,6 +740,57 @@ function checkPasswordStrength(password) {
     text.textContent = password.length > 0 ? level.label : '';
     text.style.color = level.color;
 }
+
+// ============================================================
+// FORGOT PASSWORD
+// ============================================================
+document.getElementById('forgotForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('forgotEmail').value.trim();
+    const btn = document.getElementById('forgotBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    try {
+        const redirectTo = window.location.origin + window.location.pathname;
+        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
+        if (error) throw error;
+        notify(`Password reset link sent to ${email}. Please check your inbox.`, 'success', 10000);
+        showLogin();
+    } catch (err) {
+        notify('Error: ' + err.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '📧 <span>Send Reset Link</span>';
+    }
+});
+
+// ============================================================
+// RESET PASSWORD FORM
+// ============================================================
+document.getElementById('resetForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const password = document.getElementById('resetPassword').value;
+    const passwordConfirm = document.getElementById('resetPasswordConfirm').value;
+    const btn = document.getElementById('resetBtn');
+
+    if (password.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
+    if (password !== passwordConfirm) { notify('Passwords do not match', 'warning'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
+    try {
+        const { error } = await sb.auth.updateUser({ password });
+        if (error) throw error;
+        notify('Password updated successfully! Please log in.', 'success', 8000);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showLogin();
+    } catch (err) {
+        notify('Error: ' + err.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🔐 <span>Update Password</span>';
+    }
+});
 
 // ============================================================
 // INVITATION FLOW
@@ -710,7 +842,6 @@ async function checkInviteToken() {
 // ============================================================
 document.getElementById('registerForm').addEventListener('submit', async e => {
     e.preventDefault();
-
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
@@ -726,57 +857,34 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
 
     try {
         const { data: authData, error: authError } = await sb.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: { full_name: name }
-            }
+            email, password,
+            options: { data: { full_name: name } }
         });
 
         if (authError) throw authError;
-
         const userId = authData.user?.id;
         if (!userId) throw new Error('Failed to create user account');
 
-        const { error: profileError } = await sb.from('profiles').upsert({
-            id: userId,
-            full_name: name,
-            email: email,
-            role: 'investor',
-            status: 'active',
+        await sb.from('profiles').upsert({
+            id: userId, full_name: name, email,
+            role: 'investor', status: 'active',
             created_at: new Date().toISOString()
         });
 
-        if (profileError) console.warn('Profile creation error:', profileError.message);
-
-        const { error: invError } = await sb.from('invitations').update({
-            status: 'accepted',
-            user_id: userId,
+        await sb.from('invitations').update({
+            status: 'accepted', user_id: userId,
             used_at: new Date().toISOString()
         }).eq('id', window._inviteId);
 
-        if (invError) console.warn('Invitation update error:', invError.message);
-
-        const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
+        const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password });
         if (signInError) throw signInError;
 
         currentUser = signInData.user;
-        userProfile = {
-            id: userId,
-            full_name: name,
-            email: email,
-            role: 'investor',
-            status: 'active'
-        };
+        userProfile = { id: userId, full_name: name, email, role: 'investor', status: 'active' };
 
         window.history.replaceState({}, document.title, window.location.pathname);
         notify(`Welcome to Silicon Corridor Ventures, ${name}! 🎉`, 'success', 8000);
         showDashboard();
-
     } catch (err) {
         notify('Registration failed: ' + err.message, 'danger');
     } finally {
@@ -818,14 +926,14 @@ async function fetchProfile() {
     } catch (err) {
         console.warn('Profile fetch error:', err.message);
         userProfile = { role: 'investor', full_name: currentUser.email, email: currentUser.email, status: 'active' };
-        notify('Profile defaults used — check DB connection', 'warning');
     }
 }
 
 function showDashboard() {
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
+    ['authContainer','forgotContainer','resetContainer','registerContainer','invalidInviteContainer'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
     document.getElementById('logoutBtn').classList.remove('hidden');
     const badge = document.getElementById('userBadge');
     badge.classList.remove('hidden');
@@ -846,7 +954,7 @@ async function logout() {
     await sb.auth.signOut();
     currentUser = null; userProfile = null;
     ['adminDashboard','investorDashboard'].forEach(id => document.getElementById(id).classList.remove('active'));
-    document.getElementById('authContainer').classList.remove('hidden');
+    showLogin();
     document.getElementById('logoutBtn').classList.add('hidden');
     document.getElementById('userBadge').classList.add('hidden');
     document.getElementById('loginEmail').value = '';
@@ -946,7 +1054,7 @@ async function setInvestorStatus(id, status) {
 }
 
 // ============================================================
-// ADMIN: INVITATIONS (with Soft Delete + Compliance Check)
+// ADMIN: INVITATIONS
 // ============================================================
 async function loadInvitations() {
     try {
@@ -974,20 +1082,16 @@ async function softDeleteInvitation(id, email) {
     try {
         const deletedEmail = email + '_deleted_' + Date.now();
         const { error } = await sb.from('invitations')
-            .update({
-                deleted_at: new Date().toISOString(),
-                email: deletedEmail
-            })
+            .update({ deleted_at: new Date().toISOString(), email: deletedEmail })
             .eq('id', id);
         if (error) throw error;
         notify(`Invitation for ${email} removed. You can now resend an invitation to this address.`, 'success');
-        loadInvitations();
-        loadAdminStats();
+        loadInvitations(); loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
 }
 
 // ============================================================
-// SEND INVITE — Compliance check + Railway backend
+// SEND INVITE
 // ============================================================
 async function sendInvite() {
     const name   = document.getElementById('iName').value.trim();
@@ -997,12 +1101,8 @@ async function sendInvite() {
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
 
     try {
-        // COMPLIANCE CHECK: Verify no active invitation exists for this email
         const { data: existing } = await sb.from('invitations')
-            .select('id')
-            .eq('email', email)
-            .is('deleted_at', null)
-            .maybeSingle();
+            .select('id').eq('email', email).is('deleted_at', null).maybeSingle();
 
         if (existing) {
             notify(`An active invitation for ${email} already exists. Please delete it first before resending.`, 'warning');
@@ -1012,20 +1112,16 @@ async function sendInvite() {
         const array = new Uint8Array(32);
         crypto.getRandomValues(array);
         const token = btoa(String.fromCharCode(...array))
-            .replace(/\+/g, '-')
-            .replace(/\//g, '_')
-            .replace(/=/g, '');
+            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + expiry);
 
         const { error } = await sb.from('invitations').insert({
-            name:       name,
-            email:      email,
-            token:      token,
+            name, email, token,
             expires_at: expiresAt.toISOString(),
             created_by: currentUser.id,
-            status:     'pending'
+            status: 'pending'
         });
 
         if (error) throw error;
@@ -1037,24 +1133,17 @@ async function sendInvite() {
         document.getElementById('iEmail').value = '';
 
         notify(
-            sent
-                ? `Invitation sent to ${email}`
-                : `Invitation created but email failed. Please check the Railway backend.`,
+            sent ? `Invitation sent to ${email}` : `Invitation created but email failed.`,
             sent ? 'success' : 'warning',
             sent ? 5000 : 10000
         );
 
-        loadInvitations();
-        loadAdminStats();
-
+        loadInvitations(); loadAdminStats();
     } catch (err) {
         notify('Error sending invitation: ' + err.message, 'danger');
     }
 }
 
-// ============================================================
-// EMAIL VIA RAILWAY BACKEND
-// ============================================================
 async function sendEmailViaBackend(name, email, token, expiry) {
     const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;
     try {
@@ -1063,16 +1152,9 @@ async function sendEmailViaBackend(name, email, token, expiry) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, token, expiry, inviteUrl })
         });
-        if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            console.error('Backend error:', errData);
-            return false;
-        }
+        if (!res.ok) { console.error('Backend error:', await res.json().catch(() => ({}))); return false; }
         return true;
-    } catch (err) {
-        console.error('Backend call failed:', err);
-        return false;
-    }
+    } catch (err) { console.error('Backend call failed:', err); return false; }
 }
 
 // ============================================================
@@ -1387,30 +1469,67 @@ async function loadInvDocs() {
 }
 
 // ============================================================
-// INVESTOR: NEWS
+// INVESTOR: NEWS — Real headlines via RSS2JSON
 // ============================================================
 async function loadNews() {
     const el = document.getElementById('newsContent');
-    el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    el.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading headlines...</p></div>';
     try {
         const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
         if (error) throw error;
-        if (!data?.length) { el.innerHTML = emptyState('📰','No watchlist companies','The admin has not added any companies to the watchlist yet'); return; }
-        el.innerHTML = `
-            <div class="alert alert-info" style="margin-bottom:1.5rem;">ℹ️ Click any company link below to view the latest news from Google News.</div>
-            ${data.map(w => `
-                <div class="news-item">
-                    <div class="news-tag">${w.ticker ? '$'+w.ticker+' • ' : ''}Watchlist</div>
-                    <div class="news-title">
-                        <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank">
-                            ${w.company_name} — Latest News ↗
-                        </a>
-                    </div>
-                    <div class="news-date">Click to view on Google News</div>
-                </div>
-            `).join('')}
-        `;
-    } catch (err) { el.innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+        if (!data?.length) {
+            el.innerHTML = emptyState('📰','No watchlist companies','The admin has not added any companies to the watchlist yet');
+            return;
+        }
+
+        // Fetch news for each company
+        const newsPromises = data.map(async (w) => {
+            try {
+                const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(w.company_name)}&hl=en-US&gl=US&ceid=US:en`;
+                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=5`;
+                const res = await fetch(apiUrl);
+                const json = await res.json();
+                return { company: w, items: json.items || [] };
+            } catch (e) {
+                return { company: w, items: [] };
+            }
+        });
+
+        const results = await Promise.all(newsPromises);
+
+        let html = '';
+        for (const { company, items } of results) {
+            html += `<div class="news-company-section">
+                <div class="news-company-header">
+                    📈 ${company.company_name}${company.ticker ? ` <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">($${company.ticker})</span>` : ''}
+                </div>`;
+
+            if (!items.length) {
+                html += `<div class="news-item"><div class="news-headline" style="color:var(--muted);">No recent headlines found.</div></div>`;
+            } else {
+                for (const item of items) {
+                    const pubDate = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                    const source = item.author || item.source || '';
+                    // Clean up title (Google News sometimes adds source at end)
+                    const title = item.title ? item.title.replace(/ - [^-]+$/, '') : 'Read article';
+                    html += `<div class="news-item">
+                        <div class="news-headline">
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer">${title} ↗</a>
+                        </div>
+                        <div class="news-meta">
+                            ${source ? `<span class="news-source">${source}</span>` : ''}
+                            ${pubDate ? `<span>${pubDate}</span>` : ''}
+                        </div>
+                    </div>`;
+                }
+            }
+            html += '</div>';
+        }
+
+        el.innerHTML = html;
+    } catch (err) {
+        el.innerHTML = `<div class="alert alert-danger">Error loading news: ${err.message}</div>`;
+    }
 }
 
 // ============================================================
@@ -1430,82 +1549,4 @@ async function loadInvestments() {
                         ${inv.opportunities?.sector ? `<div style="color:var(--muted);font-size:0.85rem;">${inv.opportunities.sector}</div>` : ''}
                     </div>
                     <div>
-                        <div class="inv-amount">$${fmtMoney(inv.amount)}</div>
-                        ${statusBadge(inv.status)}
-                    </div>
-                </div>
-                <div class="inv-details">
-                    <div><div class="inv-detail-label">Investment Date</div><div class="inv-detail-value">${fmtDate(inv.investment_date)}</div></div>
-                    ${inv.notes ? `<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">${inv.notes}</div></div>` : ''}
-                </div>
-            </div>
-        `).join('');
-    } catch (err) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
-}
-
-// ============================================================
-// INVESTOR: PROFILE
-// ============================================================
-function fillProfile() {
-    document.getElementById('pName').value   = userProfile?.full_name || '';
-    document.getElementById('pEmail').value  = userProfile?.email || currentUser?.email || '';
-    document.getElementById('pPhone').value  = userProfile?.phone || '';
-    document.getElementById('pStatus').value = userProfile?.status || '';
-}
-
-async function saveProfile(e) {
-    e.preventDefault();
-    try {
-        const { error } = await sb.from('profiles').update({
-            full_name: document.getElementById('pName').value.trim(),
-            phone: document.getElementById('pPhone').value.trim(),
-            updated_at: new Date().toISOString()
-        }).eq('id', currentUser.id);
-        if (error) throw error;
-        userProfile.full_name = document.getElementById('pName').value.trim();
-        document.getElementById('invName').textContent = userProfile.full_name;
-        document.getElementById('userBadge').textContent = userProfile.full_name;
-        notify('Profile updated successfully', 'success');
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
-}
-
-// ============================================================
-// DRAG & DROP UPLOAD
-// ============================================================
-const uploadArea = document.getElementById('uploadArea');
-uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
-uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-uploadArea.addEventListener('drop', e => {
-    e.preventDefault();
-    uploadArea.classList.remove('dragover');
-    const files = e.dataTransfer.files;
-    if (files.length) {
-        document.getElementById('fileInput').files = files;
-        handleFile(document.getElementById('fileInput'));
-    }
-});
-
-// ============================================================
-// INIT
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-    updateLang();
-
-    const params = new URLSearchParams(window.location.search);
-    const inviteToken = params.get('invite');
-
-    if (inviteToken) {
-        document.getElementById('authContainer').classList.add('hidden');
-        checkInviteToken();
-    } else {
-        sb.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                currentUser = session.user;
-                fetchProfile().then(() => showDashboard());
-            }
-        });
-    }
-});
-</script>
-</body>
-</html>
+                        <div class="inv-amount">$${fmtMoney(inv.

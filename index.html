@@ -177,7 +177,6 @@
         .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
         @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        /* Password strength indicator */
         .password-strength { margin-top: 0.5rem; }
         .strength-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
         .strength-fill { height: 100%; border-radius: 2px; transition: all 0.3s; }
@@ -247,9 +246,75 @@
         </button>
     </form>
     <hr class="divider">
-    <p style="color:var(--muted);font-size:0.82rem;text-align:center;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversionista? Debe ser invitado por un administrador para crear una cuenta.">
-        New investor? You must be invited by an admin to create an account.
-    </p>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
+        <p style="color:var(--muted);margin:0;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversionista? Debe ser invitado por un administrador para crear una cuenta.">
+            New investor? You must be invited by an admin to create an account.
+        </p>
+    </div>
+    <button type="button" class="btn btn-secondary btn-sm" style="margin-top:1rem;width:100%;" onclick="showForgotPassword()" data-en="Forgot Password?" data-es="¿Olvidó su contraseña?">Forgot Password?</button>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div id="forgotPasswordContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔒</div>
+        <h2 data-en="Reset Password" data-es="Restablecer Contraseña">Reset Password</h2>
+        <p data-en="Enter your email to receive a recovery link" data-es="Ingrese su correo para recibir un enlace de recuperación">Enter your email to receive a recovery link</p>
+    </div>
+    <form id="forgotPasswordForm">
+        <div class="form-group">
+            <label data-en="Email Address" data-es="Correo Electrónico">Email Address</label>
+            <input type="email" class="form-input" id="fpEmail" required autocomplete="email">
+        </div>
+        <div class="form-group">
+            <label data-en="Verify you are human" data-es="Verificar que es humano">Verify you are human</label>
+            <div style="background:var(--light);padding:1rem;border-radius:8px;margin-bottom:0.75rem;">
+                <div style="font-weight:600;margin-bottom:0.5rem;" id="captchaQuestion"></div>
+                <input type="number" class="form-input" id="captchaAnswer" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="fpBtn">
+            <span data-en="Send Recovery Email" data-es="Enviar Correo de Recuperación">Send Recovery Email</span>
+        </button>
+    </form>
+    <hr class="divider">
+    <button type="button" class="btn btn-secondary btn-sm btn-full" onclick="showLogin()" data-en="← Back to Login" data-es="← Volver al Inicio de Sesión">← Back to Login</button>
+</div>
+
+<!-- PASSWORD RESET -->
+<div id="resetPasswordContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔑</div>
+        <h2 data-en="Create New Password" data-es="Crear Nueva Contraseña">Create New Password</h2>
+        <p data-en="Enter a new password for your account" data-es="Ingrese una nueva contraseña para su cuenta">Enter a new password for your account</p>
+    </div>
+    <form id="resetPasswordForm">
+        <div class="form-group">
+            <label data-en="New Password" data-es="Nueva Contraseña">New Password</label>
+            <input type="password" class="form-input" id="newPassword" required minlength="8" oninput="checkPasswordStrength(this.value)" placeholder="Minimum 8 characters">
+            <div class="password-strength">
+                <div class="strength-bar"><div class="strength-fill" id="resetStrengthFill" style="width:0%;background:#dc2626;"></div></div>
+                <div class="strength-text" id="resetStrengthText" style="color:var(--muted);"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-en="Confirm Password" data-es="Confirmar Contraseña">Confirm Password</label>
+            <input type="password" class="form-input" id="confirmNewPassword" required placeholder="Re-enter your password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="resetBtn">
+            🔐 <span data-en="Update Password" data-es="Actualizar Contraseña">Update Password</span>
+        </button>
+    </form>
+</div>
+
+<!-- INVALID RESET LINK -->
+<div id="invalidResetContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">❌</div>
+        <h2 style="color:#dc2626;" data-en="Invalid Reset Link" data-es="Enlace de Restablecimiento Inválido">Invalid Reset Link</h2>
+        <p id="invalidResetMsg" style="color:var(--muted);" data-en="This password reset link is invalid or has expired." data-es="Este enlace de restablecimiento de contraseña es inválido o ha expirado.">This password reset link is invalid or has expired.</p>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="showLogin()">← <span data-en="Back to Login" data-es="Volver al Inicio de Sesión">Back to Login</span></button>
 </div>
 
 <!-- INVITATION REGISTRATION -->
@@ -273,10 +338,10 @@
         </div>
         <div class="form-group">
             <label data-en="Password" data-es="Contraseña">Password</label>
-            <input type="password" class="form-input" id="regPassword" required minlength="8" oninput="checkPasswordStrength(this.value)" placeholder="Minimum 8 characters">
+            <input type="password" class="form-input" id="regPassword" required minlength="8" oninput="checkPasswordStrength(this.value, 'reg')" placeholder="Minimum 8 characters">
             <div class="password-strength">
-                <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%;background:#dc2626;"></div></div>
-                <div class="strength-text" id="strengthText" style="color:var(--muted);"></div>
+                <div class="strength-bar"><div class="strength-fill" id="regStrengthFill" style="width:0%;background:#dc2626;"></div></div>
+                <div class="strength-text" id="regStrengthText" style="color:var(--muted);"></div>
             </div>
         </div>
         <div class="form-group">
@@ -570,12 +635,12 @@
 // ============================================================
 const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-// Email handled securely via Railway backend
 const BACKEND_URL   = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
 const BUCKET        = 'investor-documents';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null, userProfile = null, lang = 'en';
+let captchaNum1, captchaNum2, captchaOp, captchaCorrectAnswer;
 
 // ============================================================
 // LANGUAGE
@@ -584,7 +649,13 @@ function toggleLanguage() {
     lang = lang === 'en' ? 'es' : 'en';
     document.getElementById('langText').textContent = lang === 'en' ? 'ES' : 'EN';
     updateLang();
+    // Regenerate captcha question in correct language if visible
+    const fpContainer = document.getElementById('forgotPasswordContainer');
+    if (!fpContainer.classList.contains('hidden')) {
+        updateCaptchaQuestion();
+    }
 }
+
 function updateLang() {
     document.querySelectorAll('[data-en][data-es]').forEach(el => {
         const t = el.getAttribute('data-' + lang);
@@ -614,31 +685,90 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
 
 // ============================================================
-// SHOW/HIDE CONTAINERS
+// ALL AUTH CONTAINERS
 // ============================================================
+const AUTH_CONTAINERS = [
+    'authContainer',
+    'forgotPasswordContainer',
+    'resetPasswordContainer',
+    'invalidResetContainer',
+    'registerContainer',
+    'invalidInviteContainer'
+];
+
+function hideAllAuth() {
+    AUTH_CONTAINERS.forEach(id => document.getElementById(id).classList.add('hidden'));
+}
+
 function showLogin() {
+    hideAllAuth();
     document.getElementById('authContainer').classList.remove('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
+
 function showRegister() {
-    document.getElementById('authContainer').classList.add('hidden');
+    hideAllAuth();
     document.getElementById('registerContainer').classList.remove('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
 }
+
 function showInvalidInvite(msg) {
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
+    hideAllAuth();
     document.getElementById('invalidInviteContainer').classList.remove('hidden');
     document.getElementById('invalidInviteMsg').textContent = msg || 'This invitation link is invalid or has expired.';
+}
+
+function showForgotPassword() {
+    hideAllAuth();
+    document.getElementById('forgotPasswordContainer').classList.remove('hidden');
+    generateCaptcha();
+}
+
+function showResetPassword() {
+    hideAllAuth();
+    document.getElementById('resetPasswordContainer').classList.remove('hidden');
+}
+
+function showInvalidReset(msg) {
+    hideAllAuth();
+    document.getElementById('invalidResetContainer').classList.remove('hidden');
+    document.getElementById('invalidResetMsg').textContent = msg || 'This password reset link is invalid or has expired.';
+}
+
+// ============================================================
+// CAPTCHA
+// ============================================================
+function generateCaptcha() {
+    captchaNum1 = Math.floor(Math.random() * 10) + 1;
+    captchaNum2 = Math.floor(Math.random() * 10) + 1;
+    captchaOp = Math.random() > 0.5 ? '+' : '-';
+    // Ensure no negative answers
+    if (captchaOp === '-' && captchaNum2 > captchaNum1) {
+        let tmp = captchaNum1; captchaNum1 = captchaNum2; captchaNum2 = tmp;
+    }
+    captchaCorrectAnswer = captchaOp === '+' ? captchaNum1 + captchaNum2 : captchaNum1 - captchaNum2;
+    updateCaptchaQuestion();
+    document.getElementById('captchaAnswer').value = '';
+}
+
+function updateCaptchaQuestion() {
+    const qEl = document.getElementById('captchaQuestion');
+    if (!qEl) return;
+    if (lang === 'es') {
+        qEl.textContent = `¿Cuánto es ${captchaNum1} ${captchaOp} ${captchaNum2}?`;
+    } else {
+        qEl.textContent = `What is ${captchaNum1} ${captchaOp} ${captchaNum2}?`;
+    }
 }
 
 // ============================================================
 // PASSWORD STRENGTH
 // ============================================================
-function checkPasswordStrength(password) {
-    const fill = document.getElementById('strengthFill');
-    const text = document.getElementById('strengthText');
+function checkPasswordStrength(password, prefix = 'reset') {
+    const fillId = prefix === 'reg' ? 'regStrengthFill' : 'resetStrengthFill';
+    const textId = prefix === 'reg' ? 'regStrengthText' : 'resetStrengthText';
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
+    if (!fill || !text) return;
+
     let strength = 0;
     if (password.length >= 8) strength++;
     if (password.length >= 12) strength++;
@@ -647,11 +777,11 @@ function checkPasswordStrength(password) {
     if (/[^A-Za-z0-9]/.test(password)) strength++;
 
     const levels = [
-        { pct: '20%', color: '#dc2626', label: 'Very Weak' },
-        { pct: '40%', color: '#f97316', label: 'Weak' },
-        { pct: '60%', color: '#eab308', label: 'Fair' },
-        { pct: '80%', color: '#22c55e', label: 'Strong' },
-        { pct: '100%', color: '#16a34a', label: 'Very Strong' }
+        { pct: '20%', color: '#dc2626', label: lang === 'es' ? 'Muy Débil' : 'Very Weak' },
+        { pct: '40%', color: '#f97316', label: lang === 'es' ? 'Débil' : 'Weak' },
+        { pct: '60%', color: '#eab308', label: lang === 'es' ? 'Regular' : 'Fair' },
+        { pct: '80%', color: '#22c55e', label: lang === 'es' ? 'Fuerte' : 'Strong' },
+        { pct: '100%', color: '#16a34a', label: lang === 'es' ? 'Muy Fuerte' : 'Very Strong' }
     ];
     const level = levels[Math.min(strength - 1, 4)] || { pct: '0%', color: '#dc2626', label: '' };
     fill.style.width = password.length > 0 ? level.pct : '0%';
@@ -706,6 +836,48 @@ async function checkInviteToken() {
 }
 
 // ============================================================
+// RESET TOKEN FLOW
+// ============================================================
+async function checkResetToken() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('reset');
+    if (!token) return;
+
+    try {
+        const { data, error } = await sb.from('password_resets')
+            .select('*')
+            .eq('token', token)
+            .eq('used', false)
+            .single();
+
+        if (error || !data) {
+            showInvalidReset(
+                lang === 'es'
+                    ? 'Este enlace de restablecimiento es inválido. Por favor solicite uno nuevo.'
+                    : 'This reset link is invalid. Please request a new one.'
+            );
+            return;
+        }
+
+        if (new Date(data.expires_at) < new Date()) {
+            showInvalidReset(
+                lang === 'es'
+                    ? 'Este enlace de restablecimiento ha expirado. Por favor solicite uno nuevo.'
+                    : 'This reset link has expired. Please request a new one.'
+            );
+            return;
+        }
+
+        window._resetToken = token;
+        window._resetEmail = data.email;
+        showResetPassword();
+
+    } catch (err) {
+        showInvalidReset('An error occurred validating your reset link. Please try again.');
+    }
+}
+
+// ============================================================
 // REGISTRATION FORM
 // ============================================================
 document.getElementById('registerForm').addEventListener('submit', async e => {
@@ -728,9 +900,7 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
         const { data: authData, error: authError } = await sb.auth.signUp({
             email: email,
             password: password,
-            options: {
-                data: { full_name: name }
-            }
+            options: { data: { full_name: name } }
         });
 
         if (authError) throw authError;
@@ -786,7 +956,189 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
 });
 
 // ============================================================
-// AUTH
+// FORGOT PASSWORD FORM
+// ============================================================
+document.getElementById('forgotPasswordForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const email = document.getElementById('fpEmail').value.trim();
+    const userAnswer = parseInt(document.getElementById('captchaAnswer').value);
+    const btn = document.getElementById('fpBtn');
+
+    if (!email) {
+        notify(lang === 'es' ? 'Por favor ingrese su correo electrónico' : 'Please enter your email address', 'warning');
+        return;
+    }
+
+    if (isNaN(userAnswer) || userAnswer !== captchaCorrectAnswer) {
+        notify(lang === 'es' ? 'Respuesta incorrecta. Por favor intente de nuevo.' : 'Incorrect answer. Please try again.', 'warning');
+        generateCaptcha();
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = lang === 'es' ? 'Enviando...' : 'Sending...';
+
+    try {
+        // Check if user exists in profiles
+        const { data: userExists } = await sb.from('profiles')
+            .select('id, full_name')
+            .eq('email', email)
+            .single();
+
+        if (!userExists) {
+            // For security, show same message even if not found
+            notify(
+                lang === 'es'
+                    ? 'Si existe una cuenta con ese correo, recibirá un enlace de recuperación.'
+                    : 'If an account exists with that email, you will receive a recovery link.',
+                'info',
+                8000
+            );
+            generateCaptcha();
+            btn.disabled = false;
+            btn.innerHTML = `<span data-en="Send Recovery Email" data-es="Enviar Correo de Recuperación">${lang === 'es' ? 'Enviar Correo de Recuperación' : 'Send Recovery Email'}</span>`;
+            return;
+        }
+
+        // Generate reset token
+        const array = new Uint8Array(32);
+        crypto.getRandomValues(array);
+        const resetToken = btoa(String.fromCharCode(...array))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+
+        const expiresAt = new Date();
+        expiresAt.setHours(expiresAt.getHours() + 1);
+
+        // Store reset token in database
+        const { error: insertError } = await sb.from('password_resets').insert({
+            email: email,
+            token: resetToken,
+            expires_at: expiresAt.toISOString(),
+            used: false
+        });
+
+        if (insertError) throw insertError;
+
+        // Send recovery email via backend
+        const sent = await sendPasswordRecoveryEmail(userExists.full_name, email, resetToken);
+
+        if (sent) {
+            notify(
+                lang === 'es'
+                    ? '¡Correo de recuperación enviado! Revise su bandeja de entrada para el enlace de restablecimiento.'
+                    : 'Recovery email sent! Check your inbox for the reset link.',
+                'success',
+                8000
+            );
+            showLogin();
+        } else {
+            notify(
+                lang === 'es'
+                    ? 'El correo de recuperación falló. Por favor intente de nuevo o contacte soporte.'
+                    : 'Recovery email failed. Please try again or contact support.',
+                'warning',
+                8000
+            );
+            generateCaptcha();
+        }
+
+    } catch (err) {
+        notify('Error: ' + err.message, 'danger');
+        generateCaptcha();
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span data-en="Send Recovery Email" data-es="Enviar Correo de Recuperación">${lang === 'es' ? 'Enviar Correo de Recuperación' : 'Send Recovery Email'}</span>`;
+    }
+});
+
+// ============================================================
+// SEND PASSWORD RECOVERY EMAIL
+// ============================================================
+async function sendPasswordRecoveryEmail(name, email, token) {
+    const resetUrl = `${window.location.origin}${window.location.pathname}?reset=${token}`;
+    try {
+        const res = await fetch(BACKEND_URL.replace('/send-invitation', '/send-password-reset'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, token, resetUrl })
+        });
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            console.error('Backend error:', errData);
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.error('Backend call failed:', err);
+        return false;
+    }
+}
+
+// ============================================================
+// RESET PASSWORD FORM
+// ============================================================
+document.getElementById('resetPasswordForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const newPass = document.getElementById('newPassword').value;
+    const confirmPass = document.getElementById('confirmNewPassword').value;
+    const btn = document.getElementById('resetBtn');
+
+    if (newPass.length < 8) {
+        notify(lang === 'es' ? 'La contraseña debe tener al menos 8 caracteres' : 'Password must be at least 8 characters', 'warning');
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        notify(lang === 'es' ? 'Las contraseñas no coinciden' : 'Passwords do not match', 'warning');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = lang === 'es' ? 'Actualizando...' : 'Updating...';
+
+    try {
+        // Update password via Supabase auth
+        const { error: updateError } = await sb.auth.updateUser({ password: newPass });
+        if (updateError) throw updateError;
+
+        // Mark reset token as used
+        if (window._resetToken) {
+            const { error: markError } = await sb.from('password_resets')
+                .update({ used: true, used_at: new Date().toISOString() })
+                .eq('token', window._resetToken);
+            if (markError) console.warn('Mark used error:', markError.message);
+        }
+
+        // Clear URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        notify(
+            lang === 'es'
+                ? '¡Contraseña actualizada exitosamente! Ahora puede iniciar sesión con su nueva contraseña.'
+                : 'Password updated successfully! You can now log in with your new password.',
+            'success',
+            8000
+        );
+
+        showLogin();
+        if (window._resetEmail) {
+            document.getElementById('loginEmail').value = window._resetEmail;
+        }
+
+    } catch (err) {
+        notify('Error updating password: ' + err.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `🔐 <span data-en="Update Password" data-es="Actualizar Contraseña">${lang === 'es' ? 'Actualizar Contraseña' : 'Update Password'}</span>`;
+    }
+});
+
+// ============================================================
+// AUTH — LOGIN
 // ============================================================
 document.getElementById('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
@@ -805,8 +1157,7 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
         notify('Login failed: ' + err.message, 'danger');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>';
-        updateLang();
+        btn.innerHTML = `<span data-en="Sign In" data-es="Iniciar Sesión">${lang === 'es' ? 'Iniciar Sesión' : 'Sign In'}</span>`;
     }
 });
 
@@ -823,9 +1174,7 @@ async function fetchProfile() {
 }
 
 function showDashboard() {
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('registerContainer').classList.add('hidden');
-    document.getElementById('invalidInviteContainer').classList.add('hidden');
+    hideAllAuth();
     document.getElementById('logoutBtn').classList.remove('hidden');
     const badge = document.getElementById('userBadge');
     badge.classList.remove('hidden');
@@ -846,7 +1195,1842 @@ async function logout() {
     await sb.auth.signOut();
     currentUser = null; userProfile = null;
     ['adminDashboard','investorDashboard'].forEach(id => document.getElementById(id).classList.remove('active'));
+    showLogin();
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('userBadge').classList.add('hidden');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    notify('Logged out successfully', 'success');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function adminNav(el) {
+    document.querySelectorAll('#adminDashboard .nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('#adminDashboard .dashboard-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(el.dataset.section).classList.add('active');
+}
+
+function investorNav(el) {
+    document.querySelectorAll('#investorDashboard .nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('#investorDashboard .dashboard-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(el.dataset.section).classList.add('active');
+    if (el.dataset.section === 'invNews') loadNews();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }); }
+function fmtMoney(n) { if (!n) return '—'; return Number(n).toLocaleString('en-US'); }
+function fmtSize(b) { if (!b) return ''; if (b < 1024) return b + ' B'; if (b < 1048576) return (b/1024).toFixed(1) + ' KB'; return (b/1048576).toFixed(1) + ' MB'; }
+function statusBadge(s) {
+    const map = { active:'badge-success', pending:'badge-warning', suspended:'badge-danger', inactive:'badge-muted', approved:'badge-success', rejected:'badge-danger' };
+    return `<span class="badge ${map[s]||'badge-muted'}">${s||'—'}</span>`;
+}
+function invBadge(s) {
+    const map = { pending:'badge-warning', accepted:'badge-success', expired:'badge-muted' };
+    return `<span class="badge ${map[s]||'badge-muted'}">${s||'—'}</span>`;
+}
+function oppBadge(s) {
+    const map = { active:'badge-success', coming_soon:'badge-purple', closed:'badge-muted' };
+    const labels = { active:'Active', coming_soon:'Coming Soon', closed:'Closed' };
+    return `<span class="badge ${map[s]||'badge-muted'}">${labels[s]||s}</span>`;
+}
+function docUrl(path) {
+    const { data } = sb.storage.from(BUCKET).getPublicUrl(path);
+    return data?.publicUrl || '#';
+}
+function emptyState(icon, title, sub = '') {
+    return `<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div>${sub ? `<div class="empty-sub">${sub}</div>` : ''}</div>`;
+}
+
+// ============================================================
+// ADMIN: STATS
+// ============================================================
+async function loadAdminStats() {
+    try {
+        const { data, error } = await sb.from('admin_stats').select('*').single();
+        if (error) throw error;
+        document.getElementById('sTotalInv').textContent    = data.total_investors ?? 0;
+        document.getElementById('sActiveInv').textContent   = data.active_investors ?? 0;
+        document.getElementById('sPendingDocs').textContent  = data.pending_documents ?? 0;
+        document.getElementById('sPendingInv').textContent   = data.pending_invitations ?? 0;
+        document.getElementById('sAcceptedInv').textContent  = data.accepted_invitations ?? 0;
+    } catch (err) { console.error('Stats:', err.message); }
+}
+
+// ============================================================
+// ADMIN: INVESTORS
+// ============================================================
+async function loadInvestors() {
+    try {
+        const { data, error } = await sb.from('profiles').select('*').eq('role','investor').order('created_at', { ascending: false });
+        if (error) throw error;
+        const tbody = document.getElementById('investorsBody');
+        if (!data?.length) { tbody.innerHTML = `<tr><td colspan="5">${emptyState('👥','No investors yet','Invite investors using the button above')}</td></tr>`; return; }
+        tbody.innerHTML = data.map(r => `<tr>
+            <td><strong>${r.full_name||'—'}</strong></td>
+            <td>${r.email}</td>
+            <td>${statusBadge(r.status)}</td>
+            <td>${fmtDate(r.created_at)}</td>
+            <td><div class="action-group">
+                ${r.status === 'active'
+                    ? `<button class="btn btn-warning btn-sm" onclick="setInvestorStatus('${r.id}','suspended')">🚫 Suspend</button>`
+                    : `<button class="btn btn-success btn-sm" onclick="setInvestorStatus('${r.id}','active')">✅ Activate</button>`}
+            </div></td>
+        </tr>`).join('');
+    } catch (err) { document.getElementById('investorsBody').innerHTML = `<tr><td colspan="5">Error: ${err.message}</td></tr>`; }
+}
+
+async function setInvestorStatus(id, status) {
+    try {
+        const { error } = await sb.from('profiles').update({ status }).eq('id', id);
+        if (error) throw error;
+        notify(`Investor ${status === 'active' ? 'activated' : 'suspended'}`, 'success');
+        loadInvestors(); loadAdminStats();
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+// ============================================================
+// ADMIN: INVITATIONS
+// ============================================================
+async function loadInvitations() {
+    try {
+        const { data, error } = await sb.from('invitations')
+            .select('*')
+            .is('deleted_at', null)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        const tbody = document.getElementById('invitationsBody');
+        if (!data?.length) { tbody.innerHTML = `<tr><td colspan="5">${emptyState('✉️','No invitations sent yet')}</td></tr>`; return; }
+        tbody.innerHTML = data.map(r => `<tr>
+            <td>${r.name}</td>
+            <td>${r.email}</td>
+            <td>${invBadge(r.status)}</td>
+            <td>${fmtDate(r.expires_at)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="softDeleteInvitation('${r.id}', '${r.email}')">🗑️ Delete</button>
+            </td>
+        </tr>`).join('');
+    } catch (err) { console.error('Invitations:', err.message); }
+}
+
+async function softDeleteInvitation(id, email) {
+    if (!confirm(`Hide invitation for ${email}? You will be able to resend a new invitation to this address.`)) return;
+    try {
+        const deletedEmail = email + '_deleted_' + Date.now();
+        const { error } = await sb.from('invitations')
+            .update({ deleted_at: new Date().toISOString(), email: deletedEmail })
+            .eq('id', id);
+        if (error) throw error;
+        notify(`Invitation for ${email} removed. You can now resend an invitation to this address.`, 'success');
+        loadInvitations();
+        loadAdminStats();
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+// ============================================================
+// SEND INVITE
+// ============================================================
+async function sendInvite() {
+    const name   = document.getElementById('iName').value.trim();
+    const email  = document.getElementById('iEmail').value.trim();
+    const expiry = parseInt(document.getElementById('iExpiry').value);
+
+    if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
+
+    try {
+        const { data: existing } = await sb.from('invitations')
+            .select('id')
+            .eq('email', email)
+            .is('deleted_at', null)
+            .maybeSingle();
+
+        if (existing) {
+            notify(`An active invitation for ${email} already exists. Please delete it first before resending.`, 'warning');
+            return;
+        }
+
+        const array = new Uint8Array(32);
+        crypto.getRandomValues(array);
+        const token = btoa(String.fromCharCode(...array))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + expiry);
+
+        const { error } = await sb.from('invitations').insert({
+            name:       name,
+            email:      email,
+            token:      token,
+            expires_at: expiresAt.toISOString(),
+            created_by: currentUser.id,
+            status:     'pending'
+        });
+
+        if (error) throw error;
+
+        const sent = await sendEmailViaBackend(name, email, token, expiry);
+
+        closeModal('inviteModal');
+        document.getElementById('iName').value  = '';
+        document.getElementById('iEmail').value = '';
+
+        notify(
+            sent
+                ? `Invitation sent to ${email}`
+                : `Invitation created but email failed. Please check the Railway backend.`,
+            sent ? 'success' : 'warning',
+            sent ? 5000 : 10000
+        );
+
+        loadInvitations();
+        loadAdminStats();
+
+    } catch (err) {
+        notify('Error sending invitation: ' + err.message, 'danger');
+    }
+}
+
+// ============================================================
+// EMAIL VIA RAILWAY BACKEND
+// ============================================================
+async function sendEmailViaBackend(name, email, token, expiry) {
+    const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;
+    try {
+        const res = await fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, token, expiry, inviteUrl })
+        });
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            console.error('Backend error:', errData);
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.error('Backend call failed:', err);
+        return false;
+    }
+}
+
+// ============================================================
+// ADMIN: DOCUMENTS
+// ============================================================
+async function loadAdminDocs() {
+    const filter = document.getElementById('docFilter').value;
+    try {
+        let q = sb.from('documents').select(`*,profiles!documents_user_id_fkey(full_name,email),document_types(name)`).order('uploaded_at', { ascending: false });
+        if (filter !== 'all') q = q.eq('status', filter);
+        const { data, error } = await q;
+        if (error) throw error;
+        const el = document.getElementById('adminDocsList');
+        if (!data?.length) { el.innerHTML = emptyState('📄','No documents found'); return; }
+        el.innerHTML = data.map(d => `
+            <div class="doc-item">
+                <div class="doc-info">
+                    <span class="doc-icon">📄</span>
+                    <div>
+                        <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
+                        <div class="doc-meta">👤 ${d.profiles?.full_name || d.profiles?.email || 'Unknown'} • ${fmtDate(d.uploaded_at)} • ${fmtSize(d.file_size)}</div>
+                        ${d.rejection_reason ? `<div class="doc-rejection">Reason: ${d.rejection_reason}</div>` : ''}
+                    </div>
+                </div>
+                <div class="action-group">
+                    ${statusBadge(d.status)}
+                    <a href="${docUrl(d.file_path)}" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>
+                    ${d.status === 'pending' ? `
+                        <button class="btn btn-success btn-sm" onclick="reviewDoc('${d.id}','approved')">✅ Approve</button>
+                        <button class="btn btn-danger btn-sm" onclick="openReject('${d.id}')">❌ Reject</button>
+                    ` : ''}
+                </div>
+            </div>
+        `).join('');
+    } catch (err) { document.getElementById('adminDocsList').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+}
+
+async function reviewDoc(id, status, reason = null) {
+    try {
+        const upd = { status, reviewed_by: currentUser.id, reviewed_at: new Date().toISOString() };
+        if (reason) upd.rejection_reason = reason;
+        const { error } = await sb.from('documents').update(upd).eq('id', id);
+        if (error) throw error;
+        notify(`Document ${status}`, 'success');
+        loadAdminDocs(); loadAdminStats();
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+function openReject(id) {
+    document.getElementById('rejectDocId').value = id;
+    document.getElementById('rejectReason').value = '';
+    openModal('rejectModal');
+}
+
+function confirmReject() {
+    const id = document.getElementById('rejectDocId').value;
+    const reason = document.getElementById('rejectReason').value.trim();
+    if (!reason) { notify('Please provide a rejection reason', 'warning'); return; }
+    closeModal('rejectModal');
+    reviewDoc(id, 'rejected', reason);
+}
+
+// ============================================================
+// ADMIN: WATCHLIST
+// ============================================================
+async function loadWatchlist() {
+    try {
+        const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
+        if (error) throw error;
+        const el = document.getElementById('watchlistList');
+        if (!data?.length) { el.innerHTML = emptyState('👁️','No companies in watchlist','Add companies above to track their news'); return; }
+        el.innerHTML = data.map(w => `
+            <div class="watchlist-item">
+                <div>
+                    <div class="watchlist-name">${w.company_name}</div>
+                    ${w.ticker ? `<div class="watchlist-ticker">$${w.ticker}</div>` : ''}
+                </div>
+                <div class="action-group">
+                    <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank" class="btn btn-secondary btn-sm">📰 News</a>
+                    <button class="btn btn-danger btn-sm" onclick="removeWatchlist('${w.id}')">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) { console.error('Watchlist:', err.message); }
+}
+
+async function addWatchlist() {
+    const company = document.getElementById('wlCompany').value.trim();
+    const ticker  = document.getElementById('wlTicker').value.trim();
+    if (!company) { notify('Please enter a company name', 'warning'); return; }
+    try {
+        const { error } = await sb.from('news_watchlist').insert({ company_name: company, ticker: ticker || null, added_by: currentUser.id });
+        if (error) throw error;
+        document.getElementById('wlCompany').value = '';
+        document.getElementById('wlTicker').value = '';
+        notify('Added to watchlist', 'success');
+        loadWatchlist();
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+async function removeWatchlist(id) {
+    try {
+        const { error } = await sb.from('news_watchlist').delete().eq('id', id);
+        if (error) throw error;
+        notify('Removed from watchlist', 'success');
+        loadWatchlist();
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+// ============================================================
+// OPPORTUNITIES
+// ============================================================
+async function loadOpps(view) {
+    const elId = view === 'admin' ? 'adminOppList' : 'invOppList';
+    try {
+        const { data, error } = await sb.from('opportunities').select('*').order('created_at', { ascending: false });
+        if (error) { document.getElementById(elId).innerHTML = `<div class="alert alert-warning">⚠️ Opportunities table not found.</div>`; return; }
+        const el = document.getElementById(elId);
+        if (!data?.length) {
+            el.innerHTML = emptyState('💡', 'No opportunities yet', view === 'admin' ? 'Click "New Opportunity" to add one' : 'Check back soon for new investment opportunities');
+            return;
+        }
+        if (view === 'admin') {
+            el.innerHTML = data.map(o => `
+                <div class="doc-item">
+                    <div class="doc-info">
+                        <span class="doc-icon">💡</span>
+                        <div>
+                            <div class="doc-name">${o.title}</div>
+                            <div class="doc-meta">${o.sector||''}${o.location ? ' • '+o.location : ''} • Min: $${fmtMoney(o.minimum_investment)}</div>
+                        </div>
+                    </div>
+                    <div class="action-group">
+                        ${oppBadge(o.status)}
+                        <button class="btn btn-secondary btn-sm" onclick="editOpp('${o.id}')">✏️ Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteOpp('${o.id}')">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            const visible = data.filter(o => o.status !== 'closed');
+            if (!visible.length) { el.innerHTML = emptyState('💡','No active opportunities','Check back soon'); return; }
+            el.innerHTML = `<div class="opp-grid">${visible.map(o => `
+                <div class="opp-card">
+                    <div class="opp-header">
+                        <div class="opp-title">${o.title}</div>
+                        <div class="opp-sub">${o.sector||''}${o.location ? ' • '+o.location : ''}</div>
+                    </div>
+                    <div class="opp-body">
+                        ${o.description ? `<div class="opp-desc">${o.description}</div>` : ''}
+                        ${o.target_amount ? `<div class="opp-row"><span class="opp-label">Target</span><span class="opp-val">$${fmtMoney(o.target_amount)}</span></div>` : ''}
+                        ${o.minimum_investment ? `<div class="opp-row"><span class="opp-label">Minimum</span><span class="opp-val">$${fmtMoney(o.minimum_investment)}</span></div>` : ''}
+                        ${o.expected_return ? `<div class="opp-row"><span class="opp-label">Expected Return</span><span class="opp-val">${o.expected_return}</span></div>` : ''}
+                        ${o.timeline ? `<div class="opp-row"><span class="opp-label">Timeline</span><span class="opp-val">${o.timeline}</span></div>` : ''}
+                        <div style="margin-top:1rem;">${oppBadge(o.status)}</div>
+                    </div>
+                </div>
+            `).join('')}</div>`;
+        }
+    } catch (err) { document.getElementById(elId).innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+}
+
+function openOppModal() {
+    document.getElementById('oppId').value = '';
+    document.getElementById('oppModalTitle').textContent = 'New Opportunity';
+    ['oppTitle','oppSector','oppLocation','oppDesc','oppTarget','oppMin','oppReturn','oppTimeline'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('oppStatus').value = 'active';
+    openModal('oppModal');
+}
+
+async function editOpp(id) {
+    const { data } = await sb.from('opportunities').select('*').eq('id', id).single();
+    if (!data) return;
+    document.getElementById('oppId').value       = data.id;
+    document.getElementById('oppTitle').value    = data.title || '';
+    document.getElementById('oppSector').value   = data.sector || '';
+    document.getElementById('oppLocation').value = data.location || '';
+    document.getElementById('oppDesc').value     = data.description || '';
+    document.getElementById('oppTarget').value   = data.target_amount || '';
+    document.getElementById('oppMin').value      = data.minimum_investment || '';
+    document.getElementById('oppReturn').value   = data.expected_return || '';
+    document.getElementById('oppTimeline').value = data.timeline || '';
+    document.getElementById('oppStatus').value   = data.status || 'active';
+    document.getElementById('oppModalTitle').textContent = 'Edit Opportunity';
+    openModal('oppModal');
+}
+
+async function saveOpp() {
+    const id = document.getElementById('oppId').value;
+    const payload = {
+        title: document.getElementById('oppTitle').value.trim(),
+        sector: document.getElementById('oppSector').value.trim(),
+        location: document.getElementById('oppLocation').value.trim(),
+        description: document.getElementById('oppDesc').value.trim(),
+        target_amount: parseFloat(document.getElementById('oppTarget').value) || null,
+        minimum_investment: parseFloat(document.getElementById('oppMin').value) || null,
+        expected_return: document.getElementById('oppReturn').value.trim(),
+        timeline: document.getElementById('oppTimeline').value.trim(),
+        status: document.getElementById('oppStatus').value,
+        created_by: currentUser.id
+    };
+    if (!payload.title) { notify('Title is required', 'warning'); return; }
+    try {
+        const { error } = id
+            ? await sb.from('opportunities').update(payload).eq('id', id)
+            : await sb.from('opportunities').insert(payload);
+        if (error) throw error;
+        closeModal('oppModal');
+        notify(`Opportunity ${id ? 'updated' : 'created'}`, 'success');
+        loadOpps('admin');
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+async function deleteOpp(id) {
+    if (!confirm('Delete this opportunity?')) return;
+    try {
+        const { error } = await sb.from('opportunities').delete().eq('id', id);
+        if (error) throw error;
+        notify('Opportunity deleted', 'success');
+        loadOpps('admin');
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+// ============================================================
+// INVESTOR: OVERVIEW
+// ============================================================
+async function loadInvOverview() {
+    try {
+        const { data, error } = await sb.from('documents').select('status').eq('user_id', currentUser.id);
+        if (error) throw error;
+        const total    = data.length;
+        const approved = data.filter(d => d.status === 'approved').length;
+        const pending  = data.filter(d => d.status === 'pending').length;
+        const rejected = data.filter(d => d.status === 'rejected').length;
+        document.getElementById('iDocTotal').textContent    = total;
+        document.getElementById('iDocApproved').textContent = approved;
+        document.getElementById('iDocPending').textContent  = pending;
+        document.getElementById('iDocRejected').textContent = rejected;
+        const alerts = document.getElementById('invAlerts');
+        alerts.innerHTML = '';
+        if (rejected > 0) alerts.innerHTML += `<div class="alert alert-danger">❌ You have ${rejected} rejected document(s). Please re-upload them.</div>`;
+        if (pending  > 0) alerts.innerHTML += `<div class="alert alert-warning">⏳ ${pending} document(s) are pending review.</div>`;
+        if (approved === total && total > 0) alerts.innerHTML += `<div class="alert alert-success">✅ All your documents have been approved!</div>`;
+        if (total === 0) alerts.innerHTML += `<div class="alert alert-info">ℹ️ No documents uploaded yet. Go to the Documents tab to get started.</div>`;
+    } catch (err) { console.error('Overview:', err.message); }
+}
+
+// ============================================================
+// INVESTOR: DOCUMENTS
+// ============================================================
+async function loadDocTypes() {
+    try {
+        const { data, error } = await sb.from('document_types').select('*').order('display_order');
+        if (error) throw error;
+        const sel = document.getElementById('uploadDocType');
+        sel.innerHTML = '<option value="">— Select type —</option>';
+        data.forEach(dt => { sel.innerHTML += `<option value="${dt.id}">${dt.name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}</option>`; });
+    } catch (err) { console.error('DocTypes:', err.message); }
+}
+
+function handleFile(input) {
+    const f = input.files[0];
+    document.getElementById('uploadFileName').textContent = f ? `📎 ${f.name} (${fmtSize(f.size)})` : '';
+}
+
+async function uploadDoc() {
+    const typeId = document.getElementById('uploadDocType').value;
+    const file   = document.getElementById('fileInput').files[0];
+    if (!typeId) { notify('Please select a document type', 'warning'); return; }
+    if (!file)   { notify('Please select a file', 'warning'); return; }
+    if (file.size > 10 * 1024 * 1024) { notify('File must be under 10MB', 'warning'); return; }
+    try {
+        const path = `${currentUser.id}/${Date.now()}_${file.name}`;
+        const { error: upErr } = await sb.storage.from(BUCKET).upload(path, file);
+        if (upErr) throw upErr;
+        const { error: dbErr } = await sb.from('documents').insert({
+            user_id: currentUser.id, document_type_id: typeId,
+            file_name: file.name, file_path: path,
+            file_size: file.size, mime_type: file.type, status: 'pending'
+        });
+        if (dbErr) throw dbErr;
+        document.getElementById('fileInput').value = '';
+        document.getElementById('uploadFileName').textContent = '';
+        document.getElementById('uploadDocType').value = '';
+        notify('Document uploaded successfully!', 'success');
+        loadInvDocs(); loadInvOverview();
+    } catch (err) { notify('Upload failed: ' + err.message, 'danger'); }
+}
+
+async function loadInvDocs() {
+    try {
+        const { data, error } = await sb.from('documents').select(`*,document_types(name)`).eq('user_id', currentUser.id).order('uploaded_at', { ascending: false });
+        if (error) throw error;
+        const el = document.getElementById('invDocsList');
+        if (!data?.length) { el.innerHTML = emptyState('📄','No documents uploaded yet','Use the form above to upload your first document'); return; }
+        el.innerHTML = data.map(d => `
+            <div class="doc-item">
+                <div class="doc-info">
+                    <span class="doc-icon">📄</span>
+                    <div>
+                        <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
+                        <div class="doc-meta">${d.file_name} • ${fmtDate(d.uploaded_at)} • ${fmtSize(d.file_size)}</div>
+                        ${d.rejection_reason ? `<div class="doc-rejection">❌ Rejection reason: ${d.rejection_reason}</div>` : ''}
+                    </div>
+                </div>
+                <div class="action-group">
+                    ${statusBadge(d.status)}
+                    <a href="${docUrl(d.file_path)}" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) { document.getElementById('invDocsList').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+}
+
+// ============================================================
+// INVESTOR: NEWS
+// ============================================================
+async function loadNews() {
+    const el = document.getElementById('newsContent');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    try {
+        const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
+        if (error) throw error;
+        if (!data?.length) { el.innerHTML = emptyState('📰','No watchlist companies','The admin has not added any companies to the watchlist yet'); return; }
+        el.innerHTML = `
+            <div class="alert alert-info" style="margin-bottom:1.5rem;">ℹ️ Click any company link below to view the latest news from Google News.</div>
+            ${data.map(w => `
+                <div class="news-item">
+                    <div class="news-tag">${w.ticker ? '$'+w.ticker+' • ' : ''}Watchlist</div>
+                    <div class="news-title">
+                        <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank">
+                            ${w.company_name} — Latest News ↗
+                        </a>
+                    </div>
+                    <div class="news-date">Click to view on Google News</div>
+                </div>
+            `).join('')}
+        `;
+    } catch (err) { el.innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+}
+
+// ============================================================
+// INVESTOR: INVESTMENTS
+// ============================================================
+async function loadInvestments() {
+    try {
+        const { data, error } = await sb.from('investments').select(`*,opportunities(title,sector)`).eq('investor_id', currentUser.id).order('investment_date', { ascending: false });
+        if (error) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-warning">⚠️ Investments table not found.</div>`; return; }
+        const el = document.getElementById('invInvestments');
+        if (!data?.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
+        el.innerHTML = data.map(inv => `
+            <div class="inv-card">
+                <div class="inv-header">
+                    <div>
+                        <div class="inv-title">${inv.opportunities?.title || 'Investment'}</div>
+                        ${inv.opportunities?.sector ? `<div style="color:var(--muted);font-size:0.85rem;">${inv.opportunities.sector}</div>` : ''}
+                    </div>
+                    <div>
+                        <div class="inv-amount">$${fmtMoney(inv.amount)}</div>
+                        ${statusBadge(inv.status)}
+                    </div>
+                </div>
+                <div class="inv-details">
+                    <div><div class="inv-detail-label">Investment Date</div><div class="inv-detail-value">${fmtDate(inv.investment_date)}</div></div>
+                    ${inv.notes ? `<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">${inv.notes}</div></div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    } catch (err) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
+}
+
+// ============================================================
+// INVESTOR: PROFILE
+// ============================================================
+function fillProfile() {
+    document.getElementById('pName').value   = userProfile?.full_name || '';
+    document.getElementById('pEmail').value  = userProfile?.email || currentUser?.email || '';
+    document.getElementById('pPhone').value  = userProfile?.phone || '';
+    document.getElementById('pStatus').value = userProfile?.status || '';
+}
+
+async function saveProfile(e) {
+    e.preventDefault();
+    try {
+        const { error } = await sb.from('profiles').update({
+            full_name: document.getElementById('pName').value.trim(),
+            phone: document.getElementById('pPhone').value.trim(),
+            updated_at: new Date().toISOString()
+        }).eq('id', currentUser.id);
+        if (error) throw error;
+        userProfile.full_name = document.getElementById('pName').value.trim();
+        document.getElementById('invName').textContent = userProfile.full_name;
+        document.getElementById('userBadge').textContent = userProfile.full_name;
+        notify('Profile updated successfully', 'success');
+    } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+// ============================================================
+// DRAG & DROP UPLOAD
+// ============================================================
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length) {
+        document.getElementById('fileInput').files = files;
+        handleFile(document.getElementById('fileInput'));
+    }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    updateLang();
+
+    const params = new URLSearchParams(window.location.search);
+    const inviteToken = params.get('invite');
+    const resetToken = params.get('reset');
+
+    if (inviteToken) {
+        document.getElementById('authContainer').classList.add('hidden');
+        checkInviteToken();
+    } else if (resetToken) {
+        document.getElementById('authContainer').classList.add('hidden');
+        checkResetToken();
+    } else {
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                currentUser = session.user;
+                fetchProfile().then(() => showDashboard());
+            }
+        });
+    }
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silicon Corridor Ventures - Investor Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --purple: #6B3FA0;
+            --purple-dark: #4A2570;
+            --sky: #4AABCF;
+            --teal: #3BBFAD;
+            --grad: linear-gradient(135deg, #6B3FA0 0%, #4AABCF 50%, #3BBFAD 100%);
+            --light: #F7F8FC;
+            --white: #fff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 20px rgba(107,63,160,0.15);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; }
+
+        .header { background: var(--grad); color: white; padding: 1rem 0; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 1rem; }
+        .logo-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .logo-icon svg { width: 36px; height: 36px; }
+        .logo-text h1 { font-size: 1.4rem; font-weight: 800; margin: 0; }
+        .logo-text p { font-size: 0.8rem; opacity: 0.9; margin: 0; }
+        .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+        .user-badge { background: rgba(255,255,255,0.2); color: white; padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .lang-toggle { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; font-family: inherit; }
+        .lang-toggle:hover { background: rgba(255,255,255,0.35); }
+
+        .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+        .auth-container { max-width: 420px; margin: 4rem auto; background: var(--white); border-radius: 16px; padding: 2.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .auth-header { text-align: center; margin-bottom: 2rem; }
+        .auth-header h2 { color: var(--purple-dark); margin-bottom: 0.5rem; font-size: 1.5rem; }
+        .auth-header p { color: var(--muted); font-size: 0.875rem; }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--text); font-size: 0.9rem; }
+        .form-input { width: 100%; padding: 0.8rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; transition: all 0.2s; font-family: inherit; background: white; color: var(--text); }
+        .form-input:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(107,63,160,0.1); }
+        .form-input:disabled { background: var(--light); cursor: not-allowed; }
+        select.form-input { cursor: pointer; }
+        textarea.form-input { resize: vertical; min-height: 90px; }
+
+        .btn { padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: inherit; text-decoration: none; }
+        .btn-primary { background: var(--grad); color: white; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(107,63,160,0.3); }
+        .btn-secondary { background: var(--light); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+        .btn-success { background: #16a34a; color: white; }
+        .btn-success:hover { background: #15803d; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-warning { background: #d97706; color: white; }
+        .btn-warning:hover { background: #b45309; }
+        .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
+        .btn-full { width: 100%; }
+
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+        .dashboard-nav { background: var(--white); border-radius: 12px; padding: 0.875rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .nav-item { padding: 0.65rem 1.1rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; border: 1px solid var(--border); font-size: 0.875rem; user-select: none; }
+        .nav-item.active { background: var(--grad); color: white; border-color: transparent; }
+        .nav-item:hover:not(.active) { background: var(--light); }
+        .dashboard-section { display: none; }
+        .dashboard-section.active { display: block; }
+
+        .card { background: var(--white); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+        .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--white); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--purple); margin-bottom: 0.4rem; }
+        .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th { background: var(--light); padding: 0.75rem 1rem; text-align: left; font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
+        td { padding: 0.875rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafbff; }
+
+        .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-warning { background: #fef9c3; color: #854d0e; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .badge-muted { background: var(--light); color: var(--muted); }
+        .badge-purple { background: #f3e8ff; color: #6B3FA0; }
+
+        .alert { padding: 0.875rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; }
+        .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .alert-info { background: #f0f4ff; border: 1px solid #c7d2fe; color: #3730a3; }
+
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--white); border-radius: 16px; padding: 2rem; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.25); }
+        .modal-lg { max-width: 640px; }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.15rem; font-weight: 700; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0.25rem; }
+        .modal-close:hover { color: var(--text); }
+        .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .upload-area:hover { border-color: var(--purple); background: rgba(107,63,160,0.04); }
+        .upload-area input[type="file"] { display: none; }
+        .upload-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .upload-text { font-weight: 600; margin-bottom: 0.25rem; }
+        .upload-hint { font-size: 0.8rem; color: var(--muted); }
+        .upload-selected { margin-top: 0.75rem; font-weight: 600; color: var(--purple); font-size: 0.9rem; }
+
+        .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); flex-wrap: wrap; gap: 0.75rem; transition: all 0.2s; }
+        .doc-item:hover { border-color: var(--purple); }
+        .doc-info { display: flex; align-items: center; gap: 0.875rem; }
+        .doc-icon { font-size: 1.75rem; }
+        .doc-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .doc-meta { font-size: 0.78rem; color: var(--muted); }
+        .doc-rejection { font-size: 0.78rem; color: #dc2626; margin-top: 0.2rem; }
+        .action-group { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+
+        .opp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
+        .opp-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; box-shadow: var(--shadow); }
+        .opp-card:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(107,63,160,0.2); }
+        .opp-header { background: var(--grad); color: white; padding: 1.25rem 1.5rem; }
+        .opp-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .opp-sub { font-size: 0.82rem; opacity: 0.9; }
+        .opp-body { padding: 1.25rem 1.5rem; }
+        .opp-row { display: flex; justify-content: space-between; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+        .opp-row:last-of-type { border-bottom: none; }
+        .opp-label { color: var(--muted); font-weight: 500; }
+        .opp-val { font-weight: 700; }
+        .opp-desc { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
+
+        .watchlist-item { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; background: var(--white); }
+        .watchlist-name { font-weight: 600; font-size: 0.9rem; }
+        .watchlist-ticker { font-size: 0.8rem; color: var(--purple); font-weight: 700; }
+
+        .news-item { padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); transition: all 0.2s; }
+        .news-item:hover { border-color: var(--purple); }
+        .news-tag { font-size: 0.72rem; color: var(--purple); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+        .news-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .news-title a { color: var(--text); text-decoration: none; }
+        .news-title a:hover { color: var(--purple); }
+        .news-date { font-size: 0.78rem; color: var(--muted); }
+
+        .inv-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+        .inv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .inv-title { font-size: 1.05rem; font-weight: 700; }
+        .inv-amount { font-size: 1.6rem; font-weight: 800; color: var(--purple); }
+        .inv-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; }
+        .inv-detail-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
+        .inv-detail-value { font-weight: 600; margin-top: 0.2rem; font-size: 0.9rem; }
+
+        .loading { text-align: center; padding: 2.5rem; color: var(--muted); }
+        .spinner { width: 36px; height: 36px; border: 4px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.75rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+        .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+        .empty-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+        .empty-sub { font-size: 0.875rem; }
+
+        .hidden { display: none !important; }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+        @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .password-strength { margin-top: 0.5rem; }
+        .strength-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
+        .strength-fill { height: 100%; border-radius: 2px; transition: all 0.3s; }
+        .strength-text { font-size: 0.75rem; margin-top: 0.25rem; }
+
+        @media (max-width: 768px) {
+            .header-content { padding: 0 1rem; }
+            .logo-text h1 { font-size: 1rem; }
+            .main-content { padding: 1rem; }
+            .auth-container { margin: 1.5rem auto; }
+            .dashboard-nav { flex-direction: column; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .modal { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="50,10 80,30 80,70 50,90 20,70 20,30" fill="none" stroke="white" stroke-width="3"/>
+                    <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="white" stroke-width="2"/>
+                    <polygon points="50,30 60,40 60,60 50,70 40,60 40,40" fill="white" opacity="0.85"/>
+                    <line x1="20" y1="30" x2="10" y2="20" stroke="white" stroke-width="2"/>
+                    <line x1="80" y1="30" x2="90" y2="20" stroke="white" stroke-width="2"/>
+                    <line x1="80" y1="70" x2="90" y2="80" stroke="white" stroke-width="2"/>
+                    <line x1="20" y1="70" x2="10" y2="80" stroke="white" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <h1>Silicon Corridor Ventures</h1>
+                <p data-en="Investor Portal" data-es="Portal de Inversionistas">Investor Portal</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="lang-toggle" onclick="toggleLanguage()"><span id="langText">ES</span></button>
+            <span id="userBadge" class="user-badge hidden"></span>
+            <button id="logoutBtn" class="btn btn-secondary btn-sm hidden" onclick="logout()">
+                <span data-en="Logout" data-es="Cerrar Sesión">Logout</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+
+<!-- LOGIN -->
+<div id="authContainer" class="auth-container">
+    <div class="auth-header">
+        <h2 data-en="Investor Login" data-es="Inicio de Sesión">Investor Login</h2>
+        <p data-en="Access your secure investor portal" data-es="Acceda a su portal seguro de inversionistas">Access your secure investor portal</p>
+    </div>
+    <form id="loginForm">
+        <div class="form-group">
+            <label data-en="Email" data-es="Correo Electrónico">Email</label>
+            <input type="email" class="form-input" id="loginEmail" required autocomplete="email">
+        </div>
+        <div class="form-group">
+            <label data-en="Password" data-es="Contraseña">Password</label>
+            <input type="password" class="form-input" id="loginPassword" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+            <span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>
+        </button>
+    </form>
+    <hr class="divider">
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
+        <p style="color:var(--muted);margin:0;" data-en="New investor? You must be invited by an admin to create an account." data-es="¿Nuevo inversionista? Debe ser invitado por un administrador para crear una cuenta.">
+            New investor? You must be invited by an admin to create an account.
+        </p>
+    </div>
+    <button type="button" class="btn btn-secondary btn-sm" style="margin-top:1rem;width:100%;" onclick="showForgotPassword()" data-en="Forgot Password?" data-es="¿Olvidó su contraseña?">Forgot Password?</button>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div id="forgotPasswordContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <h2 data-en="Reset Password" data-es="Restablecer Contraseña">Reset Password</h2>
+        <p data-en="Enter your email to receive a recovery link" data-es="Ingrese su correo para recibir un enlace de recuperación">Enter your email to receive a recovery link</p>
+    </div>
+    <form id="forgotPasswordForm">
+        <div class="form-group">
+            <label data-en="Email Address" data-es="Correo Electrónico">Email Address</label>
+            <input type="email" class="form-input" id="fpEmail" required autocomplete="email">
+        </div>
+        <div class="form-group">
+            <label data-en="Verify you are human" data-es="Verificar que es humano">Verify you are human</label>
+            <div style="background:var(--light);padding:1rem;border-radius:8px;margin-bottom:0.75rem;">
+                <div style="font-weight:600;margin-bottom:0.5rem;" id="captchaQuestion"></div>
+                <input type="number" class="form-input" id="captchaAnswer" placeholder="Your answer" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="fpBtn">
+            <span data-en="Send Recovery Email" data-es="Enviar Correo de Recuperación">Send Recovery Email</span>
+        </button>
+    </form>
+    <hr class="divider">
+    <button type="button" class="btn btn-secondary btn-sm btn-full" onclick="showLogin()" data-en="Back to Login" data-es="Volver al Inicio de Sesión">Back to Login</button>
+</div>
+
+<!-- PASSWORD RESET -->
+<div id="resetPasswordContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔑</div>
+        <h2 data-en="Create New Password" data-es="Crear Nueva Contraseña">Create New Password</h2>
+        <p data-en="Enter a new password for your account" data-es="Ingrese una nueva contraseña para su cuenta">Enter a new password for your account</p>
+    </div>
+    <form id="resetPasswordForm">
+        <div class="form-group">
+            <label data-en="New Password" data-es="Nueva Contraseña">New Password</label>
+            <input type="password" class="form-input" id="newPassword" required minlength="8" oninput="checkPasswordStrength(this.value)" placeholder="Minimum 8 characters">
+            <div class="password-strength">
+                <div class="strength-bar"><div class="strength-fill" id="resetStrengthFill" style="width:0%;background:#dc2626;"></div></div>
+                <div class="strength-text" id="resetStrengthText" style="color:var(--muted);"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-en="Confirm Password" data-es="Confirmar Contraseña">Confirm Password</label>
+            <input type="password" class="form-input" id="confirmNewPassword" required placeholder="Re-enter your password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="resetBtn">
+            🔐 <span data-en="Update Password" data-es="Actualizar Contraseña">Update Password</span>
+        </button>
+    </form>
+</div>
+
+<!-- INVITATION REGISTRATION -->
+<div id="registerContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🎉</div>
+        <h2 data-en="Create Your Account" data-es="Crear Su Cuenta">Create Your Account</h2>
+        <p id="registerSubtitle" data-en="You've been invited to join Silicon Corridor Ventures" data-es="Ha sido invitado a unirse a Silicon Corridor Ventures">You've been invited to join Silicon Corridor Ventures</p>
+    </div>
+    <div class="alert alert-info" style="margin-bottom:1.5rem;">
+        ℹ️ <span id="inviteWelcomeMsg">Welcome! Please create your password to access the investor portal.</span>
+    </div>
+    <form id="registerForm">
+        <div class="form-group">
+            <label data-en="Full Name" data-es="Nombre Completo">Full Name</label>
+            <input type="text" class="form-input" id="regName" required>
+        </div>
+        <div class="form-group">
+            <label data-en="Email" data-es="Correo Electrónico">Email</label>
+            <input type="email" class="form-input" id="regEmail" disabled>
+        </div>
+        <div class="form-group">
+            <label data-en="Password" data-es="Contraseña">Password</label>
+            <input type="password" class="form-input" id="regPassword" required minlength="8" oninput="checkPasswordStrength(this.value)" placeholder="Minimum 8 characters">
+            <div class="password-strength">
+                <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%;background:#dc2626;"></div></div>
+                <div class="strength-text" id="strengthText" style="color:var(--muted);"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-en="Confirm Password" data-es="Confirmar Contraseña">Confirm Password</label>
+            <input type="password" class="form-input" id="regPasswordConfirm" required placeholder="Re-enter your password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="registerBtn">
+            🚀 <span data-en="Create Account & Sign In" data-es="Crear Cuenta e Iniciar Sesión">Create Account & Sign In</span>
+        </button>
+    </form>
+</div>
+
+<!-- INVALID INVITATION -->
+<div id="invalidInviteContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">❌</div>
+        <h2 style="color:#dc2626;">Invalid Invitation</h2>
+        <p id="invalidInviteMsg" style="color:var(--muted);">This invitation link is invalid or has expired.</p>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="showLogin()">← Back to Login</button>
+</div>
+
+<!-- INVALID RESET LINK -->
+<div id="invalidResetContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">❌</div>
+        <h2 style="color:#dc2626;" data-en="Invalid Reset Link" data-es="Enlace de Restablecimiento Inválido">Invalid Reset Link</h2>
+        <p id="invalidResetMsg" style="color:var(--muted);" data-en="This password reset link is invalid or has expired." data-es="Este enlace de restablecimiento de contraseña es inválido o ha expirado.">This password reset link is invalid or has expired.</p>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="showLogin()">← <span data-en="Back to Login" data-es="Volver al Inicio de Sesión">Back to Login</span></button>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="adminDashboard" class="dashboard">
+    <nav class="dashboard-nav">
+        <div class="nav-item active" data-section="adminStats" onclick="adminNav(this)">📊 <span data-en="Statistics" data-es="Estadísticas">Statistics</span></div>
+        <div class="nav-item" data-section="adminInvestors" onclick="adminNav(this)">👥 <span data-en="Investors" data-es="Inversionistas">Investors</span></div>
+        <div class="nav-item" data-section="adminDocuments" onclick="adminNav(this)">📄 <span data-en="Documents" data-es="Documentos">Documents</span></div>
+        <div class="nav-item" data-section="adminWatchlist" onclick="adminNav(this)">👁️ <span data-en="Watchlist" data-es="Seguimiento">Watchlist</span></div>
+        <div class="nav-item" data-section="adminOpportunities" onclick="adminNav(this)">💡 <span data-en="Opportunities" data-es="Oportunidades">Opportunities</span></div>
+    </nav>
+
+    <section id="adminStats" class="dashboard-section active">
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-number" id="sTotalInv">—</div><div class="stat-label" data-en="Total Investors" data-es="Total Inversionistas">Total Investors</div></div>
+            <div class="stat-card"><div class="stat-number" id="sActiveInv">—</div><div class="stat-label" data-en="Active Investors" data-es="Inversionistas Activos">Active Investors</div></div>
+            <div class="stat-card"><div class="stat-number" id="sPendingDocs">—</div><div class="stat-label" data-en="Pending Documents" data-es="Documentos Pendientes">Pending Documents</div></div>
+            <div class="stat-card"><div class="stat-number" id="sPendingInv">—</div><div class="stat-label" data-en="Pending Invitations" data-es="Invitaciones Pendientes">Pending Invitations</div></div>
+            <div class="stat-card"><div class="stat-number" id="sAcceptedInv">—</div><div class="stat-label" data-en="Accepted Invitations" data-es="Invitaciones Aceptadas">Accepted Invitations</div></div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="Admin Dashboard" data-es="Panel de Administración">Admin Dashboard</h3></div>
+            <p style="color:var(--muted);" data-en="Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities." data-es="Bienvenido al panel de administración. Use la navegación de arriba para gestionar inversionistas, revisar documentos, gestionar la lista de seguimiento y publicar nuevas oportunidades de inversión.">
+                Welcome to the admin panel. Use the navigation above to manage investors, review documents, manage the watchlist, and post new investment opportunities.
+            </p>
+        </div>
+    </section>
+
+    <section id="adminInvestors" class="dashboard-section">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" data-en="Investor Management" data-es="Gestión de Inversionistas">Investor Management</h3>
+                <button class="btn btn-primary btn-sm" onclick="openModal('inviteModal')">✉️ <span data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</span></button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr>
+                        <th data-en="Name" data-es="Nombre">Name</th>
+                        <th data-en="Email" data-es="Correo">Email</th>
+                        <th data-en="Status" data-es="Estado">Status</th>
+                        <th data-en="Joined" data-es="Unido">Joined</th>
+                        <th data-en="Actions" data-es="Acciones">Actions</th>
+                    </tr></thead>
+                    <tbody id="investorsBody"><tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="Invitation History" data-es="Historial de Invitaciones">Invitation History</h3></div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr>
+                        <th data-en="Name" data-es="Nombre">Name</th>
+                        <th data-en="Email" data-es="Correo">Email</th>
+                        <th data-en="Status" data-es="Estado">Status</th>
+                        <th data-en="Expires" data-es="Expira">Expires</th>
+                        <th data-en="Actions" data-es="Acciones">Actions</th>
+                    </tr></thead>
+                    <tbody id="invitationsBody"><tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="adminDocuments" class="dashboard-section">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" data-en="Document Review" data-es="Revisión de Documentos">Document Review</h3>
+                <select id="docFilter" class="form-input" style="width:auto;padding:0.5rem 1rem;" onchange="loadAdminDocs()">
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+            <div id="adminDocsList"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+    </section>
+
+    <section id="adminWatchlist" class="dashboard-section">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="News Watchlist" data-es="Lista de Seguimiento">News Watchlist</h3></div>
+            <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+                <input type="text" class="form-input" id="wlCompany" placeholder="Company name..." style="flex:1;min-width:180px;">
+                <input type="text" class="form-input" id="wlTicker" placeholder="Ticker (optional)" style="width:140px;">
+                <button class="btn btn-primary" onclick="addWatchlist()">➕ <span data-en="Add" data-es="Agregar">Add</span></button>
+            </div>
+            <div id="watchlistList"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+    </section>
+
+    <section id="adminOpportunities" class="dashboard-section">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" data-en="Investment Opportunities" data-es="Oportunidades de Inversión">Investment Opportunities</h3>
+                <button class="btn btn-primary btn-sm" onclick="openOppModal()">➕ <span data-en="New Opportunity" data-es="Nueva Oportunidad">New Opportunity</span></button>
+            </div>
+            <div id="adminOppList"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+    </section>
+</div>
+
+<!-- INVESTOR DASHBOARD -->
+<div id="investorDashboard" class="dashboard">
+    <nav class="dashboard-nav">
+        <div class="nav-item active" data-section="invOverview" onclick="investorNav(this)">🏠 <span data-en="Overview" data-es="Resumen">Overview</span></div>
+        <div class="nav-item" data-section="invDocuments" onclick="investorNav(this)">📄 <span data-en="Documents" data-es="Documentos">Documents</span></div>
+        <div class="nav-item" data-section="invNews" onclick="investorNav(this)">📰 <span data-en="Market News" data-es="Noticias">Market News</span></div>
+        <div class="nav-item" data-section="invOpportunities" onclick="investorNav(this)">💡 <span data-en="Opportunities" data-es="Oportunidades">Opportunities</span></div>
+        <div class="nav-item" data-section="invAccount" onclick="investorNav(this)">💼 <span data-en="Account" data-es="Cuenta">Account</span></div>
+        <div class="nav-item" data-section="invProfile" onclick="investorNav(this)">👤 <span data-en="Profile" data-es="Perfil">Profile</span></div>
+    </nav>
+
+    <section id="invOverview" class="dashboard-section active">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><span data-en="Welcome back," data-es="Bienvenido,">Welcome back,</span> <span id="invName" style="color:var(--purple);"></span></h2>
+            </div>
+            <p style="color:var(--muted);" data-en="Access your investment documents, market news, and account information below." data-es="Acceda a sus documentos de inversión, noticias del mercado e información de cuenta a continuación.">
+                Access your investment documents, market news, and account information below.
+            </p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-number" id="iDocTotal">—</div><div class="stat-label" data-en="Total Documents" data-es="Total Documentos">Total Documents</div></div>
+            <div class="stat-card"><div class="stat-number" id="iDocApproved" style="color:#16a34a;">—</div><div class="stat-label" data-en="Approved" data-es="Aprobados">Approved</div></div>
+            <div class="stat-card"><div class="stat-number" id="iDocPending" style="color:#d97706;">—</div><div class="stat-label" data-en="Pending Review" data-es="En Revisión">Pending Review</div></div>
+            <div class="stat-card"><div class="stat-number" id="iDocRejected" style="color:#dc2626;">—</div><div class="stat-label" data-en="Rejected" data-es="Rechazados">Rejected</div></div>
+        </div>
+        <div id="invAlerts"></div>
+    </section>
+
+    <section id="invDocuments" class="dashboard-section">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="Upload Document" data-es="Subir Documento">Upload Document</h3></div>
+            <div class="form-group">
+                <label data-en="Document Type" data-es="Tipo de Documento">Document Type</label>
+                <select class="form-input" id="uploadDocType"><option value="">— Select type —</option></select>
+            </div>
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFile(this)">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text" data-en="Click to upload or drag & drop" data-es="Haga clic para subir o arrastre">Click to upload or drag & drop</div>
+                <div class="upload-hint" data-en="PDF, JPG, PNG, DOC — max 10MB" data-es="PDF, JPG, PNG, DOC — máx 10MB">PDF, JPG, PNG, DOC — max 10MB</div>
+                <div class="upload-selected" id="uploadFileName"></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top:1rem;" onclick="uploadDoc()">⬆️ <span data-en="Upload" data-es="Subir">Upload</span></button>
+        </div>
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="My Documents" data-es="Mis Documentos">My Documents</h3></div>
+            <div id="invDocsList"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+    </section>
+
+    <section id="invNews" class="dashboard-section">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h3></div>
+            <div id="newsContent"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+    </section>
+
+    <section id="invOpportunities" class="dashboard-section">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="Investment Opportunities" data-es="Oportunidades de Inversión">Investment Opportunities</h3></div>
+            <div id="invOppList"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+    </section>
+
+    <section id="invAccount" class="dashboard-section">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="My Active Investments" data-es="Mis Inversiones Activas">My Active Investments</h3></div>
+            <div id="invInvestments"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+    </section>
+
+    <section id="invProfile" class="dashboard-section">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title" data-en="My Profile" data-es="Mi Perfil">My Profile</h3></div>
+            <form id="profileForm" onsubmit="saveProfile(event)">
+                <div class="form-group"><label data-en="Full Name" data-es="Nombre Completo">Full Name</label><input type="text" class="form-input" id="pName"></div>
+                <div class="form-group"><label data-en="Email" data-es="Correo">Email</label><input type="email" class="form-input" id="pEmail" disabled></div>
+                <div class="form-group"><label data-en="Phone" data-es="Teléfono">Phone</label><input type="tel" class="form-input" id="pPhone"></div>
+                <div class="form-group"><label data-en="Account Status" data-es="Estado de Cuenta">Account Status</label><input type="text" class="form-input" id="pStatus" disabled></div>
+                <button type="submit" class="btn btn-primary">💾 <span data-en="Save Changes" data-es="Guardar Cambios">Save Changes</span></button>
+            </form>
+        </div>
+    </section>
+</div>
+
+</main>
+
+<!-- Invite Modal -->
+<div class="modal-overlay" id="inviteModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</h3>
+            <button class="modal-close" onclick="closeModal('inviteModal')">×</button>
+        </div>
+        <div class="form-group"><label data-en="Full Name" data-es="Nombre Completo">Full Name</label><input type="text" class="form-input" id="iName" placeholder="John Doe"></div>
+        <div class="form-group"><label data-en="Email Address" data-es="Correo Electrónico">Email Address</label><input type="email" class="form-input" id="iEmail" placeholder="investor@example.com"></div>
+        <div class="form-group">
+            <label data-en="Invitation Expires In" data-es="La Invitación Expira En">Invitation Expires In</label>
+            <select class="form-input" id="iExpiry">
+                <option value="7">7 days</option>
+                <option value="14">14 days</option>
+                <option value="30">30 days</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('inviteModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="sendInvite()">✉️ <span data-en="Send Invitation" data-es="Enviar Invitación">Send Invitation</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal-overlay" id="rejectModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" data-en="Reject Document" data-es="Rechazar Documento">Reject Document</h3>
+            <button class="modal-close" onclick="closeModal('rejectModal')">×</button>
+        </div>
+        <div class="form-group"><label data-en="Reason for Rejection" data-es="Razón del Rechazo">Reason for Rejection</label><textarea class="form-input" id="rejectReason" placeholder="Please provide a clear reason..."></textarea></div>
+        <input type="hidden" id="rejectDocId">
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('rejectModal')">Cancel</button>
+            <button class="btn btn-danger" onclick="confirmReject()">❌ <span data-en="Reject" data-es="Rechazar">Reject</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- Opportunity Modal -->
+<div class="modal-overlay" id="oppModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title" id="oppModalTitle">New Opportunity</h3>
+            <button class="modal-close" onclick="closeModal('oppModal')">×</button>
+        </div>
+        <input type="hidden" id="oppId">
+        <div class="form-group"><label>Title</label><input type="text" class="form-input" id="oppTitle" placeholder="Investment opportunity title"></div>
+        <div class="grid-2">
+            <div class="form-group"><label>Sector</label><input type="text" class="form-input" id="oppSector" placeholder="e.g. Technology"></div>
+            <div class="form-group"><label>Location</label><input type="text" class="form-input" id="oppLocation" placeholder="e.g. San Francisco, CA"></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea class="form-input" id="oppDesc" placeholder="Describe the investment opportunity..."></textarea></div>
+        <div class="grid-2">
+            <div class="form-group"><label>Target Amount ($)</label><input type="number" class="form-input" id="oppTarget" placeholder="1000000"></div>
+            <div class="form-group"><label>Minimum Investment ($)</label><input type="number" class="form-input" id="oppMin" placeholder="25000"></div>
+        </div>
+        <div class="grid-2">
+            <div class="form-group"><label>Expected Return</label><input type="text" class="form-input" id="oppReturn" placeholder="e.g. 15-20% IRR"></div>
+            <div class="form-group"><label>Timeline</label><input type="text" class="form-input" id="oppTimeline" placeholder="e.g. 3-5 years"></div>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select class="form-input" id="oppStatus">
+                <option value="active">Active</option>
+                <option value="coming_soon">Coming Soon</option>
+                <option value="closed">Closed</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('oppModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="saveOpp()">💾 Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const SUPABASE_URL  = 'https://wrojhaduvtpilxdmqryp.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
+const BACKEND_URL   = 'https://silicon-corridor-backend-production.up.railway.app/api/send-invitation';
+const BUCKET        = 'investor-documents';
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null, userProfile = null, lang = 'en';
+
+// ============================================================
+// LANGUAGE
+// ============================================================
+function toggleLanguage() {
+    lang = lang === 'en' ? 'es' : 'en';
+    document.getElementById('langText').textContent = lang === 'en' ? 'ES' : 'EN';
+    updateLang();
+}
+function updateLang() {
+    document.querySelectorAll('[data-en][data-es]').forEach(el => {
+        const t = el.getAttribute('data-' + lang);
+        if (t) el.textContent = t;
+    });
+}
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+function notify(msg, type = 'info', ms = 5000) {
+    const icons = { success:'✅', warning:'⚠️', danger:'❌', info:'ℹ️' };
+    const n = document.createElement('div');
+    n.className = 'alert alert-' + type;
+    n.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;min-width:300px;max-width:480px;animation:slideIn 0.3s ease;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.15);';
+    n.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span style="flex:1">${msg}</span><button onclick="this.parentElement.remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:inherit;">×</button>`;
+    document.body.appendChild(n);
+    setTimeout(() => n.isConnected && n.remove(), ms);
+    n.addEventListener('click', () => n.remove());
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
+
+// ============================================================
+// SHOW/HIDE CONTAINERS
+// ============================================================
+function hideAllAuthContainers() {
+    ['authContainer','registerContainer','invalidInviteContainer','forgotPasswordContainer','resetPasswordContainer','invalidResetContainer'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
+}
+
+function showLogin() {
+    hideAllAuthContainers();
     document.getElementById('authContainer').classList.remove('hidden');
+}
+
+function showRegister() {
+    hideAllAuthContainers();
+    document.getElementById('registerContainer').classList.remove('hidden');
+}
+
+function showInvalidInvite(msg) {
+    hideAllAuthContainers();
+    document.getElementById('invalidInviteContainer').classList.remove('hidden');
+    document.getElementById('invalidInviteMsg').textContent = msg || 'This invitation link is invalid or has expired.';
+}
+
+function showForgotPassword() {
+    hideAllAuthContainers();
+    document.getElementById('forgotPasswordContainer').classList.remove('hidden');
+    generateCaptcha();
+}
+
+function showResetPassword() {
+    hideAllAuthContainers();
+    document.getElementById('resetPasswordContainer').classList.remove('hidden');
+}
+
+function showInvalidReset(msg) {
+    hideAllAuthContainers();
+    document.getElementById('invalidResetContainer').classList.remove('hidden');
+    document.getElementById('invalidResetMsg').textContent = msg || 'This password reset link is invalid or has expired.';
+}
+
+// ============================================================
+// PASSWORD STRENGTH
+// ============================================================
+function checkPasswordStrength(password) {
+    // Update both registration and reset forms if they exist
+    const fills = ['strengthFill', 'resetStrengthFill'];
+    const texts = ['strengthText', 'resetStrengthText'];
+
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (password.length >= 12) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+    const levels = [
+        { pct: '20%', color: '#dc2626', label: 'Very Weak' },
+        { pct: '40%', color: '#f97316', label: 'Weak' },
+        { pct: '60%', color: '#eab308', label: 'Fair' },
+        { pct: '80%', color: '#22c55e', label: 'Strong' },
+        { pct: '100%', color: '#16a34a', label: 'Very Strong' }
+    ];
+    const level = levels[Math.min(strength - 1, 4)] || { pct: '0%', color: '#dc2626', label: '' };
+
+    fills.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.width = password.length > 0 ? level.pct : '0%';
+            el.style.background = level.color;
+        }
+    });
+    texts.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = password.length > 0 ? level.label : '';
+            el.style.color = level.color;
+        }
+    });
+}
+
+// ============================================================
+// FORGOT PASSWORD & RESET FLOW
+// ============================================================
+let captchaNum1, captchaNum2, captchaOp, captchaCorrectAnswer;
+
+function generateCaptcha() {
+    captchaNum1 = Math.floor(Math.random() * 10) + 1;
+    captchaNum2 = Math.floor(Math.random() * 10) + 1;
+    captchaOp = Math.random() > 0.5 ? '+' : '-';
+    captchaCorrectAnswer = captchaOp === '+' ? captchaNum1 + captchaNum2 : captchaNum1 - captchaNum2;
+
+    const question = lang === 'en'
+        ? `What is ${captchaNum1} ${captchaOp} ${captchaNum2}?`
+        : `¿Cuánto es ${captchaNum1} ${captchaOp} ${captchaNum2}?`;
+    document.getElementById('captchaQuestion').textContent = question;
+    document.getElementById('captchaAnswer').value = '';
+}
+
+// ============================================================
+// INVITATION FLOW
+// ============================================================
+async function checkInviteToken() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('invite');
+    if (!token) return;
+
+    try {
+        const { data, error } = await sb.from('invitations')
+            .select('*')
+            .eq('token', token)
+            .is('deleted_at', null)
+            .single();
+
+        if (error || !data) {
+            showInvalidInvite('This invitation link is invalid. Please contact your administrator.');
+            return;
+        }
+
+        if (new Date(data.expires_at) < new Date()) {
+            showInvalidInvite('This invitation has expired. Please ask your administrator to send a new one.');
+            return;
+        }
+
+        if (data.status === 'accepted') {
+            showInvalidInvite('This invitation has already been used. Please log in with your existing account.');
+            return;
+        }
+
+        document.getElementById('regName').value = data.name || '';
+        document.getElementById('regEmail').value = data.email || '';
+        document.getElementById('inviteWelcomeMsg').textContent = `Welcome, ${data.name}! Please create your password to access the Silicon Corridor Ventures Investor Portal.`;
+
+        window._inviteToken = token;
+        window._inviteId = data.id;
+        window._inviteEmail = data.email;
+        window._inviteName = data.name;
+
+        showRegister();
+    } catch (err) {
+        showInvalidInvite('An error occurred validating your invitation. Please try again.');
+    }
+}
+
+// ============================================================
+// CHECK RESET TOKEN
+// ============================================================
+async function checkResetToken() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('reset');
+    if (!token) return;
+
+    try {
+        const { data, error } = await sb.from('password_resets')
+            .select('*')
+            .eq('token', token)
+            .eq('used', false)
+            .single();
+
+        if (error || !data) {
+            showInvalidReset(
+                lang === 'en'
+                    ? 'This reset link is invalid. Please request a new one.'
+                    : 'Este enlace de restablecimiento es inválido. Por favor solicite uno nuevo.'
+            );
+            return;
+        }
+
+        if (new Date(data.expires_at) < new Date()) {
+            showInvalidReset(
+                lang === 'en'
+                    ? 'This reset link has expired. Please request a new one.'
+                    : 'Este enlace de restablecimiento ha expirado. Por favor solicite uno nuevo.'
+            );
+            return;
+        }
+
+        window._resetToken = token;
+        window._resetEmail = data.email;
+        showResetPassword();
+
+    } catch (err) {
+        showInvalidReset('An error occurred validating your reset link. Please try again.');
+    }
+}
+
+// ============================================================
+// FORGOT PASSWORD FORM
+// ============================================================
+document.getElementById('forgotPasswordForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const email = document.getElementById('fpEmail').value.trim();
+    const userAnswer = parseInt(document.getElementById('captchaAnswer').value);
+    const btn = document.getElementById('fpBtn');
+
+    if (!email) {
+        notify('Please enter your email address', 'warning');
+        return;
+    }
+
+    if (userAnswer !== captchaCorrectAnswer) {
+        notify(
+            lang === 'en' ? 'Incorrect answer. Please try again.' : 'Respuesta incorrecta. Por favor intente de nuevo.',
+            'warning'
+        );
+        generateCaptcha();
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = lang === 'en' ? 'Sending...' : 'Enviando...';
+
+    try {
+        const { data: userExists } = await sb.from('profiles')
+            .select('id, full_name')
+            .eq('email', email)
+            .single();
+
+        if (!userExists) {
+            notify(
+                lang === 'en' ? 'No account found with that email address.' : 'No se encontró ninguna cuenta con ese correo electrónico.',
+                'warning'
+            );
+            generateCaptcha();
+            btn.disabled = false;
+            btn.innerHTML = `<span data-en="Send Recovery Email" data-es="Enviar Correo de Recuperación">${lang === 'en' ? 'Send Recovery Email' : 'Enviar Correo de Recuperación'}</span>`;
+            return;
+        }
+
+        const array = new Uint8Array(32);
+        crypto.getRandomValues(array);
+        const resetToken = btoa(String.fromCharCode(...array))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+
+        const expiresAt = new Date();
+        expiresAt.setHours(expiresAt.getHours() + 1);
+
+        const { error: insertError } = await sb.from('password_resets').insert({
+            email: email,
+            token: resetToken,
+            expires_at: expiresAt.toISOString(),
+            used: false
+        });
+
+        if (insertError) throw insertError;
+
+        const sent = await sendPasswordRecoveryEmail(userExists.full_name, email, resetToken);
+
+        if (sent) {
+            notify(
+                lang === 'en'
+                    ? 'Recovery email sent! Check your inbox for the reset link.'
+                    : 'Correo de recuperación enviado! Revise su bandeja de entrada para el enlace de restablecimiento.',
+                'success',
+                8000
+            );
+            showLogin();
+        } else {
+            notify(
+                lang === 'en'
+                    ? 'Recovery email failed. Please try again or contact support.'
+                    : 'El correo de recuperación falló. Por favor intente de nuevo o contacte soporte.',
+                'warning',
+                8000
+            );
+            generateCaptcha();
+        }
+
+    } catch (err) {
+        notify('Error: ' + err.message, 'danger');
+        generateCaptcha();
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span data-en="Send Recovery Email" data-es="Enviar Correo de Recuperación">${lang === 'en' ? 'Send Recovery Email' : 'Enviar Correo de Recuperación'}</span>`;
+    }
+});
+
+// ============================================================
+// SEND PASSWORD RECOVERY EMAIL
+// ============================================================
+async function sendPasswordRecoveryEmail(name, email, token) {
+    const resetUrl = `${window.location.origin}${window.location.pathname}?reset=${token}`;
+    try {
+        const res = await fetch(BACKEND_URL.replace('/send-invitation', '/send-password-reset'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, token, resetUrl })
+        });
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            console.error('Backend error:', errData);
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.error('Backend call failed:', err);
+        return false;
+    }
+}
+
+// ============================================================
+// RESET PASSWORD FORM
+// ============================================================
+document.getElementById('resetPasswordForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const newPass = document.getElementById('newPassword').value;
+    const confirmPass = document.getElementById('confirmNewPassword').value;
+    const btn = document.getElementById('resetBtn');
+
+    if (newPass.length < 8) {
+        notify(
+            lang === 'en' ? 'Password must be at least 8 characters' : 'La contraseña debe tener al menos 8 caracteres',
+            'warning'
+        );
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        notify(
+            lang === 'en' ? 'Passwords do not match' : 'Las contraseñas no coinciden',
+            'warning'
+        );
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = lang === 'en' ? 'Updating...' : 'Actualizando...';
+
+    try {
+        const { error: updateError } = await sb.auth.updateUser({ password: newPass });
+        if (updateError) throw updateError;
+
+        if (window._resetToken) {
+            const { error: markError } = await sb.from('password_resets')
+                .update({ used: true, used_at: new Date().toISOString() })
+                .eq('token', window._resetToken);
+            if (markError) console.warn('Mark used error:', markError.message);
+        }
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        notify(
+            lang === 'en'
+                ? 'Password updated successfully! You can now log in with your new password.'
+                : 'Contraseña actualizada exitosamente! Ahora puede iniciar sesión con su nueva contraseña.',
+            'success',
+            8000
+        );
+
+        showLogin();
+        if (window._resetEmail) {
+            document.getElementById('loginEmail').value = window._resetEmail;
+        }
+
+    } catch (err) {
+        notify('Error updating password: ' + err.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `🔐 <span data-en="Update Password" data-es="Actualizar Contraseña">${lang === 'en' ? 'Update Password' : 'Actualizar Contraseña'}</span>`;
+    }
+});
+
+// ============================================================
+// REGISTRATION FORM
+// ============================================================
+document.getElementById('registerForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+    const btn = document.getElementById('registerBtn');
+
+    if (!name) { notify('Please enter your full name', 'warning'); return; }
+    if (password.length < 8) { notify('Password must be at least 8 characters', 'warning'); return; }
+    if (password !== passwordConfirm) { notify('Passwords do not match', 'warning'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Creating account...';
+
+    try {
+        const { data: authData, error: authError } = await sb.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { full_name: name } }
+        });
+
+        if (authError) throw authError;
+
+        const userId = authData.user?.id;
+        if (!userId) throw new Error('Failed to create user account');
+
+        const { error: profileError } = await sb.from('profiles').upsert({
+            id: userId,
+            full_name: name,
+            email: email,
+            role: 'investor',
+            status: 'active',
+            created_at: new Date().toISOString()
+        });
+
+        if (profileError) console.warn('Profile creation error:', profileError.message);
+
+        const { error: invError } = await sb.from('invitations').update({
+            status: 'accepted',
+            user_id: userId,
+            used_at: new Date().toISOString()
+        }).eq('id', window._inviteId);
+
+        if (invError) console.warn('Invitation update error:', invError.message);
+
+        const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
+
+        currentUser = signInData.user;
+        userProfile = { id: userId, full_name: name, email: email, role: 'investor', status: 'active' };
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+        notify(`Welcome to Silicon Corridor Ventures, ${name}! 🎉`, 'success', 8000);
+        showDashboard();
+
+    } catch (err) {
+        notify('Registration failed: ' + err.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🚀 <span>Create Account & Sign In</span>';
+    }
+});
+
+// ============================================================
+// AUTH
+// ============================================================
+document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPassword').value;
+    const btn   = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.textContent = '...';
+    try {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+        if (error) throw error;
+        currentUser = data.user;
+        await fetchProfile();
+        showDashboard();
+    } catch (err) {
+        notify('Login failed: ' + err.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span data-en="Sign In" data-es="Iniciar Sesión">${lang === 'en' ? 'Sign In' : 'Iniciar Sesión'}</span>`;
+    }
+});
+
+async function fetchProfile() {
+    try {
+        const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+        if (error) throw error;
+        userProfile = data;
+    } catch (err) {
+        console.warn('Profile fetch error:', err.message);
+        userProfile = { role: 'investor', full_name: currentUser.email, email: currentUser.email, status: 'active' };
+        notify('Profile defaults used — check DB connection', 'warning');
+    }
+}
+
+function showDashboard() {
+    hideAllAuthContainers();
+    document.getElementById('logoutBtn').classList.remove('hidden');
+    const badge = document.getElementById('userBadge');
+    badge.classList.remove('hidden');
+    badge.textContent = userProfile?.full_name || currentUser.email;
+
+    const role = userProfile?.role;
+    if (role === 'admin' || role === 'compliance') {
+        document.getElementById('adminDashboard').classList.add('active');
+        loadAdminStats(); loadInvestors(); loadInvitations(); loadAdminDocs(); loadWatchlist(); loadOpps('admin');
+    } else {
+        document.getElementById('investorDashboard').classList.add('active');
+        document.getElementById('invName').textContent = userProfile?.full_name || '';
+        loadInvOverview(); loadDocTypes(); loadInvDocs(); loadOpps('investor'); loadInvestments(); fillProfile();
+    }
+}
+
+async function logout() {
+    await sb.auth.signOut();
+    currentUser = null; userProfile = null;
+    ['adminDashboard','investorDashboard'].forEach(id => document.getElementById(id).classList.remove('active'));
+    showLogin();
     document.getElementById('logoutBtn').classList.add('hidden');
     document.getElementById('userBadge').classList.add('hidden');
     document.getElementById('loginEmail').value = '';
@@ -946,7 +3130,7 @@ async function setInvestorStatus(id, status) {
 }
 
 // ============================================================
-// ADMIN: INVITATIONS (with Soft Delete + Compliance Check)
+// ADMIN: INVITATIONS
 // ============================================================
 async function loadInvitations() {
     try {
@@ -974,10 +3158,7 @@ async function softDeleteInvitation(id, email) {
     try {
         const deletedEmail = email + '_deleted_' + Date.now();
         const { error } = await sb.from('invitations')
-            .update({
-                deleted_at: new Date().toISOString(),
-                email: deletedEmail
-            })
+            .update({ deleted_at: new Date().toISOString(), email: deletedEmail })
             .eq('id', id);
         if (error) throw error;
         notify(`Invitation for ${email} removed. You can now resend an invitation to this address.`, 'success');
@@ -987,7 +3168,7 @@ async function softDeleteInvitation(id, email) {
 }
 
 // ============================================================
-// SEND INVITE — Compliance check + Railway backend
+// SEND INVITE
 // ============================================================
 async function sendInvite() {
     const name   = document.getElementById('iName').value.trim();
@@ -997,7 +3178,6 @@ async function sendInvite() {
     if (!name || !email) { notify('Please fill in all fields', 'warning'); return; }
 
     try {
-        // COMPLIANCE CHECK: Verify no active invitation exists for this email
         const { data: existing } = await sb.from('invitations')
             .select('id')
             .eq('email', email)
@@ -1020,12 +3200,10 @@ async function sendInvite() {
         expiresAt.setDate(expiresAt.getDate() + expiry);
 
         const { error } = await sb.from('invitations').insert({
-            name:       name,
-            email:      email,
-            token:      token,
+            name, email, token,
             expires_at: expiresAt.toISOString(),
             created_by: currentUser.id,
-            status:     'pending'
+            status: 'pending'
         });
 
         if (error) throw error;
@@ -1414,98 +3592,4 @@ async function loadNews() {
 }
 
 // ============================================================
-// INVESTOR: INVESTMENTS
-// ============================================================
-async function loadInvestments() {
-    try {
-        const { data, error } = await sb.from('investments').select(`*,opportunities(title,sector)`).eq('investor_id', currentUser.id).order('investment_date', { ascending: false });
-        if (error) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-warning">⚠️ Investments table not found.</div>`; return; }
-        const el = document.getElementById('invInvestments');
-        if (!data?.length) { el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin'); return; }
-        el.innerHTML = data.map(inv => `
-            <div class="inv-card">
-                <div class="inv-header">
-                    <div>
-                        <div class="inv-title">${inv.opportunities?.title || 'Investment'}</div>
-                        ${inv.opportunities?.sector ? `<div style="color:var(--muted);font-size:0.85rem;">${inv.opportunities.sector}</div>` : ''}
-                    </div>
-                    <div>
-                        <div class="inv-amount">$${fmtMoney(inv.amount)}</div>
-                        ${statusBadge(inv.status)}
-                    </div>
-                </div>
-                <div class="inv-details">
-                    <div><div class="inv-detail-label">Investment Date</div><div class="inv-detail-value">${fmtDate(inv.investment_date)}</div></div>
-                    ${inv.notes ? `<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">${inv.notes}</div></div>` : ''}
-                </div>
-            </div>
-        `).join('');
-    } catch (err) { document.getElementById('invInvestments').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`; }
-}
-
-// ============================================================
-// INVESTOR: PROFILE
-// ============================================================
-function fillProfile() {
-    document.getElementById('pName').value   = userProfile?.full_name || '';
-    document.getElementById('pEmail').value  = userProfile?.email || currentUser?.email || '';
-    document.getElementById('pPhone').value  = userProfile?.phone || '';
-    document.getElementById('pStatus').value = userProfile?.status || '';
-}
-
-async function saveProfile(e) {
-    e.preventDefault();
-    try {
-        const { error } = await sb.from('profiles').update({
-            full_name: document.getElementById('pName').value.trim(),
-            phone: document.getElementById('pPhone').value.trim(),
-            updated_at: new Date().toISOString()
-        }).eq('id', currentUser.id);
-        if (error) throw error;
-        userProfile.full_name = document.getElementById('pName').value.trim();
-        document.getElementById('invName').textContent = userProfile.full_name;
-        document.getElementById('userBadge').textContent = userProfile.full_name;
-        notify('Profile updated successfully', 'success');
-    } catch (err) { notify('Error: ' + err.message, 'danger'); }
-}
-
-// ============================================================
-// DRAG & DROP UPLOAD
-// ============================================================
-const uploadArea = document.getElementById('uploadArea');
-uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
-uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-uploadArea.addEventListener('drop', e => {
-    e.preventDefault();
-    uploadArea.classList.remove('dragover');
-    const files = e.dataTransfer.files;
-    if (files.length) {
-        document.getElementById('fileInput').files = files;
-        handleFile(document.getElementById('fileInput'));
-    }
-});
-
-// ============================================================
-// INIT
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-    updateLang();
-
-    const params = new URLSearchParams(window.location.search);
-    const inviteToken = params.get('invite');
-
-    if (inviteToken) {
-        document.getElementById('authContainer').classList.add('hidden');
-        checkInviteToken();
-    } else {
-        sb.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                currentUser = session.user;
-                fetchProfile().then(() => showDashboard());
-            }
-        });
-    }
-});
-</script>
-</body>
-</html>
+// INVESTOR

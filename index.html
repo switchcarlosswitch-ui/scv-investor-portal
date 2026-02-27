@@ -851,10 +851,10 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async e
 
     try {
         // Look up profile — we need the name for the branded email
-        const { data: profile } = await sb.from('profiles')
-            .select('id, full_name')
-            .eq('email', email)
-            .maybeSingle();
+        const { data: profiles } = await sb.rpc('get_profile_for_password_reset', {
+    p_email: email
+});
+const profile = profiles?.[0] || null;
 
         if (profile) {
             // Generate a cryptographically secure token
@@ -1900,3 +1900,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+

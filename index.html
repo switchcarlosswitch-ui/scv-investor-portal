@@ -683,6 +683,7 @@ const BUCKET          = 'investor-documents';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null, userProfile = null, lang = 'en';
+let loginAttempts = 0, loginLockedUntil = null;
 
 // ============================================================
 // AUTH CONTAINER REGISTRY
@@ -1118,18 +1119,58 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
 // ============================================================
 document.getElementById('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
+
+    // Check if locked out
+    if (loginLockedUntil && new Date() < loginLockedUntil) {
+        const mins = Math.ceil((loginLockedUntil - new Date()) / 60000);
+        notify(
+            lang === 'en'
+                ? `Too many failed attempts. Please try again in ${mins} minute(s).`
+                : `Demasiados intentos fallidos. Por favor intente en ${mins} minuto(s).`,
+            'danger', 8000
+        );
+        return;
+    }
+
     const email = document.getElementById('loginEmail').value.trim();
     const pass  = document.getElementById('loginPassword').value;
     const btn   = document.getElementById('loginBtn');
-    btn.disabled = true; btn.textContent = '…';
+    btn.disabled = true;
+    btn.textContent = '…';
+
     try {
         const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
         if (error) throw error;
+
+        // Success — reset counters
+        loginAttempts    = 0;
+        loginLockedUntil = null;
+
         currentUser = data.user;
         await fetchProfile();
         showDashboard();
+
     } catch (err) {
-        notify('Login failed: ' + err.message, 'danger');
+        loginAttempts++;
+
+        if (loginAttempts >= 5) {
+            loginLockedUntil = new Date(Date.now() + 15 * 60 * 1000);
+            loginAttempts    = 0;
+            notify(
+                lang === 'en'
+                    ? '🔒 Too many failed attempts. Login locked for 15 minutes.'
+                    : '🔒 Demasiados intentos fallidos. Inicio de sesión bloqueado por 15 minutos.',
+                'danger', 15000
+            );
+        } else {
+            const remaining = 5 - loginAttempts;
+            notify(
+                lang === 'en'
+                    ? `Login failed. ${remaining} attempt(s) remaining before lockout.`
+                    : `Inicio de sesión fallido. ${remaining} intento(s) restantes antes del bloqueo.`,
+                'danger'
+            );
+        }
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<span data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>';
@@ -1926,6 +1967,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

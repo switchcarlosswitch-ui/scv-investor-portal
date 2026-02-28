@@ -1214,9 +1214,22 @@ function oppBadge(s) {
     const labels = { active:'Active', coming_soon:'Coming Soon', closed:'Closed' };
     return `<span class="badge ${map[s]||'badge-muted'}">${labels[s]||s}</span>`;
 }
-function docUrl(path) {
-    const { data } = sb.storage.from(BUCKET).getPublicUrl(path);
-    return data?.publicUrl || '#';
+async function openSignedDoc(path) {
+    try {
+        const { data, error } = await sb.storage
+            .from(BUCKET)
+            .createSignedUrl(path, 3600); // 1 hour expiry
+        if (error) throw error;
+        window.open(data.signedUrl, '_blank');
+    } catch (err) {
+        notify(
+            lang === 'en'
+                ? 'Could not open document. Please try again.'
+                : 'No se pudo abrir el documento. Por favor intente de nuevo.',
+            'danger'
+        );
+        console.error('Signed URL error:', err.message);
+    }
 }
 function emptyState(icon, title, sub = '') {
     return `<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div>${sub ? `<div class="empty-sub">${sub}</div>` : ''}</div>`;
@@ -1407,7 +1420,7 @@ async function loadAdminDocs() {
                 </div>
                 <div class="action-group">
                     ${statusBadge(d.status)}
-                    <a href="${docUrl(d.file_path)}" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>
+                    <button class="btn btn-secondary btn-sm" onclick="openSignedDoc('${d.file_path}')">👁️ View</button>
                     ${d.status === 'pending' ? `
                         <button class="btn btn-success btn-sm" onclick="reviewDoc('${d.id}','approved')">✅ Approve</button>
                         <button class="btn btn-danger btn-sm" onclick="openReject('${d.id}')">❌ Reject</button>
@@ -1723,7 +1736,7 @@ async function loadInvDocs() {
                 </div>
                 <div class="action-group">
                     ${statusBadge(d.status)}
-                    <a href="${docUrl(d.file_path)}" target="_blank" class="btn btn-secondary btn-sm">👁️ View</a>
+                    <button class="btn btn-secondary btn-sm" onclick="openSignedDoc('${d.file_path}')">👁️ View</button>
                 </div>
             </div>
         `).join('');
@@ -1900,4 +1913,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 

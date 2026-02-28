@@ -1548,7 +1548,7 @@ async function loadOpps(view) {
                         <span class="doc-icon">💡</span>
                         <div>
                             <div class="doc-name">${sanitize(o.title)}</div>
-                            <div class="doc-meta">${o.sector || ''}${o.location ? ' - ' + o.location : ''} - Min: $${fmtMoney(o.minimum_investment)}</div>
+                            <div class="doc-meta">${sanitize(o.sector) || ''}${o.location ? ' - ' + o.location : ''} - Min: $${fmtMoney(o.minimum_investment)}</div>
                         </div>
                     </div>
                     <div class="action-group">
@@ -1565,7 +1565,7 @@ async function loadOpps(view) {
                 <div class="opp-card">
                     <div class="opp-header">
                         <div class="opp-title">${sanitize(o.title)}</div>
-                        <div class="opp-sub">${o.sector || ''}${o.location ? ' - ' + o.location : ''}</div>
+                        <div class="opp-sub">${sanitize(o.sector) || ''}${o.location ? ' - ' + o.location : ''}</div>
                     </div>
                     <div class="opp-body">
                         ${o.description ? `<div class="opp-desc">${sanitize(o.description)}</div>` : ''}
@@ -1925,6 +1925,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

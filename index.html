@@ -1277,8 +1277,8 @@ async function loadInvestors() {
             return;
         }
         tbody.innerHTML = data.map(r => `<tr>
-            <td><strong>${r.full_name || '—'}</strong></td>
-            <td>${r.email}</td>
+            <td><strong>${sanitize(r.full_name)||'—'}</strong></td>
+            <td>${sanitize(r.email)}</td>
             <td>${statusBadge(r.status)}</td>
             <td>${fmtDate(r.created_at)}</td>
             <td><div class="action-group">
@@ -1317,12 +1317,12 @@ async function loadInvitations() {
             return;
         }
         tbody.innerHTML = data.map(r => `<tr>
-            <td>${r.name}</td>
-            <td>${r.email}</td>
+            <td>${sanitize(r.name)}</td>
+            <td>${sanitize(r.email)}</td>
             <td>${invBadge(r.status)}</td>
             <td>${fmtDate(r.expires_at)}</td>
             <td>
-                <button class="btn btn-danger btn-sm" onclick="softDeleteInvitation('${r.id}','${r.email}')">🗑️ Delete</button>
+                <button class="btn btn-danger btn-sm" onclick="softDeleteInvitation('${r.id}','${sanitize(r.email)}')">🗑️ Delete</button>
             </td>
         </tr>`).join('');
     } catch (err) { console.error('Invitations:', err.message); }
@@ -1427,7 +1427,7 @@ async function loadAdminDocs() {
                     <div>
                         <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
                         <div class="doc-meta">👤 ${d.profiles?.full_name || d.profiles?.email || 'Unknown'} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
-                        ${d.rejection_reason ? `<div class="doc-rejection">Reason: ${d.rejection_reason}</div>` : ''}
+                        ${d.rejection_reason ? `<div class="doc-rejection">Reason: ${sanitize(d.rejection_reason)}</div>` : ''}
                     </div>
                 </div>
                 <div class="action-group">
@@ -1485,8 +1485,8 @@ async function loadWatchlist() {
         el.innerHTML = data.map(w => `
             <div class="watchlist-item">
                 <div>
-                    <div class="watchlist-name">${w.company_name}</div>
-                    ${w.ticker ? `<div class="watchlist-ticker">$${w.ticker}</div>` : ''}
+                    <div class="watchlist-name">${sanitize(w.company_name)}</div>
+                    ${w.ticker ? `<div class="watchlist-ticker">$${sanitize(w.ticker)}</div>` : ''}
                 </div>
                 <div class="action-group">
                     <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank" class="btn btn-secondary btn-sm">📰 News</a>
@@ -1547,7 +1547,7 @@ async function loadOpps(view) {
                     <div class="doc-info">
                         <span class="doc-icon">💡</span>
                         <div>
-                            <div class="doc-name">${o.title}</div>
+                            <div class="doc-name">${sanitize(o.title)}</div>
                             <div class="doc-meta">${o.sector || ''}${o.location ? ' - ' + o.location : ''} - Min: $${fmtMoney(o.minimum_investment)}</div>
                         </div>
                     </div>
@@ -1564,15 +1564,15 @@ async function loadOpps(view) {
             el.innerHTML = `<div class="opp-grid">${visible.map(o => `
                 <div class="opp-card">
                     <div class="opp-header">
-                        <div class="opp-title">${o.title}</div>
+                        <div class="opp-title">${sanitize(o.title)}</div>
                         <div class="opp-sub">${o.sector || ''}${o.location ? ' - ' + o.location : ''}</div>
                     </div>
                     <div class="opp-body">
-                        ${o.description ? `<div class="opp-desc">${o.description}</div>` : ''}
+                        ${o.description ? `<div class="opp-desc">${sanitize(o.description)}</div>` : ''}
                         ${o.target_amount      ? `<div class="opp-row"><span class="opp-label">Target</span><span class="opp-val">$${fmtMoney(o.target_amount)}</span></div>` : ''}
                         ${o.minimum_investment ? `<div class="opp-row"><span class="opp-label">Minimum</span><span class="opp-val">$${fmtMoney(o.minimum_investment)}</span></div>` : ''}
-                        ${o.expected_return    ? `<div class="opp-row"><span class="opp-label">Expected Return</span><span class="opp-val">${o.expected_return}</span></div>` : ''}
-                        ${o.timeline           ? `<div class="opp-row"><span class="opp-label">Timeline</span><span class="opp-val">${o.timeline}</span></div>` : ''}
+                        ${o.expected_return    ? `<div class="opp-row"><span class="opp-label">Expected Return</span><span class="opp-val">${sanitize(o.expected_return)}</span></div>` : ''}
+                        ${o.timeline           ? `<div class="opp-row"><span class="opp-label">Timeline</span><span class="opp-val">${sanitize(o.timeline)}</span></div>` : ''}
                         <div style="margin-top:1rem;">${oppBadge(o.status)}</div>
                     </div>
                 </div>
@@ -1742,8 +1742,8 @@ async function loadInvDocs() {
                     <span class="doc-icon">📄</span>
                     <div>
                         <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
-                        <div class="doc-meta">${d.file_name} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
-                        ${d.rejection_reason ? `<div class="doc-rejection">❌ Rejection reason: ${d.rejection_reason}</div>` : ''}
+                        <div class="doc-meta">${sanitize(d.file_name)} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
+                        ${d.rejection_reason ? `<div class="doc-rejection">❌ Rejection reason: ${sanitize(d.rejection_reason)}</div>` : ''}
                     </div>
                 </div>
                 <div class="action-group">
@@ -1783,7 +1783,7 @@ async function loadNews() {
                     <div class="news-tag">${w.ticker ? '$' + w.ticker + ' - ' : ''}Watchlist</div>
                     <div class="news-title">
                         <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank">
-                            ${w.company_name} — Latest News ↗
+                            ${sanitize(w.company_name)} — Latest News ↗
                         </a>
                     </div>
                     <div class="news-date" data-en="Click to view on Google News" data-es="Haga clic para ver en Google News">Click to view on Google News</div>
@@ -1835,7 +1835,7 @@ async function loadInvestments() {
                     ${inv.notes ? `
                     <div>
                         <div class="inv-detail-label" data-en="Notes" data-es="Notas">Notes</div>
-                        <div class="inv-detail-value">${inv.notes}</div>
+                        <div class="inv-detail-value">${sanitize(inv.notes)}</div>
                     </div>` : ''}
                 </div>
             </div>
@@ -1925,6 +1925,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

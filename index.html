@@ -1266,7 +1266,7 @@ async function loadAdminStats() {
 // ADMIN: INVESTORS
 // ============================================================
 async function loadInvestors() {
-    try {
+      try {
         const { data, error } = await sb.from('profiles')
             .select('*').eq('role', 'investor')
             .order('created_at', { ascending: false });
@@ -1277,7 +1277,7 @@ async function loadInvestors() {
             return;
         }
         tbody.innerHTML = data.map(r => `<tr>
-            <td><strong>${sanitize(r.full_name)||'—'}</strong></td>
+            <td><strong>${sanitize(r.full_name) || '—'}</strong></td>
             <td>${sanitize(r.email)}</td>
             <td>${statusBadge(r.status)}</td>
             <td>${fmtDate(r.created_at)}</td>
@@ -1306,7 +1306,7 @@ async function setInvestorStatus(id, status) {
 // ADMIN: INVITATIONS  (soft-delete + compliance check)
 // ============================================================
 async function loadInvitations() {
-    try {
+   try {
         const { data, error } = await sb.from('invitations')
             .select('*').is('deleted_at', null)
             .order('created_at', { ascending: false });
@@ -1410,7 +1410,7 @@ async function sendInviteEmail(name, email, token, expiry) {
 // ADMIN: DOCUMENTS
 // ============================================================
 async function loadAdminDocs() {
-    const filter = document.getElementById('docFilter').value;
+     const filter = document.getElementById('docFilter').value;
     try {
         let q = sb.from('documents')
             .select('*,profiles!documents_user_id_fkey(full_name,email),document_types(name)')
@@ -1425,8 +1425,8 @@ async function loadAdminDocs() {
                 <div class="doc-info">
                     <span class="doc-icon">📄</span>
                     <div>
-                        <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
-                        <div class="doc-meta">👤 ${d.profiles?.full_name || d.profiles?.email || 'Unknown'} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
+                        <div class="doc-name">${sanitize(d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name)}</div>
+                        <div class="doc-meta">👤 ${sanitize(d.profiles?.full_name || d.profiles?.email || 'Unknown')} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
                         ${d.rejection_reason ? `<div class="doc-rejection">Reason: ${sanitize(d.rejection_reason)}</div>` : ''}
                     </div>
                 </div>
@@ -1474,7 +1474,7 @@ function confirmReject() {
 // ADMIN: WATCHLIST
 // ============================================================
 async function loadWatchlist() {
-    try {
+     try {
         const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
         if (error) throw error;
         const el = document.getElementById('watchlistList');
@@ -1548,7 +1548,7 @@ async function loadOpps(view) {
                         <span class="doc-icon">💡</span>
                         <div>
                             <div class="doc-name">${sanitize(o.title)}</div>
-                            <div class="doc-meta">${sanitize(o.sector) || ''}${o.location ? ' - ' + o.location : ''} - Min: $${fmtMoney(o.minimum_investment)}</div>
+                            <div class="doc-meta">${sanitize(o.sector) || ''}${o.location ? ' - ' + sanitize(o.location) : ''} - Min: $${fmtMoney(o.minimum_investment)}</div>
                         </div>
                     </div>
                     <div class="action-group">
@@ -1565,7 +1565,7 @@ async function loadOpps(view) {
                 <div class="opp-card">
                     <div class="opp-header">
                         <div class="opp-title">${sanitize(o.title)}</div>
-                        <div class="opp-sub">${sanitize(o.sector) || ''}${o.location ? ' - ' + o.location : ''}</div>
+                        <div class="opp-sub">${sanitize(o.sector) || ''}${o.location ? ' - ' + sanitize(o.location) : ''}</div>
                     </div>
                     <div class="opp-body">
                         ${o.description ? `<div class="opp-desc">${sanitize(o.description)}</div>` : ''}
@@ -1582,6 +1582,7 @@ async function loadOpps(view) {
         document.getElementById(elId).innerHTML =
             `<div class="alert alert-danger">Error: ${err.message}</div>`;
     }
+}
 }
 
 function openOppModal() {
@@ -1725,7 +1726,7 @@ async function uploadDoc() {
 }
 
 async function loadInvDocs() {
-    try {
+       try {
         const { data, error } = await sb.from('documents')
             .select('*,document_types(name)')
             .eq('user_id', currentUser.id)
@@ -1741,7 +1742,7 @@ async function loadInvDocs() {
                 <div class="doc-info">
                     <span class="doc-icon">📄</span>
                     <div>
-                        <div class="doc-name">${d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name}</div>
+                        <div class="doc-name">${sanitize(d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name)}</div>
                         <div class="doc-meta">${sanitize(d.file_name)} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
                         ${d.rejection_reason ? `<div class="doc-rejection">❌ Rejection reason: ${sanitize(d.rejection_reason)}</div>` : ''}
                     </div>
@@ -1819,8 +1820,8 @@ async function loadInvestments() {
             <div class="inv-card">
                 <div class="inv-header">
                     <div>
-                        <div class="inv-title">${inv.opportunities?.title || 'Investment'}</div>
-                        ${inv.opportunities?.sector ? `<div style="color:var(--muted);font-size:0.85rem;">${inv.opportunities.sector}</div>` : ''}
+                        <div class="inv-title">${sanitize(inv.opportunities?.title) || 'Investment'}</div>
+                        ${inv.opportunities?.sector ? `<div style="color:var(--muted);font-size:0.85rem;">${sanitize(inv.opportunities.sector)}</div>` : ''}
                     </div>
                     <div>
                         <div class="inv-amount">$${fmtMoney(inv.amount)}</div>
@@ -1829,12 +1830,12 @@ async function loadInvestments() {
                 </div>
                 <div class="inv-details">
                     <div>
-                        <div class="inv-detail-label" data-en="Investment Date" data-es="Fecha de Inversión">Investment Date</div>
+                        <div class="inv-detail-label">Investment Date</div>
                         <div class="inv-detail-value">${fmtDate(inv.investment_date)}</div>
                     </div>
                     ${inv.notes ? `
                     <div>
-                        <div class="inv-detail-label" data-en="Notes" data-es="Notas">Notes</div>
+                        <div class="inv-detail-label">Notes</div>
                         <div class="inv-detail-value">${sanitize(inv.notes)}</div>
                     </div>` : ''}
                 </div>
@@ -1925,6 +1926,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

@@ -1776,26 +1776,85 @@ async function fetchProfile() {
     }
 }
 
-function showDashboard() {
+Copy code
+// ============================================================
+// SHOW DASHBOARD
+// ============================================================
+async function showDashboard() {
     hideAllAuthContainers();
+    const role = userProfile?.role;
+
+    // ── Enforce MFA for admin and compliance ──────────────────
+    if (role === 'admin' || role === 'compliance') {
+        try {
+            const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+
+            // Admin HAS MFA enrolled but hasn't verified it this session
+            if (aal?.nextLevel === 'aal2' && aal?.currentLevel !== 'aal2') {
+                hideAllAuthContainers();
+                document.getElementById('mfaContainer').classList.remove('hidden');
+                clearMFADigits('mfa');
+                document.getElementById('mfa0').focus();
+                return;
+            }
+
+            // Admin has NO MFA enrolled → force enrollment now
+            if (aal?.nextLevel === 'aal1') {
+                notify(
+                    '🔐 Administrators must enable Two-Factor Authentication before accessing the portal.',
+                    'danger', 0
+                );
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('hamburgerBtn').classList.remove('hidden');
+                const badge = document.getElementById('userBadge');
+                badge.classList.remove('hidden');
+                badge.textContent = userProfile?.full_name || currentUser.email;
+                startMFAEnroll(); // Opens QR code enrollment modal immediately
+                return;
+            }
+
+        } catch (err) {
+            // If MFA check fails for any reason, log and proceed
+            // so admin is never permanently locked out by a network error
+            console.warn('MFA level check failed:', err.message);
+        }
+    }
+
+    _completeDashboardLoad(role);
+}
+
+// ============================================================
+// COMPLETE DASHBOARD LOAD
+// ============================================================
+function _completeDashboardLoad(role) {
     document.getElementById('logoutBtn').classList.remove('hidden');
     document.getElementById('hamburgerBtn').classList.remove('hidden');
     const badge = document.getElementById('userBadge');
     badge.classList.remove('hidden');
     badge.textContent = userProfile?.full_name || currentUser.email;
-    const role = userProfile?.role;
+
     if (role === 'admin' || role === 'compliance') {
         document.getElementById('adminDashboard').classList.add('active');
-        loadAdminStats(); loadInvestors(); loadInvitations(); loadAdminDocs(); loadWatchlist(); loadOpps('admin');
+        loadAdminStats(); loadInvestors(); loadInvitations();
+        loadAdminDocs(); loadWatchlist(); loadOpps('admin');
     } else {
         document.getElementById('investorDashboard').classList.add('active');
         document.getElementById('invName').textContent = userProfile?.full_name || '';
-        loadInvOverview(); loadDocTypes(); loadInvDocs(); loadOpps('investor'); loadInvestments(); fillProfile();
+        loadInvOverview(); loadDocTypes(); loadInvDocs();
+        loadOpps('investor'); loadInvestments(); fillProfile();
         updateAccreditedUI();
+        // Soft nudge for investors who haven't enrolled MFA
+        if (!userProfile?.mfa_enabled) {
+            setTimeout(() => {
+                notify(
+                    '💡 Tip: Enable Two-Factor Authentication in your Profile tab to better protect your account.',
+                    'info', 10000
+                );
+            }, 2000);
+        }
     }
     startIdleTimer();
 }
-
 async function logout(auto = false) {
     clearIdleTimers();
     document.getElementById('idleBanner').classList.remove('show');
@@ -2621,6 +2680,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

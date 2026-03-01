@@ -785,6 +785,40 @@
                 </button>
             </div>
         </div>
+<!-- Reg S Profile Card (Bilingual) -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            🌐 <span data-en="Regulation S Status" data-es="Estado de Regulación S">Regulation S Status</span>
+        </h3>
+        <span id="regSBadge" class="badge badge-warning">
+            <span data-en="Pending" data-es="Pendiente">Pending</span>
+        </span>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1.25rem;font-size:0.9rem;">
+        <span data-en="If you are a non-US person investing from outside the United States, please complete your Regulation S certification to confirm your eligibility."
+              data-es="Si usted es una persona no estadounidense que invierte desde fuera de los Estados Unidos, complete su certificación de Regulación S para confirmar su elegibilidad.">
+            If you are a non-US person investing from outside the United States, please complete
+            your Regulation S certification to confirm your eligibility.
+        </span>
+    </p>
+    <div id="regSCertifiedSection" class="hidden">
+        <div class="alert alert-success">
+            ✅ <span data-en="Your Regulation S non-US person certification is on file."
+                      data-es="Su certificación de persona no estadounidense de Regulación S está registrada.">
+                Your Regulation S non-US person certification is on file.
+            </span>
+        </div>
+    </div>
+    <div id="regSPendingSection">
+        <button class="btn btn-primary" onclick="openModal('regSModal')">
+            🌐 <span data-en="Complete Regulation S Certification"
+                      data-es="Completar Certificación de Regulación S">
+                Complete Regulation S Certification
+            </span>
+        </button>
+    </div>
+</div>
     </section>
 </div>
 <!-- REG S CERTIFICATION MODAL (Bilingual EN + ES) -->
@@ -2880,6 +2914,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

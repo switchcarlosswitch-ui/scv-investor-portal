@@ -990,6 +990,110 @@
 <!-- Paste Part 3 immediately after this line -->
 <script>
 // ============================================================
+// 1. CONFIG
+// ============================================================
+const SUPABASE_URL   = 'https://wrojhaduvtpilxdmqryp.supabase.co';
+const SUPABASE_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
+const BACKEND_BASE   = 'https://silicon-corridor-backend-production.up.railway.app/api';
+const INVITE_URL     = BACKEND_BASE + '/send-invitation';
+const SEND_RESET_URL = BACKEND_BASE + '/send-password-reset';
+const DO_RESET_URL   = BACKEND_BASE + '/reset-password';
+const BUCKET         = 'investor-documents';
+const PAGE_SIZE      = 10;
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null, userProfile = null, lang = 'en';
+let loginAttempts = 0, loginLockedUntil = null;
+let idleTimer = null, idleWarningTimer = null, idleCountdownInterval = null;
+const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+const IDLE_WARNING_MS = 14 * 60 * 1000;
+
+let investorPage = 1, allInvestors = [];
+let adminDocsPage = 1, allAdminDocs = [];
+
+// ============================================================
+// 2. AUTH CONTAINER REGISTRY
+// ============================================================
+const AUTH_CONTAINERS = [
+    'authContainer',
+    'mfaContainer',
+    'forgotPasswordContainer',
+    'resetPasswordContainer',
+    'invalidResetContainer',
+    'registerContainer',
+    'invalidInviteContainer'
+];
+function hideAllAuthContainers() {
+    AUTH_CONTAINERS.forEach(id => document.getElementById(id).classList.add('hidden'));
+}
+
+// ============================================================
+// 3. LANGUAGE
+// ============================================================
+function toggleLanguage() {
+    lang = lang === 'en' ? 'es' : 'en';
+    document.getElementById('langText').textContent = lang === 'en' ? 'ES' : 'EN';
+    updateLang();
+    const fp = document.getElementById('forgotPasswordContainer');
+    if (fp && !fp.classList.contains('hidden')) generateCaptcha();
+}
+function updateLang() {
+    document.querySelectorAll('[data-en][data-es]').forEach(el => {
+        const t = el.getAttribute('data-' + lang);
+        if (t) el.textContent = t;
+    });
+}
+
+// ============================================================
+// 4. MOBILE NAV
+// ============================================================
+function toggleMobileNav() {
+    const nav = document.querySelector('.dashboard.active .dashboard-nav');
+    if (!nav) return;
+    nav.classList.toggle('mobile-open');
+    document.getElementById('hamburgerBtn').textContent =
+        nav.classList.contains('mobile-open') ? '✕' : '☰';
+}
+
+// ============================================================
+// 5. NOTIFICATIONS
+// ============================================================
+function notify(msg, type = 'info', ms = 5000) {
+    const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
+    const n = document.createElement('div');
+    n.className = 'alert alert-' + type;
+    n.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;min-width:300px;'
+        + 'max-width:480px;animation:slideIn 0.3s ease;cursor:pointer;'
+        + 'box-shadow:0 8px 30px rgba(0,0,0,0.15);';
+    n.innerHTML = `<span>${icons[type] || 'ℹ️'}</span>`
+        + `<span style="flex:1">${msg}</span>`
+        + `<button onclick="this.parentElement.remove()" `
+        + `style="background:none;border:none;font-size:1.2rem;`
+        + `cursor:pointer;color:inherit;">×</button>`;
+    document.body.appendChild(n);
+    setTimeout(() => n.isConnected && n.remove(), ms);
+    n.addEventListener('click', () => n.remove());
+}
+
+// ============================================================
+// 6. CUSTOM CONFIRM MODAL
+// ============================================================
+let _confirmCallback = null;
+function confirmAction(title, message, callback) {
+    document.getElementById('confirmTitle').textContent   = title;
+    document.getElementById('confirmMessage').textContent = message;
+    _confirmCallback = callback;
+    document.getElementById('confirmActionBtn').onclick = () => {
+        closeModal('confirmModal');
+        if (_confirmCallback) _confirmCallback();
+        _confirmCallback = null;
+    };
+    openModal('confirmModal');
+}
+
+
+    
+    // ============================================================
 // MODALS
 // ============================================================
 function openModal(id)  { document.getElementById(id).classList.add('active'); }
@@ -2517,5 +2621,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 

@@ -707,6 +707,35 @@
             <div class="card-header"><h3 class="card-title" data-en="Investment Opportunities" data-es="Oportunidades de Inversión">Investment Opportunities</h3></div>
             <div id="invOppList"><div class="loading"><div class="spinner"></div></div></div>
         </div>
+<!-- Reg S Legend — Always bilingual (EN required for compliance, ES for comprehension) -->
+<div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;">
+    <!-- English — always visible -->
+    <div style="padding-bottom:0.6rem;border-bottom:1px dashed #c7d2fe;margin-bottom:0.6rem;">
+        <span style="display:inline-block;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:0.15rem 0.5rem;border-radius:4px;background:#dbeafe;color:#1e40af;margin-bottom:0.3rem;">English — Legal / Compliance</span>
+        <p style="font-size:0.78rem;color:#3730a3;line-height:1.7;">
+            <strong>🌐 Regulation S Notice:</strong>
+            Securities offered herein are being offered outside the United States in reliance upon
+            Regulation S under the Securities Act of 1933. These securities have not been registered
+            under the Securities Act and may not be offered or sold within the United States or to,
+            or for the account or benefit of, US persons (as defined in Regulation S) absent
+            registration or an applicable exemption. Hedging transactions involving these securities
+            may not be conducted unless in compliance with the Securities Act.
+        </p>
+    </div>
+    <!-- Spanish — always visible -->
+    <div>
+        <span style="display:inline-block;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:0.15rem 0.5rem;border-radius:4px;background:#fef9c3;color:#854d0e;margin-bottom:0.3rem;">Español — Comprensión</span>
+        <p style="font-size:0.78rem;color:#3730a3;line-height:1.7;">
+            <strong>🌐 Aviso de Regulación S:</strong>
+            Los valores ofrecidos en este portal se ofrecen fuera de los Estados Unidos en virtud de
+            la Regulación S bajo la Ley de Valores de 1933. Estos valores no han sido registrados
+            bajo la Ley de Valores y no pueden ofrecerse ni venderse dentro de los Estados Unidos
+            ni a personas estadounidenses (según se define en la Regulación S) sin registro o una
+            exención aplicable. Las transacciones de cobertura que involucren estos valores no pueden
+            realizarse a menos que cumplan con la Ley de Valores.
+        </p>
+    </div>
+</div>
     </section>
 
     <!-- Investor: Account -->
@@ -1258,6 +1287,108 @@ function updateLang() {
     });
 }
 
+async function submitRegSCertification() {
+    const country = document.getElementById('regSCountry').value;
+    const cb1     = document.getElementById('regs_cb1').checked;
+    const cb2     = document.getElementById('regs_cb2').checked;
+    const cb3     = document.getElementById('regs_cb3').checked;
+    const cb4     = document.getElementById('regs_cb4').checked;
+
+    if (!country) {
+        notify(
+            lang === 'en'
+                ? 'Please select your country of residence.'
+                : 'Por favor seleccione su país de residencia.',
+            'warning'
+        );
+        return;
+    }
+    if (!cb1 || !cb2 || !cb3 || !cb4) {
+        notify(
+            lang === 'en'
+                ? 'You must confirm all four statements to complete Reg S certification.'
+                : 'Debe confirmar las cuatro declaraciones para completar la certificación de Regulación S.',
+            'warning'
+        );
+        return;
+    }
+
+    // Store BOTH languages in the certification record for compliance
+    const certText =
+        '[EN] I certify that I am not a US person under SEC Rule 902(k), '
+        + 'this is an offshore transaction, I was not solicited in the United States, '
+        + 'and I understand the resale restrictions under Regulation S. '
+        + 'Country of residence: ' + country + '. '
+        + 'Certified on: ' + new Date().toISOString() + '. '
+        + '|| [ES] Certifico que no soy una persona estadounidense bajo la Regla 902(k) de la SEC, '
+        + 'esta es una transacción en el extranjero, no fui contactado en los Estados Unidos, '
+        + 'y entiendo las restricciones de reventa bajo la Regulación S. '
+        + 'País de residencia: ' + country + '. '
+        + 'Certificado el: ' + new Date().toISOString();
+
+    try {
+        const { error: certErr } = await sb.from('reg_s_certifications').insert({
+            user_id:                     currentUser.id,
+            not_us_person:               cb1,
+            not_us_resident:             cb1,
+            offshore_transaction:        cb2,
+            no_us_solicitation:          cb3,
+            understands_resale_restrict: cb4,
+            country_of_residence:        country,
+            certification_text:          certText,
+            user_agent:                  navigator.userAgent,
+            certified_at:                new Date().toISOString()
+        });
+        if (certErr) throw certErr;
+
+        const { error: profErr } = await sb.from('profiles').update({
+            reg_s_certified:      true,
+            reg_s_certified_at:   new Date().toISOString(),
+            country_of_residence: country,
+            is_us_person:         false,
+            investor_type:        userProfile?.accredited_investor_certified
+                                    ? 'both' : 'non_us_reg_s'
+        }).eq('id', currentUser.id);
+        if (profErr) throw profErr;
+
+        userProfile.reg_s_certified      = true;
+        userProfile.country_of_residence = country;
+        userProfile.is_us_person         = false;
+
+        closeModal('regSModal');
+        updateRegSUI();
+        notify(
+            lang === 'en'
+                ? '✅ Regulation S certification recorded. Thank you.'
+                : '✅ Certificación de Regulación S registrada. Gracias.',
+            'success', 8000
+        );
+
+    } catch (err) {
+        notify(
+            (lang === 'en' ? 'Error saving Reg S certification: ' : 'Error al guardar certificación Reg S: ')
+            + err.message,
+            'danger'
+        );
+    }
+}
+
+function updateRegSUI() {
+    const certified = userProfile?.reg_s_certified;
+    const badge     = document.getElementById('regSBadge');
+    const certEl    = document.getElementById('regSCertifiedSection');
+    const pendEl    = document.getElementById('regSPendingSection');
+    if (badge) {
+        badge.textContent = certified
+            ? (lang === 'en' ? 'Certified ✅' : 'Certificado ✅')
+            : (lang === 'en' ? 'Pending' : 'Pendiente');
+        badge.className   = certified ? 'badge badge-success' : 'badge badge-warning';
+    }
+    if (certEl) certEl.classList.toggle('hidden', !certified);
+    if (pendEl) pendEl.classList.toggle('hidden', !!certified);
+}
+
+    
 // ============================================================
 // 4. MOBILE NAV
 // ============================================================
@@ -2914,6 +3045,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

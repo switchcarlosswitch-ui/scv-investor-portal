@@ -1776,7 +1776,7 @@ async function fetchProfile() {
     }
 }
 
-Copy code
+
 // ============================================================
 // SHOW DASHBOARD
 // ============================================================
@@ -1990,7 +1990,7 @@ async function loadInvestors() {
         if (error) throw error;
         allInvestors = data || [];
         investorPage = 1;
-        renderInvestorsTable();
+        ();
     } catch (err) {
         document.getElementById('investorsBody').innerHTML =
             `<tr><td colspan="7">Error: ${err.message}</td></tr>`;
@@ -2015,19 +2015,34 @@ function renderInvestorsTable(query = '') {
         document.getElementById('investorsPagination').innerHTML = '';
         return;
     }
-    tbody.innerHTML = page.map(r => `<tr>
-        <td><strong>${sanitize(r.full_name) || '—'}</strong></td>
-        <td>${sanitize(r.email)}</td>
-        <td>${statusBadge(r.status)}</td>
-        <td>${r.mfa_enabled ? '<span class="badge badge-success">✅ On</span>' : '<span class="badge badge-muted">Off</span>'}</td>
-        <td>${r.accredited_investor_certified ? '<span class="badge badge-success">✅ Yes</span>' : '<span class="badge badge-warning">Pending</span>'}</td>
-        <td>${fmtDate(r.created_at)}</td>
-        <td><div class="action-group">
-            ${r.status === 'active'
-                ? `<button class="btn btn-warning btn-sm" onclick="confirmAction('Suspend Investor','Suspend ${sanitize(r.full_name)}? They will not be able to log in.',()=>setInvestorStatus('${r.id}','suspended'))">🚫 Suspend</button>`
-                : `<button class="btn btn-success btn-sm" onclick="setInvestorStatus('${r.id}','active')">✅ Activate</button>`}
-        </div></td>
-    </tr>`).join('');
+    tbody.innerHTML = page.map(r => {
+    const name = sanitize(r.full_name) || '—';
+    const id   = r.id;
+    const actionBtn = r.status === 'active'
+        ? '<button class="btn btn-warning btn-sm" '
+            + 'onclick="confirmAction('
+            + '\'Suspend Investor\','
+            + '\'Suspend ' + name + '? They will not be able to log in.\','
+            + '()=&gt;setInvestorStatus(\'' + id + '\',\'suspended\'))">'
+            + '🚫 Suspend</button>'
+        : '<button class="btn btn-success btn-sm" '
+            + 'onclick="setInvestorStatus(\'' + id + '\',\'active\')">'
+            + '✅ Activate</button>';
+
+    return '<tr>'
+        + '<td><strong>' + name + '</strong></td>'
+        + '<td>' + sanitize(r.email) + '</td>'
+        + '<td>' + statusBadge(r.status) + '</td>'
+        + '<td>' + (r.mfa_enabled
+            ? '<span class="badge badge-success">✅ On</span>'
+            : '<span class="badge badge-muted">Off</span>') + '</td>'
+        + '<td>' + (r.accredited_investor_certified
+            ? '<span class="badge badge-success">✅ Yes</span>'
+            : '<span class="badge badge-warning">Pending</span>') + '</td>'
+        + '<td>' + fmtDate(r.created_at) + '</td>'
+        + '<td><div class="action-group">' + actionBtn + '</div></td>'
+        + '</tr>';
+}).join('');
     renderPagination('investorsPagination', investorPage, filtered.length, PAGE_SIZE, 'goInvestorPage');
 }
 
@@ -2680,6 +2695,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

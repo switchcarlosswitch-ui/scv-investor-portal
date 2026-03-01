@@ -1716,9 +1716,12 @@ function adminNav(el) {
     el.classList.add('active');
     document.querySelectorAll('#adminDashboard .dashboard-section').forEach(s => s.classList.remove('active'));
     document.getElementById(el.dataset.section).classList.add('active');
+    // Close mobile nav after selection
     const nav = document.getElementById('adminNavBar');
-    if (nav) nav.classList.remove('collapsed');
+    if (nav) nav.classList.remove('mobile-open');
+    document.getElementById('hamburgerBtn').textContent = '☰';
 }
+
 function investorNav(el) {
     document.querySelectorAll('#investorDashboard .nav-item').forEach(n => n.classList.remove('active'));
     el.classList.add('active');
@@ -1726,10 +1729,11 @@ function investorNav(el) {
     document.getElementById(el.dataset.section).classList.add('active');
     if (el.dataset.section === 'invNews') loadNews();
     if (el.dataset.section === 'invProfile') checkMFAStatus();
+    // Close mobile nav after selection
     const nav = document.getElementById('investorNavBar');
-    if (nav) nav.classList.remove('collapsed');
+    if (nav) nav.classList.remove('mobile-open');
+    document.getElementById('hamburgerBtn').textContent = '☰';
 }
-
 // ============================================================
 // HELPERS
 // ============================================================
@@ -2513,4 +2517,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 

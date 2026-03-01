@@ -2188,6 +2188,7 @@ function _completeDashboardLoad(role) {
         loadInvOverview(); loadDocTypes(); loadInvDocs();
         loadOpps('investor'); loadInvestments(); fillProfile();
         updateAccreditedUI();
+        updateRegSUI(); 
         // Soft nudge for investors who haven't enrolled MFA
         if (!userProfile?.mfa_enabled) {
             setTimeout(() => {
@@ -2321,6 +2322,11 @@ async function loadAdminStats() {
         const mfa  = document.getElementById('sMfaInv');
         if (cert) cert.textContent = data.certified_investors    ?? 0;
         if (mfa)  mfa.textContent  = data.mfa_enabled_investors  ?? 0;
+        const regS  = document.getElementById('sRegSInv');
+        const nonUs = document.getElementById('sNonUsInv');
+        if (regS)  regS.textContent  = data.reg_s_certified_investors ?? 0;
+        if (nonUs) nonUs.textContent = data.non_us_investors          ?? 0;
+        
     } catch (err) { console.error('Stats:', err.message); }
 }
 
@@ -3045,6 +3051,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

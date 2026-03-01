@@ -1990,7 +1990,7 @@ async function loadInvestors() {
         if (error) throw error;
         allInvestors = data || [];
         investorPage = 1;
-        ();
+         renderInvestorsTable();
     } catch (err) {
         document.getElementById('investorsBody').innerHTML =
             `<tr><td colspan="7">Error: ${err.message}</td></tr>`;
@@ -2695,6 +2695,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

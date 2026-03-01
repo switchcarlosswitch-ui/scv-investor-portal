@@ -2246,7 +2246,7 @@ function confirmReject() {
 // ADMIN: WATCHLIST
 // ============================================================
 async function loadWatchlist() {
-    try {
+   try {
         const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
         if (error) throw error;
         const el = document.getElementById('watchlistList');
@@ -2254,18 +2254,19 @@ async function loadWatchlist() {
             el.innerHTML = emptyState('👁️','No companies in watchlist','Add companies above to track their news');
             return;
         }
-        el.innerHTML = data.map(w => `
-            <div class="watchlist-item">
-                <div>
-                    <div class="watchlist-name">${sanitize(w.company_name)}</div>
-                    ${w.ticker ? `<div class="watchlist-ticker">$${sanitize(w.ticker)}</div>` : ''}
-                </div>
-                <div class="action-group">
-                    <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank" class="btn btn-secondary btn-sm">📰 News</a>
-                    <button class="btn btn-danger btn-sm" onclick="confirmAction('Remove Company','Remove ${sanitize(w.company_name)} from watchlist?',()=>removeWatchlist('${w.id}'))">🗑️</button>
-                </div>
-            </div>
-        `).join('');
+        el.innerHTML = data.map(w => {
+            const ticker = w.ticker
+                ? '<div class="watchlist-ticker">$' + sanitize(w.ticker) + '</div>'
+                : '';
+            const newsUrl = 'https://news.google.com/search?q=' + encodeURIComponent(w.company_name);
+            const cname   = sanitize(w.company_name);
+            return '<div class="watchlist-item">'
+                + '<div><div class="watchlist-name">' + cname + '</div>' + ticker + '</div>'
+                + '<div class="action-group">'
+                + '<a href="' + newsUrl + '" target="_blank" class="btn btn-secondary btn-sm">📰 News</a>'
+                + '<button class="btn btn-danger btn-sm" onclick="confirmAction(\'Remove Company\',\'Remove ' + cname + ' from watchlist?\',()=>removeWatchlist(\'' + w.id + '\'))">🗑️</button>'
+                + '</div></div>';
+        }).join('');
     } catch (err) { console.error('Watchlist:', err.message); }
 }
 
@@ -2303,7 +2304,7 @@ async function loadOpps(view) {
         const { data, error } = await sb.from('opportunities')
             .select('*').order('created_at', { ascending: false });
         if (error) {
-            document.getElementById(elId).innerHTML = `<div class="alert alert-warning">⚠️ Opportunities table not found.</div>`;
+            document.getElementById(elId).innerHTML = '<div class="alert alert-warning">⚠️ Opportunities table not found.</div>';
             return;
         }
         const el = document.getElementById(elId);
@@ -2313,44 +2314,48 @@ async function loadOpps(view) {
             return;
         }
         if (view === 'admin') {
-            el.innerHTML = data.map(o => `
-                <div class="doc-item">
-                    <div class="doc-info">
-                        <span class="doc-icon">💡</span>
-                        <div>
-                            <div class="doc-name">${sanitize(o.title)}</div>
-                            <div class="doc-meta">${sanitize(o.sector)||''}${o.location?' — '+sanitize(o.location):''} — Min: $${fmtMoney(o.minimum_investment)}</div>
-                        </div>
-                    </div>
-                    <div class="action-group">
-                        ${oppBadge(o.status)}
-                        <button class="btn btn-secondary btn-sm" onclick="editOpp('${o.id}')">✏️ Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete Opportunity','Delete this opportunity? This cannot be undone.',()=>deleteOpp('${o.id}'))">🗑️ Delete</button>
-                    </div>
-                </div>
-            `).join('');
+            el.innerHTML = data.map(o => {
+                const meta = sanitize(o.sector) + (o.location ? ' — ' + sanitize(o.location) : '') + ' — Min: $' + fmtMoney(o.minimum_investment);
+                return '<div class="doc-item">'
+                    + '<div class="doc-info"><span class="doc-icon">💡</span><div>'
+                    + '<div class="doc-name">' + sanitize(o.title) + '</div>'
+                    + '<div class="doc-meta">' + meta + '</div>'
+                    + '</div></div>'
+                    + '<div class="action-group">'
+                    + oppBadge(o.status)
+                    + '<button class="btn btn-secondary btn-sm" onclick="editOpp(\'' + o.id + '\')">✏️ Edit</button>'
+                    + '<button class="btn btn-danger btn-sm" onclick="confirmAction(\'Delete Opportunity\',\'Delete this opportunity? This cannot be undone.\',()=>deleteOpp(\'' + o.id + '\'))">🗑️ Delete</button>'
+                    + '</div></div>';
+            }).join('');
         } else {
             const visible = data.filter(o => o.status !== 'closed');
             if (!visible.length) { el.innerHTML = emptyState('💡','No active opportunities','Check back soon'); return; }
-            el.innerHTML = `<div class="opp-grid">${visible.map(o => `
-                <div class="opp-card">
-                    <div class="opp-header">
-                        <div class="opp-title">${sanitize(o.title)}</div>
-                        <div class="opp-sub">${sanitize(o.sector)||''}${o.location?' — '+sanitize(o.location):''}</div>
-                    </div>
-                    <div class="opp-body">
-                        ${o.description ? `<div class="opp-desc">${sanitize(o.description)}</div>` : ''}
-                        ${o.target_amount      ? `<div class="opp-row"><span class="opp-label">Target</span><span class="opp-val">$${fmtMoney(o.target_amount)}</span></div>` : ''}
-                        ${o.minimum_investment ? `<div class="opp-row"><span class="opp-label">Minimum</span><span class="opp-val">$${fmtMoney(o.minimum_investment)}</span></div>` : ''}
-                        ${o.expected_return    ? `<div class="opp-row"><span class="opp-label">Expected Return</span><span class="opp-val">${sanitize(o.expected_return)}</span></div>` : ''}
-                        ${o.timeline           ? `<div class="opp-row"><span class="opp-label">Timeline</span><span class="opp-val">${sanitize(o.timeline)}</span></div>` : ''}
-                        <div style="margin-top:1rem;">${oppBadge(o.status)}</div>
-                    </div>
-                </div>
-            `).join('')}</div>`;
+            el.innerHTML = '<div class="opp-grid">' + visible.map(o => {
+                const sub  = (sanitize(o.sector) || '') + (o.location ? ' — ' + sanitize(o.location) : '');
+                const desc = o.description
+                    ? '<div class="opp-desc">' + sanitize(o.description) + '</div>'
+                    : '';
+                const target = o.target_amount
+                    ? '<div class="opp-row"><span class="opp-label">Target</span><span class="opp-val">$' + fmtMoney(o.target_amount) + '</span></div>'
+                    : '';
+                const minInv = o.minimum_investment
+                    ? '<div class="opp-row"><span class="opp-label">Minimum</span><span class="opp-val">$' + fmtMoney(o.minimum_investment) + '</span></div>'
+                    : '';
+                const ret = o.expected_return
+                    ? '<div class="opp-row"><span class="opp-label">Expected Return</span><span class="opp-val">' + sanitize(o.expected_return) + '</span></div>'
+                    : '';
+                const tl = o.timeline
+                    ? '<div class="opp-row"><span class="opp-label">Timeline</span><span class="opp-val">' + sanitize(o.timeline) + '</span></div>'
+                    : '';
+                return '<div class="opp-card">'
+                    + '<div class="opp-header"><div class="opp-title">' + sanitize(o.title) + '</div><div class="opp-sub">' + sub + '</div></div>'
+                    + '<div class="opp-body">' + desc + target + minInv + ret + tl
+                    + '<div style="margin-top:1rem;">' + oppBadge(o.status) + '</div>'
+                    + '</div></div>';
+            }).join('') + '</div>';
         }
     } catch (err) {
-        document.getElementById(elId).innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
+        document.getElementById(elId).innerHTML = '<div class="alert alert-danger">Error: ' + err.message + '</div>';
     }
 }
 
@@ -2513,25 +2518,28 @@ async function loadInvDocs() {
             el.innerHTML = emptyState('📄','No documents uploaded yet','Use the form above to upload your first document');
             return;
         }
-        el.innerHTML = data.map(d => `
-            <div class="doc-item">
-                <div class="doc-info">
-                    <span class="doc-icon">📄</span>
-                    <div>
-                        <div class="doc-name">${sanitize(d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name)}</div>
-                        <div class="doc-meta">${sanitize(d.file_name)} — ${fmtDate(d.uploaded_at)} — ${fmtSize(d.file_size)}</div>
-                        ${d.rejection_reason ? `<div class="doc-rejection">❌ Rejection reason: ${sanitize(d.rejection_reason)}</div>` : ''}
-                    </div>
-                </div>
-                <div class="action-group">
-                    ${statusBadge(d.status)}
-                    <button class="btn btn-secondary btn-sm" onclick="openSignedDoc('${d.file_path}','${d.id}')">👁️ View</button>
-                </div>
-            </div>
-        `).join('');
+        el.innerHTML = data.map(d => {
+            const docName = sanitize(
+                d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase())
+                || d.file_name
+            );
+            const reject = d.rejection_reason
+                ? '<div class="doc-rejection">❌ Rejection reason: ' + sanitize(d.rejection_reason) + '</div>'
+                : '';
+            return '<div class="doc-item">'
+                + '<div class="doc-info"><span class="doc-icon">📄</span><div>'
+                + '<div class="doc-name">' + docName + '</div>'
+                + '<div class="doc-meta">' + sanitize(d.file_name) + ' — ' + fmtDate(d.uploaded_at) + ' — ' + fmtSize(d.file_size) + '</div>'
+                + reject
+                + '</div></div>'
+                + '<div class="action-group">'
+                + statusBadge(d.status)
+                + '<button class="btn btn-secondary btn-sm" onclick="openSignedDoc(\'' + d.file_path + '\',\'' + d.id + '\')">👁️ View</button>'
+                + '</div></div>';
+        }).join('');
     } catch (err) {
         document.getElementById('invDocsList').innerHTML =
-            `<div class="alert alert-danger">Error: ${err.message}</div>`;
+            '<div class="alert alert-danger">Error: ' + err.message + '</div>';
     }
 }
 
@@ -2584,7 +2592,7 @@ async function loadInvestments() {
             .order('investment_date', { ascending: false });
         if (error) {
             document.getElementById('invInvestments').innerHTML =
-                `<div class="alert alert-warning">⚠️ Investments table not found.</div>`;
+                '<div class="alert alert-warning">⚠️ Investments table not found.</div>';
             return;
         }
         const el = document.getElementById('invInvestments');
@@ -2592,30 +2600,27 @@ async function loadInvestments() {
             el.innerHTML = emptyState('💼','No active investments','Your investment portfolio will appear here once confirmed by the admin');
             return;
         }
-        el.innerHTML = data.map(inv => `
-            <div class="inv-card">
-                <div class="inv-header">
-                    <div>
-                        <div class="inv-title">${sanitize(inv.opportunities?.title) || 'Investment'}</div>
-                        ${inv.opportunities?.sector ? `<div style="color:var(--muted);font-size:0.85rem;">${sanitize(inv.opportunities.sector)}</div>` : ''}
-                    </div>
-                    <div>
-                        <div class="inv-amount">$${fmtMoney(inv.amount)}</div>
-                        ${statusBadge(inv.status)}
-                    </div>
-                </div>
-                <div class="inv-details">
-                    <div>
-                        <div class="inv-detail-label">Investment Date</div>
-                        <div class="inv-detail-value">${fmtDate(inv.investment_date)}</div>
-                    </div>
-                    ${inv.notes ? `<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">${sanitize(inv.notes)}</div></div>` : ''}
-                </div>
-            </div>
-        `).join('');
+        el.innerHTML = data.map(inv => {
+            const title  = sanitize(inv.opportunities?.title) || 'Investment';
+            const sector = inv.opportunities?.sector
+                ? '<div style="color:var(--muted);font-size:0.85rem;">' + sanitize(inv.opportunities.sector) + '</div>'
+                : '';
+            const notes = inv.notes
+                ? '<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">' + sanitize(inv.notes) + '</div></div>'
+                : '';
+            return '<div class="inv-card">'
+                + '<div class="inv-header">'
+                + '<div><div class="inv-title">' + title + '</div>' + sector + '</div>'
+                + '<div><div class="inv-amount">$' + fmtMoney(inv.amount) + '</div>' + statusBadge(inv.status) + '</div>'
+                + '</div>'
+                + '<div class="inv-details">'
+                + '<div><div class="inv-detail-label">Investment Date</div><div class="inv-detail-value">' + fmtDate(inv.investment_date) + '</div></div>'
+                + notes
+                + '</div></div>';
+        }).join('');
     } catch (err) {
         document.getElementById('invInvestments').innerHTML =
-            `<div class="alert alert-danger">Error: ${err.message}</div>`;
+            '<div class="alert alert-danger">Error: ' + err.message + '</div>';
     }
 }
 
@@ -2695,6 +2700,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,25 +25,32 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.6; }
 
+        /* ── HEADER ── */
         .header { background: var(--grad); color: white; padding: 1rem 0; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
         .header-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
         .logo { display: flex; align-items: center; gap: 1rem; }
-        .logo-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .logo-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logo-icon svg { width: 36px; height: 36px; }
         .logo-text h1 { font-size: 1.4rem; font-weight: 800; margin: 0; }
         .logo-text p { font-size: 0.8rem; opacity: 0.9; margin: 0; }
         .header-actions { display: flex; align-items: center; gap: 0.75rem; }
-        .user-badge { background: rgba(255,255,255,0.2); color: white; padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .user-badge { background: rgba(255,255,255,0.2); color: white; padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .lang-toggle { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; font-family: inherit; }
         .lang-toggle:hover { background: rgba(255,255,255,0.35); }
 
+        /* ── HAMBURGER ── */
+        .hamburger { display: none; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.7rem; border-radius: 8px; cursor: pointer; font-size: 1.2rem; line-height: 1; }
+
+        /* ── MAIN ── */
         .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 
+        /* ── AUTH CONTAINERS ── */
         .auth-container { max-width: 420px; margin: 4rem auto; background: var(--white); border-radius: 16px; padding: 2.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .auth-header { text-align: center; margin-bottom: 2rem; }
         .auth-header h2 { color: var(--purple-dark); margin-bottom: 0.5rem; font-size: 1.5rem; }
         .auth-header p { color: var(--muted); font-size: 0.875rem; }
 
+        /* ── FORMS ── */
         .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--text); font-size: 0.9rem; }
         .form-input { width: 100%; padding: 0.8rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; transition: all 0.2s; font-family: inherit; background: white; color: var(--text); }
@@ -51,6 +59,7 @@
         select.form-input { cursor: pointer; }
         textarea.form-input { resize: vertical; min-height: 90px; }
 
+        /* ── BUTTONS ── */
         .btn { padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: inherit; text-decoration: none; }
         .btn-primary { background: var(--grad); color: white; }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(107,63,160,0.3); }
@@ -64,25 +73,30 @@
         .btn-warning:hover { background: #b45309; }
         .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
         .btn-full { width: 100%; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
+        /* ── DASHBOARD NAV ── */
         .dashboard { display: none; }
         .dashboard.active { display: block; }
-        .dashboard-nav { background: var(--white); border-radius: 12px; padding: 0.875rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .dashboard-nav { background: var(--white); border-radius: 12px; padding: 0.875rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); display: flex; gap: 0.5rem; flex-wrap: wrap; position: relative; }
         .nav-item { padding: 0.65rem 1.1rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; border: 1px solid var(--border); font-size: 0.875rem; user-select: none; }
         .nav-item.active { background: var(--grad); color: white; border-color: transparent; }
         .nav-item:hover:not(.active) { background: var(--light); }
         .dashboard-section { display: none; }
         .dashboard-section.active { display: block; }
 
+        /* ── CARDS ── */
         .card { background: var(--white); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
         .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text); }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; }
+        /* ── STATS ── */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; }
         .stat-card { background: var(--white); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
         .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--purple); margin-bottom: 0.4rem; }
-        .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+        .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
 
+        /* ── TABLE ── */
         .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
         th { background: var(--light); padding: 0.75rem 1rem; text-align: left; font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
@@ -90,20 +104,23 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafbff; }
 
+        /* ── BADGES ── */
         .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
         .badge-success { background: #dcfce7; color: #166534; }
         .badge-warning { background: #fef9c3; color: #854d0e; }
-        .badge-danger { background: #fee2e2; color: #991b1b; }
-        .badge-info { background: #dbeafe; color: #1e40af; }
-        .badge-muted { background: var(--light); color: var(--muted); }
-        .badge-purple { background: #f3e8ff; color: #6B3FA0; }
+        .badge-danger  { background: #fee2e2; color: #991b1b; }
+        .badge-info    { background: #dbeafe; color: #1e40af; }
+        .badge-muted   { background: var(--light); color: var(--muted); }
+        .badge-purple  { background: #f3e8ff; color: #6B3FA0; }
 
+        /* ── ALERTS ── */
         .alert { padding: 0.875rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; }
         .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
         .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
-        .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
-        .alert-info { background: #f0f4ff; border: 1px solid #c7d2fe; color: #3730a3; }
+        .alert-danger  { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .alert-info    { background: #f0f4ff; border: 1px solid #c7d2fe; color: #3730a3; }
 
+        /* ── MODALS ── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--white); border-radius: 16px; padding: 2rem; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.25); }
@@ -115,6 +132,7 @@
         .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
+        /* ── UPLOAD ── */
         .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
         .upload-area:hover { border-color: var(--purple); background: rgba(107,63,160,0.04); }
         .upload-area input[type="file"] { display: none; }
@@ -123,6 +141,7 @@
         .upload-hint { font-size: 0.8rem; color: var(--muted); }
         .upload-selected { margin-top: 0.75rem; font-weight: 600; color: var(--purple); font-size: 0.9rem; }
 
+        /* ── DOCUMENTS ── */
         .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); flex-wrap: wrap; gap: 0.75rem; transition: all 0.2s; }
         .doc-item:hover { border-color: var(--purple); }
         .doc-info { display: flex; align-items: center; gap: 0.875rem; }
@@ -132,6 +151,7 @@
         .doc-rejection { font-size: 0.78rem; color: #dc2626; margin-top: 0.2rem; }
         .action-group { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
 
+        /* ── OPPORTUNITIES ── */
         .opp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
         .opp-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; box-shadow: var(--shadow); }
         .opp-card:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(107,63,160,0.2); }
@@ -145,10 +165,12 @@
         .opp-val { font-weight: 700; }
         .opp-desc { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
 
+        /* ── WATCHLIST ── */
         .watchlist-item { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; background: var(--white); }
         .watchlist-name { font-weight: 600; font-size: 0.9rem; }
         .watchlist-ticker { font-size: 0.8rem; color: var(--purple); font-weight: 700; }
 
+        /* ── NEWS ── */
         .news-item { padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; background: var(--white); transition: all 0.2s; }
         .news-item:hover { border-color: var(--purple); }
         .news-tag { font-size: 0.72rem; color: var(--purple); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
@@ -157,6 +179,7 @@
         .news-title a:hover { color: var(--purple); }
         .news-date { font-size: 0.78rem; color: var(--muted); }
 
+        /* ── INVESTMENTS ── */
         .inv-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
         .inv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
         .inv-title { font-size: 1.05rem; font-weight: 700; }
@@ -165,6 +188,7 @@
         .inv-detail-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
         .inv-detail-value { font-weight: 600; margin-top: 0.2rem; font-size: 0.9rem; }
 
+        /* ── LOADING / EMPTY ── */
         .loading { text-align: center; padding: 2.5rem; color: var(--muted); }
         .spinner { width: 36px; height: 36px; border: 4px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.75rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -173,31 +197,81 @@
         .empty-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
         .empty-sub { font-size: 0.875rem; }
 
+        /* ── MISC ── */
         .hidden { display: none !important; }
         .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
         @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
+        /* ── PASSWORD STRENGTH ── */
         .password-strength { margin-top: 0.5rem; }
         .strength-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
         .strength-fill { height: 100%; border-radius: 2px; transition: all 0.3s; }
         .strength-text { font-size: 0.75rem; margin-top: 0.25rem; }
 
+        /* ── CAPTCHA ── */
         .captcha-box { background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.5rem; }
         .captcha-question { font-size: 1.2rem; font-weight: 700; color: var(--purple-dark); margin-bottom: 0.6rem; }
 
+        /* ── MFA ── */
+        .mfa-digits { display: flex; gap: 0.5rem; justify-content: center; margin: 1.5rem 0; }
+        .mfa-digit { width: 48px; height: 56px; border: 2px solid var(--border); border-radius: 10px; font-size: 1.5rem; font-weight: 700; text-align: center; font-family: inherit; color: var(--text); background: white; transition: all 0.2s; }
+        .mfa-digit:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(107,63,160,0.1); }
+        .mfa-qr { text-align: center; margin: 1rem 0; }
+        .mfa-qr img { width: 180px; height: 180px; border: 4px solid var(--border); border-radius: 12px; }
+        .mfa-secret { background: var(--light); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; font-family: monospace; font-size: 0.85rem; word-break: break-all; text-align: center; margin: 0.75rem 0; letter-spacing: 0.1em; color: var(--purple-dark); font-weight: 600; }
+
+        /* ── ACCREDITED INVESTOR ── */
+        .accredited-check { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.875rem; border: 2px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .accredited-check:hover { border-color: var(--purple); background: rgba(107,63,160,0.03); }
+        .accredited-check input[type="checkbox"] { margin-top: 0.15rem; width: 18px; height: 18px; accent-color: var(--purple); flex-shrink: 0; cursor: pointer; }
+        .accredited-check label { font-size: 0.9rem; line-height: 1.5; cursor: pointer; }
+        .accredited-check.checked { border-color: var(--purple); background: rgba(107,63,160,0.05); }
+        .reg-d-notice { background: #fef9c3; border: 1px solid #fde68a; border-radius: 10px; padding: 1rem; font-size: 0.8rem; color: #78350f; line-height: 1.6; margin-top: 1rem; }
+
+        /* ── IDLE TIMER BANNER ── */
+        .idle-banner { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: white; padding: 1rem 2rem; z-index: 9998; display: none; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .idle-banner.show { display: flex; }
+        .idle-countdown { font-size: 1.1rem; font-weight: 700; color: #fbbf24; }
+
+        /* ── PAGINATION ── */
+        .pagination { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+        .page-btn { padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; background: white; cursor: pointer; font-size: 0.82rem; font-family: inherit; transition: all 0.2s; }
+        .page-btn.active { background: var(--grad); color: white; border-color: transparent; }
+        .page-btn:hover:not(.active) { background: var(--light); }
+        .page-info { font-size: 0.82rem; color: var(--muted); }
+
+        /* ── RISK DISCLOSURE ── */
+        .risk-disclosure { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.8rem; color: #7f1d1d; line-height: 1.6; }
+        .risk-disclosure strong { display: block; margin-bottom: 0.25rem; font-size: 0.85rem; }
+
+        /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
             .header-content { padding: 0 1rem; }
             .logo-text h1 { font-size: 1rem; }
+            .logo-text p { display: none; }
             .main-content { padding: 1rem; }
-            .auth-container { margin: 1.5rem auto; }
+            .auth-container { margin: 1.5rem auto; padding: 1.5rem; }
+            .hamburger { display: flex; }
             .dashboard-nav { flex-direction: column; }
+            .dashboard-nav.collapsed .nav-item { display: none; }
+            .dashboard-nav.collapsed .nav-toggle-btn { display: flex; }
             .grid-2 { grid-template-columns: 1fr; }
             .modal { padding: 1.5rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .mfa-digits { gap: 0.35rem; }
+            .mfa-digit { width: 40px; height: 50px; font-size: 1.3rem; }
+            .user-badge { display: none; }
+            .action-group { flex-wrap: wrap; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .opp-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
+<!-- ==================== HEADER ==================== -->
 <header class="header">
     <div class="header-content">
         <div class="logo">
@@ -223,9 +297,18 @@
             <button id="logoutBtn" class="btn btn-secondary btn-sm hidden" onclick="logout()">
                 <span data-en="Logout" data-es="Cerrar Sesión">Logout</span>
             </button>
+            <button class="hamburger hidden" id="hamburgerBtn" onclick="toggleMobileNav()">☰</button>
         </div>
     </div>
 </header>
+
+<!-- ==================== IDLE TIMEOUT BANNER ==================== -->
+<div class="idle-banner" id="idleBanner">
+    <span>⏱️ <span data-en="Your session will expire in" data-es="Su sesión expirará en">Your session will expire in</span> <span class="idle-countdown" id="idleCountdown">60</span>s <span data-en="due to inactivity." data-es="por inactividad.">due to inactivity.</span></span>
+    <button class="btn btn-primary btn-sm" onclick="resetIdleTimer()">
+        <span data-en="Stay Logged In" data-es="Mantener Sesión">Stay Logged In</span>
+    </button>
+</div>
 
 <main class="main-content">
 
@@ -259,6 +342,30 @@
             🔑 <span data-en="Forgot Password?" data-es="¿Olvidó su contraseña?">Forgot Password?</span>
         </button>
     </div>
+</div>
+
+<!-- ==================== MFA CHALLENGE ==================== -->
+<div id="mfaContainer" class="auth-container hidden">
+    <div class="auth-header">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔐</div>
+        <h2 data-en="Two-Factor Authentication" data-es="Autenticación de Dos Factores">Two-Factor Authentication</h2>
+        <p data-en="Enter the 6-digit code from your authenticator app" data-es="Ingrese el código de 6 dígitos de su aplicación autenticadora">Enter the 6-digit code from your authenticator app</p>
+    </div>
+    <div class="mfa-digits">
+        <input type="tel" maxlength="1" class="mfa-digit" id="mfa0" oninput="mfaInput(this,0)" onkeydown="mfaKey(event,0)">
+        <input type="tel" maxlength="1" class="mfa-digit" id="mfa1" oninput="mfaInput(this,1)" onkeydown="mfaKey(event,1)">
+        <input type="tel" maxlength="1" class="mfa-digit" id="mfa2" oninput="mfaInput(this,2)" onkeydown="mfaKey(event,2)">
+        <input type="tel" maxlength="1" class="mfa-digit" id="mfa3" oninput="mfaInput(this,3)" onkeydown="mfaKey(event,3)">
+        <input type="tel" maxlength="1" class="mfa-digit" id="mfa4" oninput="mfaInput(this,4)" onkeydown="mfaKey(event,4)">
+        <input type="tel" maxlength="1" class="mfa-digit" id="mfa5" oninput="mfaInput(this,5)" onkeydown="mfaKey(event,5)">
+    </div>
+    <button class="btn btn-primary btn-full" id="mfaVerifyBtn" onclick="verifyMFA()">
+        🔐 <span data-en="Verify Code" data-es="Verificar Código">Verify Code</span>
+    </button>
+    <hr class="divider">
+    <button type="button" class="btn btn-secondary btn-sm btn-full" onclick="showLogin()">
+        ← <span data-en="Back to Login" data-es="Volver al Inicio de Sesión">Back to Login</span>
+    </button>
 </div>
 
 <!-- ==================== FORGOT PASSWORD ==================== -->
@@ -304,9 +411,7 @@
                    oninput="checkPasswordStrength(this.value,'resetStrengthFill','resetStrengthText')"
                    placeholder="Minimum 8 characters">
             <div class="password-strength">
-                <div class="strength-bar">
-                    <div class="strength-fill" id="resetStrengthFill" style="width:0%;background:#dc2626;"></div>
-                </div>
+                <div class="strength-bar"><div class="strength-fill" id="resetStrengthFill" style="width:0%;background:#dc2626;"></div></div>
                 <div class="strength-text" id="resetStrengthText" style="color:var(--muted);"></div>
             </div>
         </div>
@@ -368,9 +473,7 @@
                    oninput="checkPasswordStrength(this.value,'strengthFill','strengthText')"
                    placeholder="Minimum 8 characters">
             <div class="password-strength">
-                <div class="strength-bar">
-                    <div class="strength-fill" id="strengthFill" style="width:0%;background:#dc2626;"></div>
-                </div>
+                <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%;background:#dc2626;"></div></div>
                 <div class="strength-text" id="strengthText" style="color:var(--muted);"></div>
             </div>
         </div>
@@ -394,9 +497,17 @@
     <button class="btn btn-primary btn-full" onclick="showLogin()">← Back to Login</button>
 </div>
 
+<!-- ==================== PART 1 END — PASTE PART 2 IMMEDIATELY AFTER THIS LINE ==================== -->
+
+
+
+<!-- ==================== PART 2 START ==================== -->
+<!-- Paste this immediately after the invalidInviteContainer closing div in Part 1 -->
+<!-- (Delete the </body></html> lines at the bottom of Part 1 first) -->
+
 <!-- ==================== ADMIN DASHBOARD ==================== -->
 <div id="adminDashboard" class="dashboard">
-    <nav class="dashboard-nav">
+    <nav class="dashboard-nav" id="adminNavBar">
         <div class="nav-item active" data-section="adminStats" onclick="adminNav(this)">📊 <span data-en="Statistics" data-es="Estadísticas">Statistics</span></div>
         <div class="nav-item" data-section="adminInvestors" onclick="adminNav(this)">👥 <span data-en="Investors" data-es="Inversionistas">Investors</span></div>
         <div class="nav-item" data-section="adminDocuments" onclick="adminNav(this)">📄 <span data-en="Documents" data-es="Documentos">Documents</span></div>
@@ -404,6 +515,7 @@
         <div class="nav-item" data-section="adminOpportunities" onclick="adminNav(this)">💡 <span data-en="Opportunities" data-es="Oportunidades">Opportunities</span></div>
     </nav>
 
+    <!-- Admin: Statistics -->
     <section id="adminStats" class="dashboard-section active">
         <div class="stats-grid">
             <div class="stat-card"><div class="stat-number" id="sTotalInv">—</div><div class="stat-label" data-en="Total Investors" data-es="Total Inversionistas">Total Investors</div></div>
@@ -411,6 +523,8 @@
             <div class="stat-card"><div class="stat-number" id="sPendingDocs">—</div><div class="stat-label" data-en="Pending Documents" data-es="Documentos Pendientes">Pending Documents</div></div>
             <div class="stat-card"><div class="stat-number" id="sPendingInv">—</div><div class="stat-label" data-en="Pending Invitations" data-es="Invitaciones Pendientes">Pending Invitations</div></div>
             <div class="stat-card"><div class="stat-number" id="sAcceptedInv">—</div><div class="stat-label" data-en="Accepted Invitations" data-es="Invitaciones Aceptadas">Accepted Invitations</div></div>
+            <div class="stat-card"><div class="stat-number" id="sCertifiedInv" style="color:#16a34a;">—</div><div class="stat-label" data-en="Accredited Certified" data-es="Acreditados Certificados">Accredited Certified</div></div>
+            <div class="stat-card"><div class="stat-number" id="sMfaInv" style="color:#6B3FA0;">—</div><div class="stat-label" data-en="MFA Enabled" data-es="MFA Habilitado">MFA Enabled</div></div>
         </div>
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Admin Dashboard" data-es="Panel de Administración">Admin Dashboard</h3></div>
@@ -422,11 +536,18 @@
         </div>
     </section>
 
+    <!-- Admin: Investors -->
     <section id="adminInvestors" class="dashboard-section">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title" data-en="Investor Management" data-es="Gestión de Inversionistas">Investor Management</h3>
                 <button class="btn btn-primary btn-sm" onclick="openModal('inviteModal')">✉️ <span data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</span></button>
+            </div>
+            <div style="margin-bottom:1rem;">
+                <input type="text" class="form-input" id="investorSearch"
+                       placeholder="Search by name or email..."
+                       oninput="filterInvestors(this.value)"
+                       style="max-width:320px;">
             </div>
             <div class="table-wrap">
                 <table>
@@ -434,12 +555,17 @@
                         <th data-en="Name" data-es="Nombre">Name</th>
                         <th data-en="Email" data-es="Correo">Email</th>
                         <th data-en="Status" data-es="Estado">Status</th>
+                        <th>MFA</th>
+                        <th data-en="Accredited" data-es="Acreditado">Accredited</th>
                         <th data-en="Joined" data-es="Unido">Joined</th>
                         <th data-en="Actions" data-es="Acciones">Actions</th>
                     </tr></thead>
-                    <tbody id="investorsBody"><tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+                    <tbody id="investorsBody">
+                        <tr><td colspan="7"><div class="loading"><div class="spinner"></div></div></td></tr>
+                    </tbody>
                 </table>
             </div>
+            <div id="investorsPagination" class="pagination"></div>
         </div>
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Invitation History" data-es="Historial de Invitaciones">Invitation History</h3></div>
@@ -452,12 +578,15 @@
                         <th data-en="Expires" data-es="Expira">Expires</th>
                         <th data-en="Actions" data-es="Acciones">Actions</th>
                     </tr></thead>
-                    <tbody id="invitationsBody"><tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+                    <tbody id="invitationsBody">
+                        <tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
     </section>
 
+    <!-- Admin: Documents -->
     <section id="adminDocuments" class="dashboard-section">
         <div class="card">
             <div class="card-header">
@@ -470,9 +599,11 @@
                 </select>
             </div>
             <div id="adminDocsList"><div class="loading"><div class="spinner"></div></div></div>
+            <div id="adminDocsPagination" class="pagination"></div>
         </div>
     </section>
 
+    <!-- Admin: Watchlist -->
     <section id="adminWatchlist" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="News Watchlist" data-es="Lista de Seguimiento">News Watchlist</h3></div>
@@ -485,6 +616,7 @@
         </div>
     </section>
 
+    <!-- Admin: Opportunities -->
     <section id="adminOpportunities" class="dashboard-section">
         <div class="card">
             <div class="card-header">
@@ -498,7 +630,7 @@
 
 <!-- ==================== INVESTOR DASHBOARD ==================== -->
 <div id="investorDashboard" class="dashboard">
-    <nav class="dashboard-nav">
+    <nav class="dashboard-nav" id="investorNavBar">
         <div class="nav-item active" data-section="invOverview" onclick="investorNav(this)">🏠 <span data-en="Overview" data-es="Resumen">Overview</span></div>
         <div class="nav-item" data-section="invDocuments" onclick="investorNav(this)">📄 <span data-en="Documents" data-es="Documentos">Documents</span></div>
         <div class="nav-item" data-section="invNews" onclick="investorNav(this)">📰 <span data-en="Market News" data-es="Noticias">Market News</span></div>
@@ -507,6 +639,7 @@
         <div class="nav-item" data-section="invProfile" onclick="investorNav(this)">👤 <span data-en="Profile" data-es="Perfil">Profile</span></div>
     </nav>
 
+    <!-- Investor: Overview -->
     <section id="invOverview" class="dashboard-section active">
         <div class="card">
             <div class="card-header">
@@ -530,6 +663,7 @@
         <div id="invAlerts"></div>
     </section>
 
+    <!-- Investor: Documents -->
     <section id="invDocuments" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Upload Document" data-es="Subir Documento">Upload Document</h3></div>
@@ -552,6 +686,7 @@
         </div>
     </section>
 
+    <!-- Investor: News -->
     <section id="invNews" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Market News" data-es="Noticias del Mercado">Market News</h3></div>
@@ -559,13 +694,19 @@
         </div>
     </section>
 
+    <!-- Investor: Opportunities -->
     <section id="invOpportunities" class="dashboard-section">
+        <div class="risk-disclosure">
+            <strong>⚠️ Important Regulatory Disclosure — Please Read Carefully</strong>
+            This portal is operated by Silicon Corridor Ventures and is restricted to accredited investors as defined under SEC Rule 501 of Regulation D. Investment opportunities presented herein involve securities that have not been registered under the Securities Act of 1933, as amended, or any state securities laws, and are being offered in reliance upon exemptions from registration thereunder. Investing in private securities involves a high degree of risk, including the possible loss of the entire investment. These securities are illiquid and there is no guarantee of any return. Past performance is not indicative of future results. Nothing on this portal constitutes an offer to sell or a solicitation of an offer to buy any security. All investments are subject to the terms and conditions of the applicable offering documents, which should be reviewed carefully before investing.
+        </div>
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="Investment Opportunities" data-es="Oportunidades de Inversión">Investment Opportunities</h3></div>
             <div id="invOppList"><div class="loading"><div class="spinner"></div></div></div>
         </div>
     </section>
 
+    <!-- Investor: Account -->
     <section id="invAccount" class="dashboard-section">
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="My Active Investments" data-es="Mis Inversiones Activas">My Active Investments</h3></div>
@@ -573,7 +714,10 @@
         </div>
     </section>
 
+    <!-- Investor: Profile -->
     <section id="invProfile" class="dashboard-section">
+
+        <!-- Profile Info -->
         <div class="card">
             <div class="card-header"><h3 class="card-title" data-en="My Profile" data-es="Mi Perfil">My Profile</h3></div>
             <form id="profileForm" onsubmit="saveProfile(event)">
@@ -584,20 +728,82 @@
                 <button type="submit" class="btn btn-primary">💾 <span data-en="Save Changes" data-es="Guardar Cambios">Save Changes</span></button>
             </form>
         </div>
+
+        <!-- MFA Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">🔐 <span data-en="Two-Factor Authentication (MFA)" data-es="Autenticación de Dos Factores (MFA)">Two-Factor Authentication (MFA)</span></h3>
+                <span id="mfaStatusBadge" class="badge badge-muted">Not Enabled</span>
+            </div>
+            <p style="color:var(--muted);margin-bottom:1.25rem;font-size:0.9rem;"
+               data-en="Add an extra layer of security to your account using Google Authenticator, Authy, or any TOTP-compatible app."
+               data-es="Agregue una capa adicional de seguridad usando Google Authenticator, Authy o cualquier app TOTP.">
+                Add an extra layer of security to your account using Google Authenticator, Authy, or any TOTP-compatible app.
+            </p>
+            <div id="mfaEnrollSection">
+                <button class="btn btn-primary" onclick="startMFAEnroll()">
+                    📱 <span data-en="Enable Two-Factor Authentication" data-es="Habilitar Autenticación de Dos Factores">Enable Two-Factor Authentication</span>
+                </button>
+            </div>
+            <div id="mfaUnenrollSection" class="hidden">
+                <div class="alert alert-success" style="margin-bottom:1rem;">
+                    ✅ <span data-en="MFA is active on your account. Your account is protected." data-es="MFA está activo en su cuenta. Su cuenta está protegida.">MFA is active on your account. Your account is protected.</span>
+                </div>
+                <button class="btn btn-danger btn-sm"
+                        onclick="confirmAction(
+                            lang==='en\'?\'Disable MFA?\':\'¿Deshabilitar MFA?\',
+                            lang===\'en\'?\'This will remove two-factor authentication from your account. Are you sure?\':\'Esto eliminará la autenticación de dos factores de su cuenta. ¿Está seguro?\',
+                            unenrollMFA
+                        )">
+                    🗑️ <span data-en="Disable MFA" data-es="Deshabilitar MFA">Disable MFA</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Accredited Investor Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">⚖️ <span data-en="Accredited Investor Status" data-es="Estado de Inversionista Acreditado">Accredited Investor Status</span></h3>
+                <span id="accreditedBadge" class="badge badge-warning">Pending</span>
+            </div>
+            <p style="color:var(--muted);margin-bottom:1.25rem;font-size:0.9rem;"
+               data-en="SEC Regulation D requires you to self-certify as an accredited investor to access investment opportunities."
+               data-es="La Regulación D de la SEC requiere que se autocertifique como inversionista acreditado para acceder a oportunidades de inversión.">
+                SEC Regulation D requires you to self-certify as an accredited investor to access investment opportunities.
+            </p>
+            <div id="accreditedCertifiedSection" class="hidden">
+                <div class="alert alert-success">
+                    ✅ <span data-en="You have completed your accredited investor self-certification." data-es="Ha completado su autocertificación de inversionista acreditado.">You have completed your accredited investor self-certification.</span>
+                </div>
+            </div>
+            <div id="accreditedPendingSection">
+                <button class="btn btn-primary" onclick="openModal('accreditedModal')">
+                    ⚖️ <span data-en="Complete Accredited Investor Certification" data-es="Completar Certificación de Inversionista Acreditado">Complete Accredited Investor Certification</span>
+                </button>
+            </div>
+        </div>
     </section>
 </div>
 
 </main>
 
-<!-- ==================== INVITE MODAL ==================== -->
+<!-- ==================== MODALS ==================== -->
+
+<!-- INVITE MODAL -->
 <div class="modal-overlay" id="inviteModal">
     <div class="modal">
         <div class="modal-header">
             <h3 class="modal-title" data-en="Invite Investor" data-es="Invitar Inversionista">Invite Investor</h3>
             <button class="modal-close" onclick="closeModal('inviteModal')">×</button>
         </div>
-        <div class="form-group"><label data-en="Full Name" data-es="Nombre Completo">Full Name</label><input type="text" class="form-input" id="iName" placeholder="John Doe"></div>
-        <div class="form-group"><label data-en="Email Address" data-es="Correo Electrónico">Email Address</label><input type="email" class="form-input" id="iEmail" placeholder="investor@example.com"></div>
+        <div class="form-group">
+            <label data-en="Full Name" data-es="Nombre Completo">Full Name</label>
+            <input type="text" class="form-input" id="iName" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+            <label data-en="Email Address" data-es="Correo Electrónico">Email Address</label>
+            <input type="email" class="form-input" id="iEmail" placeholder="investor@example.com">
+        </div>
         <div class="form-group">
             <label data-en="Invitation Expires In" data-es="La Invitación Expira En">Invitation Expires In</label>
             <select class="form-input" id="iExpiry">
@@ -613,7 +819,7 @@
     </div>
 </div>
 
-<!-- ==================== REJECT MODAL ==================== -->
+<!-- REJECT DOCUMENT MODAL -->
 <div class="modal-overlay" id="rejectModal">
     <div class="modal">
         <div class="modal-header">
@@ -622,17 +828,17 @@
         </div>
         <div class="form-group">
             <label data-en="Reason for Rejection" data-es="Razón del Rechazo">Reason for Rejection</label>
-            <textarea class="form-input" id="rejectReason" placeholder="Please provide a clear reason..."></textarea>
+            <textarea class="form-input" id="rejectReason" placeholder="Please provide a clear reason for rejection..."></textarea>
         </div>
         <input type="hidden" id="rejectDocId">
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('rejectModal')" data-en="Cancel" data-es="Cancelar">Cancel</button>
-            <button class="btn btn-danger" onclick="confirmReject()">❌ <span data-en="Reject" data-es="Rechazar">Reject</span></button>
+            <button class="btn btn-danger" onclick="confirmReject()">❌ <span data-en="Reject Document" data-es="Rechazar Documento">Reject Document</span></button>
         </div>
     </div>
 </div>
 
-<!-- ==================== OPPORTUNITY MODAL ==================== -->
+<!-- OPPORTUNITY MODAL -->
 <div class="modal-overlay" id="oppModal">
     <div class="modal modal-lg">
         <div class="modal-header">
@@ -640,12 +846,18 @@
             <button class="modal-close" onclick="closeModal('oppModal')">×</button>
         </div>
         <input type="hidden" id="oppId">
-        <div class="form-group"><label>Title</label><input type="text" class="form-input" id="oppTitle" placeholder="Investment opportunity title"></div>
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-input" id="oppTitle" placeholder="Investment opportunity title">
+        </div>
         <div class="grid-2">
             <div class="form-group"><label>Sector</label><input type="text" class="form-input" id="oppSector" placeholder="e.g. Technology"></div>
             <div class="form-group"><label>Location</label><input type="text" class="form-input" id="oppLocation" placeholder="e.g. San Francisco, CA"></div>
         </div>
-        <div class="form-group"><label>Description</label><textarea class="form-input" id="oppDesc" placeholder="Describe the investment opportunity..."></textarea></div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-input" id="oppDesc" placeholder="Describe the investment opportunity..."></textarea>
+        </div>
         <div class="grid-2">
             <div class="form-group"><label>Target Amount ($)</label><input type="number" class="form-input" id="oppTarget" placeholder="1000000"></div>
             <div class="form-group"><label>Minimum Investment ($)</label><input type="number" class="form-input" id="oppMin" placeholder="25000"></div>
@@ -664,75 +876,116 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('oppModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="saveOpp()">💾 Save</button>
+            <button class="btn btn-primary" onclick="saveOpp()">💾 Save Opportunity</button>
         </div>
     </div>
 </div>
 
+<!-- ACCREDITED INVESTOR CERTIFICATION MODAL -->
+<div class="modal-overlay" id="accreditedModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">⚖️ Accredited Investor Self-Certification</h3>
+            <button class="modal-close" onclick="closeModal('accreditedModal')">×</button>
+        </div>
+        <div class="alert alert-info" style="margin-bottom:1.25rem;">
+            ℹ️ <strong>SEC Regulation D Requirement.</strong> Please confirm which of the following criteria you meet. You must qualify under at least one criterion to access investment opportunities.
+        </div>
+
+        <div class="accredited-check" id="check_income" onclick="toggleAccreditedCheck(this,'cb_income')">
+            <input type="checkbox" id="cb_income" onclick="event.stopPropagation()">
+            <label for="cb_income">
+                <strong>Annual Income over $200,000</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">I have had individual annual income exceeding $200,000 in each of the two most recent years, or joint income with my spouse exceeding $300,000, and I reasonably expect the same income level in the current year.</span>
+            </label>
+        </div>
+
+        <div class="accredited-check" id="check_networth" onclick="toggleAccreditedCheck(this,'cb_networth')">
+            <input type="checkbox" id="cb_networth" onclick="event.stopPropagation()">
+            <label for="cb_networth">
+                <strong>Net Worth over $1,000,000</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">I have an individual or joint net worth with my spouse exceeding $1,000,000, excluding the value of my primary residence.</span>
+            </label>
+        </div>
+
+        <div class="accredited-check" id="check_license" onclick="toggleAccreditedCheck(this,'cb_license')">
+            <input type="checkbox" id="cb_license" onclick="event.stopPropagation()">
+            <label for="cb_license">
+                <strong>Professional License (Series 7, 65, or 82)</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">I hold in good standing a Series 7, Series 65, or Series 82 license issued by FINRA.</span>
+            </label>
+        </div>
+
+        <div class="accredited-check" id="check_entity" onclick="toggleAccreditedCheck(this,'cb_entity')">
+            <input type="checkbox" id="cb_entity" onclick="event.stopPropagation()">
+            <label for="cb_entity">
+                <strong>Entity with Assets over $5,000,000</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">I represent an entity with total assets exceeding $5,000,000, not formed for the specific purpose of acquiring the offered securities.</span>
+            </label>
+        </div>
+
+        <div class="reg-d-notice">
+            <strong>Self-Certification Statement — Please Read</strong>
+            By clicking "I Certify" below, I hereby represent and warrant that I qualify as an accredited investor under SEC Rule 501(a) of Regulation D based on the criteria I have checked above. I understand that this certification is made under applicable securities laws and that Silicon Corridor Ventures is relying on this representation in determining my eligibility to receive information about investment opportunities. I acknowledge that this self-certification is recorded with a timestamp for compliance and audit purposes.
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('accreditedModal')">Cancel</button>
+            <button class="btn btn-success" onclick="submitAccreditation()">⚖️ I Certify — I Am an Accredited Investor</button>
+        </div>
+    </div>
+</div>
+
+<!-- MFA ENROLLMENT MODAL -->
+<div class="modal-overlay" id="mfaEnrollModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">📱 Enable Two-Factor Authentication</h3>
+            <button class="modal-close" onclick="closeModal('mfaEnrollModal')">×</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.875rem;margin-bottom:1rem;line-height:1.6;">
+            Scan the QR code below with <strong>Google Authenticator</strong>, <strong>Authy</strong>, or any TOTP app. Then enter the 6-digit code to confirm setup.
+        </p>
+        <div class="mfa-qr" id="mfaQrContainer">
+            <div class="loading"><div class="spinner"></div><p style="font-size:0.85rem;">Generating QR code...</p></div>
+        </div>
+        <p style="text-align:center;font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem;">Or enter this secret key manually into your app:</p>
+        <div class="mfa-secret" id="mfaSecretDisplay">Loading...</div>
+        <div class="form-group" style="margin-top:1.25rem;">
+            <label style="text-align:center;display:block;margin-bottom:0.75rem;">Enter the 6-digit code from your authenticator app:</label>
+            <div class="mfa-digits">
+                <input type="tel" maxlength="1" class="mfa-digit" id="enroll0" oninput="mfaInput(this,0,'enroll')" onkeydown="mfaKey(event,0,'enroll')" autocomplete="off">
+                <input type="tel" maxlength="1" class="mfa-digit" id="enroll1" oninput="mfaInput(this,1,'enroll')" onkeydown="mfaKey(event,1,'enroll')" autocomplete="off">
+                <input type="tel" maxlength="1" class="mfa-digit" id="enroll2" oninput="mfaInput(this,2,'enroll')" onkeydown="mfaKey(event,2,'enroll')" autocomplete="off">
+                <input type="tel" maxlength="1" class="mfa-digit" id="enroll3" oninput="mfaInput(this,3,'enroll')" onkeydown="mfaKey(event,3,'enroll')" autocomplete="off">
+                <input type="tel" maxlength="1" class="mfa-digit" id="enroll4" oninput="mfaInput(this,4,'enroll')" onkeydown="mfaKey(event,4,'enroll')" autocomplete="off">
+                <input type="tel" maxlength="1" class="mfa-digit" id="enroll5" oninput="mfaInput(this,5,'enroll')" onkeydown="mfaKey(event,5,'enroll')" autocomplete="off">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('mfaEnrollModal')">Cancel</button>
+            <button class="btn btn-primary" id="mfaEnrollBtn" onclick="verifyMFAEnrollment()">✅ <span data-en="Verify & Enable MFA" data-es="Verificar y Habilitar MFA">Verify & Enable MFA</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- CUSTOM CONFIRM MODAL (replaces browser confirm()) -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal" style="max-width:400px;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="confirmTitle">Confirm Action</h3>
+            <button class="modal-close" onclick="closeModal('confirmModal')">×</button>
+        </div>
+        <p id="confirmMessage" style="color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:0.5rem;"></p>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('confirmModal')" data-en="Cancel" data-es="Cancelar">Cancel</button>
+            <button class="btn btn-danger" id="confirmActionBtn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PART 2 END ==================== -->
+<!-- Paste Part 3 immediately after this line -->
 <script>
-// ============================================================
-// CONFIG — all Railway backend endpoints in one place
-// ============================================================
-const SUPABASE_URL    = 'https://wrojhaduvtpilxdmqryp.supabase.co';
-const SUPABASE_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indyb2poYWR1dnRwaWx4ZG1xcnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjc1MzUsImV4cCI6MjA4NzY0MzUzNX0.m4JIw30ZKq7gKYSfSx6mO6aAiuLChw4FuNWellzEuIg';
-const BACKEND_BASE    = 'https://silicon-corridor-backend-production.up.railway.app/api';
-const INVITE_URL      = BACKEND_BASE + '/send-invitation';
-const SEND_RESET_URL  = BACKEND_BASE + '/send-password-reset';
-const DO_RESET_URL    = BACKEND_BASE + '/reset-password';
-const BUCKET          = 'investor-documents';
-
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser = null, userProfile = null, lang = 'en';
-let loginAttempts = 0, loginLockedUntil = null;
-
-// ============================================================
-// AUTH CONTAINER REGISTRY
-// ============================================================
-const AUTH_CONTAINERS = [
-    'authContainer',
-    'forgotPasswordContainer',
-    'resetPasswordContainer',
-    'invalidResetContainer',
-    'registerContainer',
-    'invalidInviteContainer'
-];
-
-function hideAllAuthContainers() {
-    AUTH_CONTAINERS.forEach(id => document.getElementById(id).classList.add('hidden'));
-}
-
-// ============================================================
-// LANGUAGE
-// ============================================================
-function toggleLanguage() {
-    lang = lang === 'en' ? 'es' : 'en';
-    document.getElementById('langText').textContent = lang === 'en' ? 'ES' : 'EN';
-    updateLang();
-    const fp = document.getElementById('forgotPasswordContainer');
-    if (fp && !fp.classList.contains('hidden')) generateCaptcha();
-}
-
-function updateLang() {
-    document.querySelectorAll('[data-en][data-es]').forEach(el => {
-        const t = el.getAttribute('data-' + lang);
-        if (t) el.textContent = t;
-    });
-}
-
-// ============================================================
-// NOTIFICATIONS
-// ============================================================
-function notify(msg, type = 'info', ms = 5000) {
-    const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
-    const n = document.createElement('div');
-    n.className = 'alert alert-' + type;
-    n.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;min-width:300px;max-width:480px;animation:slideIn 0.3s ease;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.15);';
-    n.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span style="flex:1">${msg}</span><button onclick="this.parentElement.remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:inherit;">×</button>`;
-    document.body.appendChild(n);
-    setTimeout(() => n.isConnected && n.remove(), ms);
-    n.addEventListener('click', () => n.remove());
-}
-
 // ============================================================
 // MODALS
 // ============================================================
@@ -756,7 +1009,8 @@ function showRegister() {
 function showInvalidInvite(msg) {
     hideAllAuthContainers();
     document.getElementById('invalidInviteContainer').classList.remove('hidden');
-    document.getElementById('invalidInviteMsg').textContent = msg || 'This invitation link is invalid or has expired.';
+    document.getElementById('invalidInviteMsg').textContent =
+        msg || 'This invitation link is invalid or has expired.';
 }
 function showForgotPassword() {
     hideAllAuthContainers();
@@ -781,7 +1035,43 @@ function showInvalidReset(msg) {
 }
 
 // ============================================================
-// PASSWORD STRENGTH  (fillId/textId allow reuse on any form)
+// IDLE SESSION TIMEOUT
+// ============================================================
+function startIdleTimer() {
+    clearIdleTimers();
+    idleWarningTimer = setTimeout(() => {
+        document.getElementById('idleBanner').classList.add('show');
+        let secs = 60;
+        document.getElementById('idleCountdown').textContent = secs;
+        idleCountdownInterval = setInterval(() => {
+            secs--;
+            document.getElementById('idleCountdown').textContent = secs;
+            if (secs <= 0) {
+                clearIdleTimers();
+                logout(true);
+            }
+        }, 1000);
+    }, IDLE_WARNING_MS);
+    idleTimer = setTimeout(() => {
+        logout(true);
+    }, IDLE_TIMEOUT_MS);
+}
+function resetIdleTimer() {
+    document.getElementById('idleBanner').classList.remove('show');
+    clearIdleTimers();
+    if (currentUser) startIdleTimer();
+}
+function clearIdleTimers() {
+    clearTimeout(idleTimer);
+    clearTimeout(idleWarningTimer);
+    clearInterval(idleCountdownInterval);
+}
+['mousemove','keydown','click','scroll','touchstart'].forEach(evt =>
+    document.addEventListener(evt, () => { if (currentUser) resetIdleTimer(); }, { passive: true })
+);
+
+// ============================================================
+// PASSWORD STRENGTH
 // ============================================================
 function checkPasswordStrength(password, fillId, textId) {
     fillId = fillId || 'strengthFill';
@@ -810,10 +1100,9 @@ function checkPasswordStrength(password, fillId, textId) {
 }
 
 // ============================================================
-// CAPTCHA  (simple math — anti-bot on forgot-password screen)
+// CAPTCHA
 // ============================================================
 let captchaAnswer = 0;
-
 function generateCaptcha() {
     const n1  = Math.floor(Math.random() * 10) + 1;
     const n2  = Math.floor(Math.random() * 10) + 1;
@@ -828,68 +1117,299 @@ function generateCaptcha() {
 }
 
 // ============================================================
+// MAGIC BYTES FILE VALIDATION
+// ============================================================
+const ALLOWED_SIGNATURES = [
+    { mime: 'application/pdf',  bytes: [0x25,0x50,0x44,0x46] },
+    { mime: 'image/jpeg',       bytes: [0xFF,0xD8,0xFF] },
+    { mime: 'image/png',        bytes: [0x89,0x50,0x4E,0x47] },
+    { mime: 'application/msword', bytes: [0xD0,0xCF,0x11,0xE0] },
+    { mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      bytes: [0x50,0x4B,0x03,0x04] }
+];
+async function validateMagicBytes(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const arr = new Uint8Array(e.target.result);
+            const matched = ALLOWED_SIGNATURES.some(sig =>
+                sig.bytes.every((b, i) => arr[i] === b)
+            );
+            resolve(matched);
+        };
+        reader.readAsArrayBuffer(file.slice(0, 8));
+    });
+}
+
+// ============================================================
+// MFA DIGIT INPUT HELPERS
+// ============================================================
+function mfaInput(el, idx, prefix = 'mfa') {
+    el.value = el.value.replace(/\D/g, '').slice(-1);
+    if (el.value && idx < 5) {
+        const next = document.getElementById(prefix + (idx + 1));
+        if (next) next.focus();
+    }
+    // Auto-submit on last digit
+    if (idx === 5 && el.value) {
+        if (prefix === 'mfa') verifyMFA();
+    }
+}
+function mfaKey(e, idx, prefix = 'mfa') {
+    if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+        const prev = document.getElementById(prefix + (idx - 1));
+        if (prev) { prev.value = ''; prev.focus(); }
+    }
+}
+function getMFACode(prefix = 'mfa') {
+    return [0,1,2,3,4,5].map(i => {
+        const el = document.getElementById(prefix + i);
+        return el ? el.value : '';
+    }).join('');
+}
+function clearMFADigits(prefix = 'mfa') {
+    [0,1,2,3,4,5].forEach(i => {
+        const el = document.getElementById(prefix + i);
+        if (el) el.value = '';
+    });
+    const first = document.getElementById(prefix + '0');
+    if (first) first.focus();
+}
+
+// ============================================================
+// MFA — LOGIN VERIFICATION
+// ============================================================
+async function verifyMFA() {
+    const code = getMFACode('mfa');
+    if (code.length !== 6) {
+        notify(lang === 'en' ? 'Please enter all 6 digits.' : 'Por favor ingrese los 6 dígitos.', 'warning');
+        return;
+    }
+    const btn = document.getElementById('mfaVerifyBtn');
+    btn.disabled = true;
+    btn.innerHTML = '⏳';
+    try {
+        const { data: factors } = await sb.auth.mfa.listFactors();
+        const totp = factors?.totp?.[0];
+        if (!totp) throw new Error('No MFA factor found');
+        const { data: challenge } = await sb.auth.mfa.challenge({ factorId: totp.id });
+        const { error } = await sb.auth.mfa.verify({
+            factorId:    totp.id,
+            challengeId: challenge.id,
+            code
+        });
+        if (error) throw error;
+        currentUser = (await sb.auth.getUser()).data.user;
+        await fetchProfile();
+        showDashboard();
+    } catch (err) {
+        notify(lang === 'en' ? 'Invalid code. Please try again.' : 'Código inválido. Intente de nuevo.', 'danger');
+        clearMFADigits('mfa');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🔐 <span data-en="Verify Code" data-es="Verificar Código">Verify Code</span>';
+        updateLang();
+    }
+}
+
+// ============================================================
+// MFA — ENROLLMENT
+// ============================================================
+let _mfaEnrollId = null;
+async function startMFAEnroll() {
+    openModal('mfaEnrollModal');
+    document.getElementById('mfaQrContainer').innerHTML =
+        '<div class="loading"><div class="spinner"></div><p style="font-size:0.85rem;">Generating QR code...</p></div>';
+    document.getElementById('mfaSecretDisplay').textContent = 'Loading...';
+    clearMFADigits('enroll');
+    try {
+        const { data, error } = await sb.auth.mfa.enroll({ factorType: 'totp' });
+        if (error) throw error;
+        _mfaEnrollId = data.id;
+        document.getElementById('mfaQrContainer').innerHTML =
+            `<div class="mfa-qr"><img src="${data.totp.qr_code}" alt="MFA QR Code"></div>`;
+        document.getElementById('mfaSecretDisplay').textContent = data.totp.secret;
+    } catch (err) {
+        notify('Error generating MFA setup: ' + err.message, 'danger');
+        closeModal('mfaEnrollModal');
+    }
+}
+
+async function verifyMFAEnrollment() {
+    const code = getMFACode('enroll');
+    if (code.length !== 6) {
+        notify(lang === 'en' ? 'Please enter all 6 digits.' : 'Por favor ingrese los 6 dígitos.', 'warning');
+        return;
+    }
+    const btn = document.getElementById('mfaEnrollBtn');
+    btn.disabled = true;
+    btn.innerHTML = '⏳';
+    try {
+        const { data: challenge } = await sb.auth.mfa.challenge({ factorId: _mfaEnrollId });
+        const { error } = await sb.auth.mfa.verify({
+            factorId:    _mfaEnrollId,
+            challengeId: challenge.id,
+            code
+        });
+        if (error) throw error;
+        // Update profile flag
+        await sb.from('profiles').update({
+            mfa_enabled:    true,
+            mfa_enrolled_at: new Date().toISOString()
+        }).eq('id', currentUser.id);
+        userProfile.mfa_enabled = true;
+        closeModal('mfaEnrollModal');
+        checkMFAStatus();
+        notify('✅ Two-factor authentication enabled successfully!', 'success', 8000);
+    } catch (err) {
+        notify('Verification failed: ' + err.message, 'danger');
+        clearMFADigits('enroll');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '✅ <span data-en="Verify & Enable MFA" data-es="Verificar y Habilitar MFA">Verify & Enable MFA</span>';
+        updateLang();
+    }
+}
+
+async function unenrollMFA() {
+    try {
+        const { data: factors } = await sb.auth.mfa.listFactors();
+        const totp = factors?.totp?.[0];
+        if (totp) {
+            const { error } = await sb.auth.mfa.unenroll({ factorId: totp.id });
+            if (error) throw error;
+        }
+        await sb.from('profiles').update({
+            mfa_enabled:    false,
+            mfa_enrolled_at: null
+        }).eq('id', currentUser.id);
+        userProfile.mfa_enabled = false;
+        checkMFAStatus();
+        notify('MFA has been disabled.', 'warning');
+    } catch (err) {
+        notify('Error disabling MFA: ' + err.message, 'danger');
+    }
+}
+
+async function checkMFAStatus() {
+    try {
+        const { data: factors } = await sb.auth.mfa.listFactors();
+        const enrolled = factors?.totp?.length > 0;
+        const badge    = document.getElementById('mfaStatusBadge');
+        const enrollEl = document.getElementById('mfaEnrollSection');
+        const unenrollEl = document.getElementById('mfaUnenrollSection');
+        if (badge) {
+            badge.textContent  = enrolled ? 'Enabled ✅' : 'Not Enabled';
+            badge.className    = enrolled ? 'badge badge-success' : 'badge badge-muted';
+        }
+        if (enrollEl)   enrollEl.classList.toggle('hidden', enrolled);
+        if (unenrollEl) unenrollEl.classList.toggle('hidden', !enrolled);
+    } catch (err) {
+        console.warn('MFA status check:', err.message);
+    }
+}
+
+// ============================================================
+// ACCREDITED INVESTOR CERTIFICATION
+// ============================================================
+function toggleAccreditedCheck(container, cbId) {
+    const cb = document.getElementById(cbId);
+    cb.checked = !cb.checked;
+    container.classList.toggle('checked', cb.checked);
+}
+
+async function submitAccreditation() {
+    const income   = document.getElementById('cb_income').checked;
+    const networth = document.getElementById('cb_networth').checked;
+    const license  = document.getElementById('cb_license').checked;
+    const entity   = document.getElementById('cb_entity').checked;
+    if (!income && !networth && !license && !entity) {
+        notify('Please select at least one criterion that applies to you.', 'warning');
+        return;
+    }
+    const certText = `I hereby certify that I qualify as an accredited investor under SEC Rule 501(a) of Regulation D. Criteria selected: ${[
+        income   ? 'Annual income over $200K' : null,
+        networth ? 'Net worth over $1M (excl. residence)' : null,
+        license  ? 'Professional license (Series 7/65/82)' : null,
+        entity   ? 'Entity assets over $5M' : null
+    ].filter(Boolean).join(', ')}. Self-certified on ${new Date().toISOString()}.`;
+    try {
+        const { error: certErr } = await sb.from('accredited_investor_certifications').insert({
+            user_id:                          currentUser.id,
+            annual_income_over_200k:          income,
+            joint_income_over_300k:           income,
+            net_worth_over_1m_excl_residence: networth,
+            professional_license:             license,
+            entity_assets_over_5m:            entity,
+            self_certified:                   true,
+            certification_text:               certText,
+            user_agent:                       navigator.userAgent,
+            certified_at:                     new Date().toISOString()
+        });
+        if (certErr) throw certErr;
+        const { error: profErr } = await sb.from('profiles').update({
+            accredited_investor_certified: true,
+            accredited_certified_at:       new Date().toISOString()
+        }).eq('id', currentUser.id);
+        if (profErr) throw profErr;
+        userProfile.accredited_investor_certified = true;
+        closeModal('accreditedModal');
+        updateAccreditedUI();
+        notify('✅ Accredited investor certification recorded. Thank you.', 'success', 8000);
+    } catch (err) {
+        notify('Error saving certification: ' + err.message, 'danger');
+    }
+}
+
+function updateAccreditedUI() {
+    const certified = userProfile?.accredited_investor_certified;
+    const badge     = document.getElementById('accreditedBadge');
+    const certEl    = document.getElementById('accreditedCertifiedSection');
+    const pendEl    = document.getElementById('accreditedPendingSection');
+    if (badge) {
+        badge.textContent = certified ? 'Certified ✅' : 'Pending';
+        badge.className   = certified ? 'badge badge-success' : 'badge badge-warning';
+    }
+    if (certEl) certEl.classList.toggle('hidden', !certified);
+    if (pendEl) pendEl.classList.toggle('hidden', !!certified);
+}
+
+// ============================================================
 // FORGOT PASSWORD FORM
-// Generates a secure token, stores it in password_resets table,
-// then calls Railway backend to send a branded recovery email
 // ============================================================
 document.getElementById('forgotPasswordForm').addEventListener('submit', async e => {
     e.preventDefault();
     const email      = document.getElementById('fpEmail').value.trim();
     const userAnswer = parseInt(document.getElementById('captchaAnswer').value, 10);
     const btn        = document.getElementById('fpBtn');
-
-    if (!email) {
-        notify(lang === 'en' ? 'Please enter your email address.' : 'Por favor ingrese su correo electrónico.', 'warning');
-        return;
-    }
+    if (!email) { notify(lang === 'en' ? 'Please enter your email address.' : 'Por favor ingrese su correo electrónico.', 'warning'); return; }
     if (isNaN(userAnswer) || userAnswer !== captchaAnswer) {
         notify(lang === 'en' ? 'Incorrect answer — please try again.' : 'Respuesta incorrecta — intente de nuevo.', 'warning');
-        generateCaptcha();
-        return;
+        generateCaptcha(); return;
     }
-
     btn.disabled = true;
     btn.innerHTML = lang === 'en' ? '⏳ Sending…' : '⏳ Enviando…';
-
     try {
-        // Look up profile — we need the name for the branded email
-        const { data: profiles } = await sb.rpc('get_profile_for_password_reset', {
-    p_email: email
-});
-const profile = profiles?.[0] || null;
-
+        const { data: profiles } = await sb.rpc('get_profile_for_password_reset', { p_email: email });
+        const profile = profiles?.[0] || null;
         if (profile) {
-            // Generate a cryptographically secure token
             const arr = new Uint8Array(32);
             crypto.getRandomValues(arr);
             const token = btoa(String.fromCharCode(...arr))
                 .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-
-            // Expire any existing unused tokens for this email
             await sb.from('password_resets')
                 .update({ used: true, used_at: new Date().toISOString() })
-                .eq('email', email)
-                .eq('used', false);
-
-            // Store new token (expires in 1 hour)
+                .eq('email', email).eq('used', false);
             const expiresAt = new Date();
             expiresAt.setHours(expiresAt.getHours() + 1);
-
             const { error: insertErr } = await sb.from('password_resets').insert({
-                email:      email,
-                token:      token,
-                expires_at: expiresAt.toISOString(),
-                used:       false,
-                created_at: new Date().toISOString()
+                email, token, expires_at: expiresAt.toISOString(),
+                used: false, created_at: new Date().toISOString()
             });
             if (insertErr) throw insertErr;
-
-            // Send branded email via Railway backend
             const resetUrl = `${window.location.origin}${window.location.pathname}?reset=${token}`;
             await sendPasswordResetEmail(profile.full_name, email, token, resetUrl);
         }
-
-        // Always show the same message — prevents email enumeration
         notify(
             lang === 'en'
                 ? '📧 If an account exists for that email, a recovery link has been sent. Please check your inbox.'
@@ -898,7 +1418,6 @@ const profile = profiles?.[0] || null;
         );
         document.getElementById('fpEmail').value = '';
         showLogin();
-
     } catch (err) {
         notify((lang === 'en' ? 'Error: ' : 'Error: ') + err.message, 'danger');
         generateCaptcha();
@@ -909,159 +1428,124 @@ const profile = profiles?.[0] || null;
     }
 });
 
-// ============================================================
-// SEND BRANDED RESET EMAIL via Railway backend
-// ============================================================
 async function sendPasswordResetEmail(name, email, token, resetUrl) {
     try {
         const res = await fetch(SEND_RESET_URL, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ name, email, token, resetUrl })
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, token, resetUrl })
         });
-        if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            console.error('Reset email backend error:', errData);
-            return false;
-        }
-        return true;
-    } catch (err) {
-        console.error('Reset email call failed:', err);
-        return false;
-    }
+        return res.ok;
+    } catch (err) { console.error('Reset email failed:', err); return false; }
 }
 
 // ============================================================
-// CHECK RESET TOKEN  (called on page load when ?reset= is in URL)
-// Validates token from password_resets table before showing form
+// CHECK RESET TOKEN
 // ============================================================
 async function checkResetToken() {
     const params = new URLSearchParams(window.location.search);
     const token  = params.get('reset');
     if (!token) return;
-
     try {
         const { data, error } = await sb.from('password_resets')
-            .select('*')
-            .eq('token', token)
-            .eq('used', false)
-            .single();
-
+            .select('*').eq('token', token).eq('used', false).single();
         if (error || !data) {
-            showInvalidReset(
-                lang === 'en'
-                    ? 'This reset link is invalid. Please request a new one.'
-                    : 'Este enlace de restablecimiento es inválido. Por favor solicite uno nuevo.'
-            );
+            showInvalidReset(lang === 'en' ? 'This reset link is invalid. Please request a new one.' : 'Este enlace es inválido. Por favor solicite uno nuevo.');
             return;
         }
         if (new Date(data.expires_at) < new Date()) {
-            showInvalidReset(
-                lang === 'en'
-                    ? 'This reset link has expired (valid for 1 hour). Please request a new one.'
-                    : 'Este enlace ha expirado (válido por 1 hora). Por favor solicite uno nuevo.'
-            );
+            showInvalidReset(lang === 'en' ? 'This reset link has expired (valid for 1 hour). Please request a new one.' : 'Este enlace ha expirado (válido por 1 hora). Por favor solicite uno nuevo.');
             return;
         }
-
-        // Store for use in the reset form submit
         window._resetToken = token;
         window._resetEmail = data.email;
-
-        // Clean URL so token is not visible or re-usable on refresh
         window.history.replaceState({}, document.title, window.location.pathname);
         showResetPassword();
-
     } catch (err) {
-        showInvalidReset(lang === 'en'
-            ? 'An error occurred validating your link. Please try again.'
-            : 'Ocurrió un error al validar su enlace. Por favor intente de nuevo.');
+        showInvalidReset(lang === 'en' ? 'An error occurred validating your link. Please try again.' : 'Ocurrió un error al validar su enlace. Por favor intente de nuevo.');
     }
 }
 
+function showResetPassword() {
+    hideAllAuthContainers();
+    document.getElementById('resetPasswordContainer').classList.remove('hidden');
+    document.getElementById('newPassword').value        = '';
+    document.getElementById('confirmNewPassword').value = '';
+    const f = document.getElementById('resetStrengthFill');
+    const t = document.getElementById('resetStrengthText');
+    if (f) f.style.width = '0%';
+    if (t) t.textContent = '';
+}
+function showInvalidReset(msg) {
+    hideAllAuthContainers();
+    document.getElementById('invalidResetContainer').classList.remove('hidden');
+    const el = document.getElementById('invalidResetMsg');
+    if (el && msg) el.textContent = msg;
+}
+
 // ============================================================
-// RESET PASSWORD FORM SUBMIT
-// Calls Railway backend which uses Supabase Admin API to update
-// the password securely — the service role key stays on the server
+// RESET PASSWORD FORM
 // ============================================================
 document.getElementById('resetPasswordForm').addEventListener('submit', async e => {
     e.preventDefault();
     const newPass     = document.getElementById('newPassword').value;
     const confirmPass = document.getElementById('confirmNewPassword').value;
     const btn         = document.getElementById('resetBtn');
-
-    if (newPass.length < 8) {
-        notify(lang === 'en' ? 'Password must be at least 8 characters.' : 'La contraseña debe tener al menos 8 caracteres.', 'warning');
-        return;
-    }
-    if (newPass !== confirmPass) {
-        notify(lang === 'en' ? 'Passwords do not match.' : 'Las contraseñas no coinciden.', 'warning');
-        return;
-    }
-
+    if (newPass.length < 8) { notify(lang === 'en' ? 'Password must be at least 8 characters.' : 'La contraseña debe tener al menos 8 caracteres.', 'warning'); return; }
+    if (newPass !== confirmPass) { notify(lang === 'en' ? 'Passwords do not match.' : 'Las contraseñas no coinciden.', 'warning'); return; }
     btn.disabled = true;
     btn.innerHTML = lang === 'en' ? '⏳ Updating…' : '⏳ Actualizando…';
-
     try {
-        // Railway backend validates token + updates password via Supabase Admin API
         const res = await fetch(DO_RESET_URL, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({
-                token:       window._resetToken,
-                email:       window._resetEmail,
-                newPassword: newPass
-            })
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: window._resetToken, email: window._resetEmail, newPassword: newPass })
         });
-
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
             throw new Error(errData.message || 'Password reset failed. Please try again.');
         }
-
-        notify(
-            lang === 'en'
-                ? '✅ Password updated successfully! Please log in with your new password.'
-                : '✅ Contraseña actualizada exitosamente. Por favor inicie sesión con su nueva contraseña.',
-            'success', 8000
-        );
-
-        // Pre-fill email so user just needs to type the new password
+        notify(lang === 'en' ? '✅ Password updated successfully! Please log in with your new password.' : '✅ Contraseña actualizada exitosamente. Por favor inicie sesión con su nueva contraseña.', 'success', 8000);
         showLogin();
         document.getElementById('loginEmail').value = window._resetEmail || '';
         window._resetToken = null;
         window._resetEmail = null;
-
     } catch (err) {
         notify((lang === 'en' ? 'Error: ' : 'Error: ') + err.message, 'danger');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '🔐 <span data-en="Update Password" data-es="Actualizar Contraseña">'
-            + (lang === 'en' ? 'Update Password' : 'Actualizar Contraseña') + '</span>';
+        btn.innerHTML = '🔐 <span data-en="Update Password" data-es="Actualizar Contraseña">' + (lang === 'en' ? 'Update Password' : 'Actualizar Contraseña') + '</span>';
     }
 });
 
 // ============================================================
-// INVITATION FLOW
+// INVITATION FLOW — uses validate_invitation_token RPC
 // ============================================================
 async function checkInviteToken() {
     const params = new URLSearchParams(window.location.search);
     const token  = params.get('invite');
     if (!token) return;
     try {
-        const { data, error } = await sb.from('invitations')
-            .select('*').eq('token', token).is('deleted_at', null).single();
-        if (error || !data) { showInvalidInvite('This invitation link is invalid. Please contact your administrator.'); return; }
-        if (new Date(data.expires_at) < new Date()) { showInvalidInvite('This invitation has expired. Please ask your administrator to send a new one.'); return; }
-        if (data.status === 'accepted') { showInvalidInvite('This invitation has already been used. Please log in with your existing account.'); return; }
-        document.getElementById('regName').value  = data.name  || '';
-        document.getElementById('regEmail').value = data.email || '';
+        const { data, error } = await sb.rpc('validate_invitation_token', { p_token: token });
+        const invitation = data?.[0] || null;
+        if (error || !invitation) {
+            showInvalidInvite('This invitation link is invalid. Please contact your administrator.');
+            return;
+        }
+        if (new Date(invitation.expires_at) < new Date()) {
+            showInvalidInvite('This invitation has expired. Please ask your administrator to send a new one.');
+            return;
+        }
+        if (invitation.status === 'accepted') {
+            showInvalidInvite('This invitation has already been used. Please log in with your existing account.');
+            return;
+        }
+        document.getElementById('regName').value  = invitation.name  || '';
+        document.getElementById('regEmail').value = invitation.email || '';
         document.getElementById('inviteWelcomeMsg').textContent =
-            `Welcome, ${data.name}! Please create your password to access the Silicon Corridor Ventures Investor Portal.`;
+            `Welcome, ${invitation.name}! Please create your password to access the Silicon Corridor Ventures Investor Portal.`;
         window._inviteToken = token;
-        window._inviteId    = data.id;
-        window._inviteEmail = data.email;
-        window._inviteName  = data.name;
+        window._inviteId    = invitation.id;
+        window._inviteEmail = invitation.email;
+        window._inviteName  = invitation.name;
         showRegister();
     } catch (err) {
         showInvalidInvite('An error occurred validating your invitation. Please try again.');
@@ -1090,18 +1574,21 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
         if (authError) throw authError;
         const userId = authData.user?.id;
         if (!userId) throw new Error('Failed to create user account');
+        const now = new Date().toISOString();
         const { error: profileError } = await sb.from('profiles').upsert({
-            id: userId, full_name: name, email, role: 'investor', status: 'active', created_at: new Date().toISOString()
+            id: userId, full_name: name, email, role: 'investor', status: 'active',
+            email_verified: true, email_verified_at: now, created_at: now
         });
         if (profileError) console.warn('Profile error:', profileError.message);
         const { error: invError } = await sb.from('invitations').update({
-            status: 'accepted', user_id: userId, used_at: new Date().toISOString()
+            status: 'accepted', user_id: userId, used_at: now
         }).eq('id', window._inviteId);
         if (invError) console.warn('Invitation update error:', invError.message);
         const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password });
         if (signInError) throw signInError;
         currentUser = signInData.user;
-        userProfile = { id: userId, full_name: name, email, role: 'investor', status: 'active' };
+        userProfile = { id: userId, full_name: name, email, role: 'investor', status: 'active',
+                        email_verified: true, accredited_investor_certified: false, mfa_enabled: false };
         window.history.replaceState({}, document.title, window.location.pathname);
         notify(`Welcome to Silicon Corridor Ventures, ${name}! 🎉`, 'success', 8000);
         showDashboard();
@@ -1119,57 +1606,48 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
 // ============================================================
 document.getElementById('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
-
-    // Check if locked out
     if (loginLockedUntil && new Date() < loginLockedUntil) {
         const mins = Math.ceil((loginLockedUntil - new Date()) / 60000);
-        notify(
-            lang === 'en'
-                ? `Too many failed attempts. Please try again in ${mins} minute(s).`
-                : `Demasiados intentos fallidos. Por favor intente en ${mins} minuto(s).`,
-            'danger', 8000
-        );
+        notify(lang === 'en' ? `Too many failed attempts. Please try again in ${mins} minute(s).` : `Demasiados intentos fallidos. Por favor intente en ${mins} minuto(s).`, 'danger', 8000);
         return;
     }
-
     const email = document.getElementById('loginEmail').value.trim();
     const pass  = document.getElementById('loginPassword').value;
     const btn   = document.getElementById('loginBtn');
     btn.disabled = true;
     btn.textContent = '…';
-
     try {
         const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
         if (error) throw error;
-
-        // Success — reset counters
         loginAttempts    = 0;
         loginLockedUntil = null;
-
         currentUser = data.user;
+
+        // Update last_login_at
+        sb.from('profiles').update({ last_login_at: new Date().toISOString() })
+            .eq('id', currentUser.id).then(() => {});
+
+        // Check if MFA is required
+        const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (aal?.nextLevel === 'aal2' && aal?.currentLevel !== 'aal2') {
+            hideAllAuthContainers();
+            document.getElementById('mfaContainer').classList.remove('hidden');
+            clearMFADigits('mfa');
+            document.getElementById('mfa0').focus();
+            return;
+        }
+
         await fetchProfile();
         showDashboard();
-
     } catch (err) {
         loginAttempts++;
-
         if (loginAttempts >= 5) {
             loginLockedUntil = new Date(Date.now() + 15 * 60 * 1000);
             loginAttempts    = 0;
-            notify(
-                lang === 'en'
-                    ? '🔒 Too many failed attempts. Login locked for 15 minutes.'
-                    : '🔒 Demasiados intentos fallidos. Inicio de sesión bloqueado por 15 minutos.',
-                'danger', 15000
-            );
+            notify(lang === 'en' ? '🔒 Too many failed attempts. Login locked for 15 minutes.' : '🔒 Demasiados intentos fallidos. Inicio de sesión bloqueado por 15 minutos.', 'danger', 15000);
         } else {
             const remaining = 5 - loginAttempts;
-            notify(
-                lang === 'en'
-                    ? `Login failed. ${remaining} attempt(s) remaining before lockout.`
-                    : `Inicio de sesión fallido. ${remaining} intento(s) restantes antes del bloqueo.`,
-                'danger'
-            );
+            notify(lang === 'en' ? `Login failed. ${remaining} attempt(s) remaining before lockout.` : `Inicio de sesión fallido. ${remaining} intento(s) restantes antes del bloqueo.`, 'danger');
         }
     } finally {
         btn.disabled = false;
@@ -1185,7 +1663,8 @@ async function fetchProfile() {
         userProfile = data;
     } catch (err) {
         console.warn('Profile fetch error:', err.message);
-        userProfile = { role: 'investor', full_name: currentUser.email, email: currentUser.email, status: 'active' };
+        userProfile = { role: 'investor', full_name: currentUser.email, email: currentUser.email, status: 'active',
+                        accredited_investor_certified: false, mfa_enabled: false };
         notify('Profile defaults used — check DB connection', 'warning');
     }
 }
@@ -1193,6 +1672,7 @@ async function fetchProfile() {
 function showDashboard() {
     hideAllAuthContainers();
     document.getElementById('logoutBtn').classList.remove('hidden');
+    document.getElementById('hamburgerBtn').classList.remove('hidden');
     const badge = document.getElementById('userBadge');
     badge.classList.remove('hidden');
     badge.textContent = userProfile?.full_name || currentUser.email;
@@ -1204,20 +1684,25 @@ function showDashboard() {
         document.getElementById('investorDashboard').classList.add('active');
         document.getElementById('invName').textContent = userProfile?.full_name || '';
         loadInvOverview(); loadDocTypes(); loadInvDocs(); loadOpps('investor'); loadInvestments(); fillProfile();
+        updateAccreditedUI();
     }
+    startIdleTimer();
 }
 
-async function logout() {
+async function logout(auto = false) {
+    clearIdleTimers();
+    document.getElementById('idleBanner').classList.remove('show');
     await sb.auth.signOut();
     currentUser = null; userProfile = null;
     document.getElementById('adminDashboard').classList.remove('active');
     document.getElementById('investorDashboard').classList.remove('active');
     document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('hamburgerBtn').classList.add('hidden');
     document.getElementById('userBadge').classList.add('hidden');
     document.getElementById('loginEmail').value    = '';
     document.getElementById('loginPassword').value = '';
     showLogin();
-    notify('Logged out successfully', 'success');
+    notify(auto ? (lang === 'en' ? '⏱️ Session expired due to inactivity.' : '⏱️ Sesión expirada por inactividad.') : 'Logged out successfully', auto ? 'warning' : 'success');
 }
 
 // ============================================================
@@ -1228,6 +1713,8 @@ function adminNav(el) {
     el.classList.add('active');
     document.querySelectorAll('#adminDashboard .dashboard-section').forEach(s => s.classList.remove('active'));
     document.getElementById(el.dataset.section).classList.add('active');
+    const nav = document.getElementById('adminNavBar');
+    if (nav) nav.classList.remove('collapsed');
 }
 function investorNav(el) {
     document.querySelectorAll('#investorDashboard .nav-item').forEach(n => n.classList.remove('active'));
@@ -1235,6 +1722,9 @@ function investorNav(el) {
     document.querySelectorAll('#investorDashboard .dashboard-section').forEach(s => s.classList.remove('active'));
     document.getElementById(el.dataset.section).classList.add('active');
     if (el.dataset.section === 'invNews') loadNews();
+    if (el.dataset.section === 'invProfile') checkMFAStatus();
+    const nav = document.getElementById('investorNavBar');
+    if (nav) nav.classList.remove('collapsed');
 }
 
 // ============================================================
@@ -1243,15 +1733,10 @@ function investorNav(el) {
 function sanitize(str) {
     if (!str) return '';
     return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#x27;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
 }
-    
-    
-    function fmtDate(d)  { if (!d) return '—'; return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }); }
+function fmtDate(d)  { if (!d) return '—'; return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }); }
 function fmtMoney(n) { if (!n) return '—'; return Number(n).toLocaleString('en-US'); }
 function fmtSize(b)  { if (!b) return ''; if (b < 1024) return b + ' B'; if (b < 1048576) return (b/1024).toFixed(1) + ' KB'; return (b/1048576).toFixed(1) + ' MB'; }
 function statusBadge(s) {
@@ -1267,25 +1752,42 @@ function oppBadge(s) {
     const labels = { active:'Active', coming_soon:'Coming Soon', closed:'Closed' };
     return `<span class="badge ${map[s]||'badge-muted'}">${labels[s]||s}</span>`;
 }
-async function openSignedDoc(path) {
+async function openSignedDoc(path, docId) {
     try {
-        const { data, error } = await sb.storage
-            .from(BUCKET)
-            .createSignedUrl(path, 3600); // 1 hour expiry
+        const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(path, 3600);
         if (error) throw error;
+        // Log document view
+        if (currentUser && docId) {
+            sb.from('document_views').insert({
+                document_id: docId,
+                viewed_by:   currentUser.id,
+                viewer_role: userProfile?.role || 'investor',
+                viewed_at:   new Date().toISOString()
+            }).then(() => {});
+        }
         window.open(data.signedUrl, '_blank');
     } catch (err) {
-        notify(
-            lang === 'en'
-                ? 'Could not open document. Please try again.'
-                : 'No se pudo abrir el documento. Por favor intente de nuevo.',
-            'danger'
-        );
-        console.error('Signed URL error:', err.message);
+        notify(lang === 'en' ? 'Could not open document. Please try again.' : 'No se pudo abrir el documento. Por favor intente de nuevo.', 'danger');
     }
 }
 function emptyState(icon, title, sub = '') {
     return `<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div>${sub ? `<div class="empty-sub">${sub}</div>` : ''}</div>`;
+}
+
+// ============================================================
+// PAGINATION HELPERS
+// ============================================================
+function renderPagination(containerId, currentPage, totalItems, pageSize, onPageChange) {
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const el = document.getElementById(containerId);
+    if (!el || totalPages <= 1) { if (el) el.innerHTML = ''; return; }
+    let html = `<span class="page-info">Page ${currentPage} of ${totalPages}</span>`;
+    if (currentPage > 1) html += `<button class="page-btn" onclick="${onPageChange}(${currentPage - 1})">← Prev</button>`;
+    for (let p = Math.max(1, currentPage - 2); p <= Math.min(totalPages, currentPage + 2); p++) {
+        html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="${onPageChange}(${p})">${p}</button>`;
+    }
+    if (currentPage < totalPages) html += `<button class="page-btn" onclick="${onPageChange}(${currentPage + 1})">Next →</button>`;
+    el.innerHTML = html;
 }
 
 // ============================================================
@@ -1300,38 +1802,68 @@ async function loadAdminStats() {
         document.getElementById('sPendingDocs').textContent  = data.pending_documents   ?? 0;
         document.getElementById('sPendingInv').textContent   = data.pending_invitations ?? 0;
         document.getElementById('sAcceptedInv').textContent  = data.accepted_invitations ?? 0;
+        const cert = document.getElementById('sCertifiedInv');
+        const mfa  = document.getElementById('sMfaInv');
+        if (cert) cert.textContent = data.certified_investors    ?? 0;
+        if (mfa)  mfa.textContent  = data.mfa_enabled_investors  ?? 0;
     } catch (err) { console.error('Stats:', err.message); }
 }
 
 // ============================================================
-// ADMIN: INVESTORS
+// ADMIN: INVESTORS (with search + pagination)
 // ============================================================
 async function loadInvestors() {
-      try {
+    try {
         const { data, error } = await sb.from('profiles')
             .select('*').eq('role', 'investor')
             .order('created_at', { ascending: false });
         if (error) throw error;
-        const tbody = document.getElementById('investorsBody');
-        if (!data?.length) {
-            tbody.innerHTML = `<tr><td colspan="5">${emptyState('👥','No investors yet','Invite investors using the button above')}</td></tr>`;
-            return;
-        }
-        tbody.innerHTML = data.map(r => `<tr>
-            <td><strong>${sanitize(r.full_name) || '—'}</strong></td>
-            <td>${sanitize(r.email)}</td>
-            <td>${statusBadge(r.status)}</td>
-            <td>${fmtDate(r.created_at)}</td>
-            <td><div class="action-group">
-                ${r.status === 'active'
-                    ? `<button class="btn btn-warning btn-sm" onclick="setInvestorStatus('${r.id}','suspended')">🚫 Suspend</button>`
-                    : `<button class="btn btn-success btn-sm" onclick="setInvestorStatus('${r.id}','active')">✅ Activate</button>`}
-            </div></td>
-        </tr>`).join('');
+        allInvestors = data || [];
+        investorPage = 1;
+        renderInvestorsTable();
     } catch (err) {
         document.getElementById('investorsBody').innerHTML =
-            `<tr><td colspan="5">Error: ${err.message}</td></tr>`;
+            `<tr><td colspan="7">Error: ${err.message}</td></tr>`;
     }
+}
+
+function filterInvestors(query) {
+    investorPage = 1;
+    renderInvestorsTable(query);
+}
+
+function renderInvestorsTable(query = '') {
+    const q = query.toLowerCase();
+    const filtered = q
+        ? allInvestors.filter(r => (r.full_name||'').toLowerCase().includes(q) || (r.email||'').toLowerCase().includes(q))
+        : allInvestors;
+    const start = (investorPage - 1) * PAGE_SIZE;
+    const page  = filtered.slice(start, start + PAGE_SIZE);
+    const tbody = document.getElementById('investorsBody');
+    if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="7">${emptyState('👥','No investors found')}</td></tr>`;
+        document.getElementById('investorsPagination').innerHTML = '';
+        return;
+    }
+    tbody.innerHTML = page.map(r => `<tr>
+        <td><strong>${sanitize(r.full_name) || '—'}</strong></td>
+        <td>${sanitize(r.email)}</td>
+        <td>${statusBadge(r.status)}</td>
+        <td>${r.mfa_enabled ? '<span class="badge badge-success">✅ On</span>' : '<span class="badge badge-muted">Off</span>'}</td>
+        <td>${r.accredited_investor_certified ? '<span class="badge badge-success">✅ Yes</span>' : '<span class="badge badge-warning">Pending</span>'}</td>
+        <td>${fmtDate(r.created_at)}</td>
+        <td><div class="action-group">
+            ${r.status === 'active'
+                ? `<button class="btn btn-warning btn-sm" onclick="confirmAction('Suspend Investor','Suspend ${sanitize(r.full_name)}? They will not be able to log in.',()=>setInvestorStatus('${r.id}','suspended'))">🚫 Suspend</button>`
+                : `<button class="btn btn-success btn-sm" onclick="setInvestorStatus('${r.id}','active')">✅ Activate</button>`}
+        </div></td>
+    </tr>`).join('');
+    renderPagination('investorsPagination', investorPage, filtered.length, PAGE_SIZE, 'goInvestorPage');
+}
+
+function goInvestorPage(p) {
+    investorPage = p;
+    renderInvestorsTable(document.getElementById('investorSearch')?.value || '');
 }
 
 async function setInvestorStatus(id, status) {
@@ -1344,10 +1876,10 @@ async function setInvestorStatus(id, status) {
 }
 
 // ============================================================
-// ADMIN: INVITATIONS  (soft-delete + compliance check)
+// ADMIN: INVITATIONS
 // ============================================================
 async function loadInvitations() {
-   try {
+    try {
         const { data, error } = await sb.from('invitations')
             .select('*').is('deleted_at', null)
             .order('created_at', { ascending: false });
@@ -1363,28 +1895,26 @@ async function loadInvitations() {
             <td>${invBadge(r.status)}</td>
             <td>${fmtDate(r.expires_at)}</td>
             <td>
-                <button class="btn btn-danger btn-sm" onclick="softDeleteInvitation('${r.id}','${sanitize(r.email)}')">🗑️ Delete</button>
+                <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete Invitation','Remove invitation for ${sanitize(r.email)}? You can resend afterwards.',()=>softDeleteInvitation('${r.id}','${sanitize(r.email)}'))">🗑️ Delete</button>
             </td>
         </tr>`).join('');
     } catch (err) { console.error('Invitations:', err.message); }
 }
 
 async function softDeleteInvitation(id, email) {
-    if (!confirm(`Hide invitation for ${email}? You can resend a new invitation to this address afterwards.`)) return;
     try {
         const deletedEmail = email + '_deleted_' + Date.now();
         const { error } = await sb.from('invitations').update({
-            deleted_at: new Date().toISOString(),
-            email:      deletedEmail
+            deleted_at: new Date().toISOString(), email: deletedEmail
         }).eq('id', id);
         if (error) throw error;
-        notify(`Invitation for ${email} removed. You can now resend an invitation to this address.`, 'success');
+        notify(`Invitation for ${email} removed.`, 'success');
         loadInvitations(); loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
 }
 
 // ============================================================
-// SEND INVITE  (compliance check + Railway branded email)
+// SEND INVITE — uses create_invitation RPC (server-side token)
 // ============================================================
 async function sendInvite() {
     const name   = document.getElementById('iName').value.trim();
@@ -1399,29 +1929,22 @@ async function sendInvite() {
             notify(`An active invitation for ${email} already exists. Please delete it first before resending.`, 'warning');
             return;
         }
-        const arr = new Uint8Array(32);
-        crypto.getRandomValues(arr);
-        const token = btoa(String.fromCharCode(...arr))
-            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + expiry);
-        const { error } = await sb.from('invitations').insert({
-            name, email, token,
-            expires_at: expiresAt.toISOString(),
-            created_by: currentUser.id,
-            status:     'pending'
+        // Use server-side create_invitation RPC for secure token generation
+        const { data, error } = await sb.rpc('create_invitation', {
+            p_name:            name,
+            p_email:           email,
+            p_created_by:      currentUser.id,
+            p_expires_in_days: expiry
         });
         if (error) throw error;
-        const sent = await sendInviteEmail(name, email, token, expiry);
+        const { invitation_id, invitation_token } = data[0];
+        const sent = await sendInviteEmail(name, email, invitation_token, expiry);
         closeModal('inviteModal');
         document.getElementById('iName').value  = '';
         document.getElementById('iEmail').value = '';
         notify(
-            sent
-                ? `Invitation sent to ${email}`
-                : `Invitation created but email failed. Please check the Railway backend.`,
-            sent ? 'success' : 'warning',
-            sent ? 5000 : 10000
+            sent ? `Invitation sent to ${email}` : `Invitation created but email failed. Please check the Railway backend.`,
+            sent ? 'success' : 'warning', sent ? 5000 : 10000
         );
         loadInvitations(); loadAdminStats();
     } catch (err) { notify('Error sending invitation: ' + err.message, 'danger'); }
@@ -1431,27 +1954,18 @@ async function sendInviteEmail(name, email, token, expiry) {
     const inviteUrl = `${window.location.origin}${window.location.pathname}?invite=${token}`;
     try {
         const res = await fetch(INVITE_URL, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ name, email, token, expiry, inviteUrl })
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, token, expiry, inviteUrl })
         });
-        if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            console.error('Invite email backend error:', errData);
-            return false;
-        }
-        return true;
-    } catch (err) {
-        console.error('Invite email call failed:', err);
-        return false;
-    }
+        return res.ok;
+    } catch (err) { console.error('Invite email failed:', err); return false; }
 }
 
 // ============================================================
-// ADMIN: DOCUMENTS
+// ADMIN: DOCUMENTS (with pagination)
 // ============================================================
 async function loadAdminDocs() {
-     const filter = document.getElementById('docFilter').value;
+    const filter = document.getElementById('docFilter').value;
     try {
         let q = sb.from('documents')
             .select('*,profiles!documents_user_id_fkey(full_name,email),document_types(name)')
@@ -1459,33 +1973,44 @@ async function loadAdminDocs() {
         if (filter !== 'all') q = q.eq('status', filter);
         const { data, error } = await q;
         if (error) throw error;
-        const el = document.getElementById('adminDocsList');
-        if (!data?.length) { el.innerHTML = emptyState('📄','No documents found'); return; }
-        el.innerHTML = data.map(d => `
-            <div class="doc-item">
-                <div class="doc-info">
-                    <span class="doc-icon">📄</span>
-                    <div>
-                        <div class="doc-name">${sanitize(d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name)}</div>
-                        <div class="doc-meta">👤 ${sanitize(d.profiles?.full_name || d.profiles?.email || 'Unknown')} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
-                        ${d.rejection_reason ? `<div class="doc-rejection">Reason: ${sanitize(d.rejection_reason)}</div>` : ''}
-                    </div>
-                </div>
-                <div class="action-group">
-                    ${statusBadge(d.status)}
-                    <button class="btn btn-secondary btn-sm" onclick="openSignedDoc('${d.file_path}')">👁️ View</button>
-                    ${d.status === 'pending' ? `
-                        <button class="btn btn-success btn-sm" onclick="reviewDoc('${d.id}','approved')">✅ Approve</button>
-                        <button class="btn btn-danger btn-sm" onclick="openReject('${d.id}')">❌ Reject</button>
-                    ` : ''}
-                </div>
-            </div>
-        `).join('');
+        allAdminDocs = data || [];
+        adminDocsPage = 1;
+        renderAdminDocs();
     } catch (err) {
         document.getElementById('adminDocsList').innerHTML =
             `<div class="alert alert-danger">Error: ${err.message}</div>`;
     }
 }
+
+function renderAdminDocs() {
+    const el = document.getElementById('adminDocsList');
+    if (!allAdminDocs.length) { el.innerHTML = emptyState('📄','No documents found'); return; }
+    const start = (adminDocsPage - 1) * PAGE_SIZE;
+    const page  = allAdminDocs.slice(start, start + PAGE_SIZE);
+    el.innerHTML = page.map(d => `
+        <div class="doc-item">
+            <div class="doc-info">
+                <span class="doc-icon">📄</span>
+                <div>
+                    <div class="doc-name">${sanitize(d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name)}</div>
+                    <div class="doc-meta">👤 ${sanitize(d.profiles?.full_name || d.profiles?.email || 'Unknown')} — ${fmtDate(d.uploaded_at)} — ${fmtSize(d.file_size)}</div>
+                    ${d.rejection_reason ? `<div class="doc-rejection">Reason: ${sanitize(d.rejection_reason)}</div>` : ''}
+                </div>
+            </div>
+            <div class="action-group">
+                ${statusBadge(d.status)}
+                <button class="btn btn-secondary btn-sm" onclick="openSignedDoc('${d.file_path}','${d.id}')">👁️ View</button>
+                ${d.status === 'pending' ? `
+                    <button class="btn btn-success btn-sm" onclick="reviewDoc('${d.id}','approved')">✅ Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="openReject('${d.id}')">❌ Reject</button>
+                ` : ''}
+            </div>
+        </div>
+    `).join('');
+    renderPagination('adminDocsPagination', adminDocsPage, allAdminDocs.length, PAGE_SIZE, 'goAdminDocsPage');
+}
+
+function goAdminDocsPage(p) { adminDocsPage = p; renderAdminDocs(); }
 
 async function reviewDoc(id, status, reason = null) {
     try {
@@ -1493,9 +2018,30 @@ async function reviewDoc(id, status, reason = null) {
         if (reason) upd.rejection_reason = reason;
         const { error } = await sb.from('documents').update(upd).eq('id', id);
         if (error) throw error;
+        // Notify investor via Railway backend
+        notifyInvestorDocStatus(id, status, reason);
         notify(`Document ${status}`, 'success');
         loadAdminDocs(); loadAdminStats();
     } catch (err) { notify('Error: ' + err.message, 'danger'); }
+}
+
+async function notifyInvestorDocStatus(docId, status, reason) {
+    try {
+        const { data } = await sb.from('documents')
+            .select('file_name,profiles!documents_user_id_fkey(full_name,email)')
+            .eq('id', docId).single();
+        if (!data) return;
+        await fetch(BACKEND_BASE + '/notify-doc-status', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                investorName:  data.profiles?.full_name,
+                investorEmail: data.profiles?.email,
+                fileName:      data.file_name,
+                status,
+                reason: reason || null
+            })
+        });
+    } catch (err) { console.warn('Doc notification failed:', err.message); }
 }
 
 function openReject(id) {
@@ -1515,7 +2061,7 @@ function confirmReject() {
 // ADMIN: WATCHLIST
 // ============================================================
 async function loadWatchlist() {
-     try {
+    try {
         const { data, error } = await sb.from('news_watchlist').select('*').order('created_at');
         if (error) throw error;
         const el = document.getElementById('watchlistList');
@@ -1531,7 +2077,7 @@ async function loadWatchlist() {
                 </div>
                 <div class="action-group">
                     <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank" class="btn btn-secondary btn-sm">📰 News</a>
-                    <button class="btn btn-danger btn-sm" onclick="removeWatchlist('${w.id}')">🗑️</button>
+                    <button class="btn btn-danger btn-sm" onclick="confirmAction('Remove Company','Remove ${sanitize(w.company_name)} from watchlist?',()=>removeWatchlist('${w.id}'))">🗑️</button>
                 </div>
             </div>
         `).join('');
@@ -1572,8 +2118,7 @@ async function loadOpps(view) {
         const { data, error } = await sb.from('opportunities')
             .select('*').order('created_at', { ascending: false });
         if (error) {
-            document.getElementById(elId).innerHTML =
-                `<div class="alert alert-warning">⚠️ Opportunities table not found.</div>`;
+            document.getElementById(elId).innerHTML = `<div class="alert alert-warning">⚠️ Opportunities table not found.</div>`;
             return;
         }
         const el = document.getElementById(elId);
@@ -1589,13 +2134,13 @@ async function loadOpps(view) {
                         <span class="doc-icon">💡</span>
                         <div>
                             <div class="doc-name">${sanitize(o.title)}</div>
-                            <div class="doc-meta">${sanitize(o.sector) || ''}${o.location ? ' - ' + sanitize(o.location) : ''} - Min: $${fmtMoney(o.minimum_investment)}</div>
+                            <div class="doc-meta">${sanitize(o.sector)||''}${o.location?' — '+sanitize(o.location):''} — Min: $${fmtMoney(o.minimum_investment)}</div>
                         </div>
                     </div>
                     <div class="action-group">
                         ${oppBadge(o.status)}
                         <button class="btn btn-secondary btn-sm" onclick="editOpp('${o.id}')">✏️ Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteOpp('${o.id}')">🗑️ Delete</button>
+                        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete Opportunity','Delete this opportunity? This cannot be undone.',()=>deleteOpp('${o.id}'))">🗑️ Delete</button>
                     </div>
                 </div>
             `).join('');
@@ -1606,7 +2151,7 @@ async function loadOpps(view) {
                 <div class="opp-card">
                     <div class="opp-header">
                         <div class="opp-title">${sanitize(o.title)}</div>
-                        <div class="opp-sub">${sanitize(o.sector) || ''}${o.location ? ' - ' + sanitize(o.location) : ''}</div>
+                        <div class="opp-sub">${sanitize(o.sector)||''}${o.location?' — '+sanitize(o.location):''}</div>
                     </div>
                     <div class="opp-body">
                         ${o.description ? `<div class="opp-desc">${sanitize(o.description)}</div>` : ''}
@@ -1620,11 +2165,9 @@ async function loadOpps(view) {
             `).join('')}</div>`;
         }
     } catch (err) {
-        document.getElementById(elId).innerHTML =
-            `<div class="alert alert-danger">Error: ${err.message}</div>`;
+        document.getElementById(elId).innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
     }
 }
-
 
 function openOppModal() {
     document.getElementById('oppId').value = '';
@@ -1679,7 +2222,6 @@ async function saveOpp() {
 }
 
 async function deleteOpp(id) {
-    if (!confirm('Delete this opportunity?')) return;
     try {
         const { error } = await sb.from('opportunities').delete().eq('id', id);
         if (error) throw error;
@@ -1714,6 +2256,8 @@ async function loadInvOverview() {
             alerts.innerHTML += `<div class="alert alert-success">✅ All your documents have been approved!</div>`;
         if (total === 0)
             alerts.innerHTML += `<div class="alert alert-info">ℹ️ No documents uploaded yet. Go to the Documents tab to get started.</div>`;
+        if (!userProfile?.accredited_investor_certified)
+            alerts.innerHTML += `<div class="alert alert-warning">⚖️ Please complete your <strong>Accredited Investor Certification</strong> in the Profile tab to access investment opportunities.</div>`;
     } catch (err) { console.error('Overview:', err.message); }
 }
 
@@ -1744,18 +2288,24 @@ async function uploadDoc() {
     if (!typeId) { notify('Please select a document type', 'warning'); return; }
     if (!file)   { notify('Please select a file', 'warning'); return; }
     if (file.size > 10 * 1024 * 1024) { notify('File must be under 10MB', 'warning'); return; }
+
+    // Magic bytes validation
+    const validBytes = await validateMagicBytes(file);
+    if (!validBytes) {
+        notify('Invalid file type. Only PDF, JPG, PNG, and Word documents are accepted.', 'danger');
+        document.getElementById('fileInput').value = '';
+        document.getElementById('uploadFileName').textContent = '';
+        return;
+    }
+
     try {
         const path = `${currentUser.id}/${Date.now()}_${file.name}`;
         const { error: upErr } = await sb.storage.from(BUCKET).upload(path, file);
         if (upErr) throw upErr;
         const { error: dbErr } = await sb.from('documents').insert({
-            user_id:          currentUser.id,
-            document_type_id: typeId,
-            file_name:        file.name,
-            file_path:        path,
-            file_size:        file.size,
-            mime_type:        file.type,
-            status:           'pending'
+            user_id: currentUser.id, document_type_id: typeId,
+            file_name: file.name, file_path: path,
+            file_size: file.size, mime_type: file.type, status: 'pending'
         });
         if (dbErr) throw dbErr;
         document.getElementById('fileInput').value            = '';
@@ -1767,7 +2317,7 @@ async function uploadDoc() {
 }
 
 async function loadInvDocs() {
-       try {
+    try {
         const { data, error } = await sb.from('documents')
             .select('*,document_types(name)')
             .eq('user_id', currentUser.id)
@@ -1784,13 +2334,13 @@ async function loadInvDocs() {
                     <span class="doc-icon">📄</span>
                     <div>
                         <div class="doc-name">${sanitize(d.document_types?.name?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || d.file_name)}</div>
-                        <div class="doc-meta">${sanitize(d.file_name)} - ${fmtDate(d.uploaded_at)} - ${fmtSize(d.file_size)}</div>
+                        <div class="doc-meta">${sanitize(d.file_name)} — ${fmtDate(d.uploaded_at)} — ${fmtSize(d.file_size)}</div>
                         ${d.rejection_reason ? `<div class="doc-rejection">❌ Rejection reason: ${sanitize(d.rejection_reason)}</div>` : ''}
                     </div>
                 </div>
                 <div class="action-group">
                     ${statusBadge(d.status)}
-                    <button class="btn btn-secondary btn-sm" onclick="openSignedDoc('${d.file_path}')">👁️ View</button>
+                    <button class="btn btn-secondary btn-sm" onclick="openSignedDoc('${d.file_path}','${d.id}')">👁️ View</button>
                 </div>
             </div>
         `).join('');
@@ -1822,7 +2372,7 @@ async function loadNews() {
             </div>
             ${data.map(w => `
                 <div class="news-item">
-                    <div class="news-tag">${w.ticker ? '$' + w.ticker + ' - ' : ''}Watchlist</div>
+                    <div class="news-tag">${w.ticker ? '$' + w.ticker + ' — ' : ''}Watchlist</div>
                     <div class="news-title">
                         <a href="https://news.google.com/search?q=${encodeURIComponent(w.company_name)}" target="_blank">
                             ${sanitize(w.company_name)} — Latest News ↗
@@ -1874,15 +2424,10 @@ async function loadInvestments() {
                         <div class="inv-detail-label">Investment Date</div>
                         <div class="inv-detail-value">${fmtDate(inv.investment_date)}</div>
                     </div>
-                    ${inv.notes ? `
-                    <div>
-                        <div class="inv-detail-label">Notes</div>
-                        <div class="inv-detail-value">${sanitize(inv.notes)}</div>
-                    </div>` : ''}
+                    ${inv.notes ? `<div><div class="inv-detail-label">Notes</div><div class="inv-detail-value">${sanitize(inv.notes)}</div></div>` : ''}
                 </div>
             </div>
         `).join('');
-        updateLang();
     } catch (err) {
         document.getElementById('invInvestments').innerHTML =
             `<div class="alert alert-danger">Error: ${err.message}</div>`;
@@ -1944,11 +2489,9 @@ uploadArea.addEventListener('drop', e => {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     updateLang();
-
     const params      = new URLSearchParams(window.location.search);
     const inviteToken = params.get('invite');
     const resetToken  = params.get('reset');
-
     if (inviteToken) {
         hideAllAuthContainers();
         checkInviteToken();
@@ -1967,12 +2510,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-

@@ -246,27 +246,30 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
-            .header-content { padding: 0 1rem; }
-            .logo-text h1 { font-size: 1rem; }
-            .logo-text p { display: none; }
-            .main-content { padding: 1rem; }
-            .auth-container { margin: 1.5rem auto; padding: 1.5rem; }
-            .hamburger { display: flex; }
-            .dashboard-nav { flex-direction: column; }
-            .dashboard-nav.collapsed .nav-item { display: none; }
-            .dashboard-nav.collapsed .nav-toggle-btn { display: flex; }
-            .grid-2 { grid-template-columns: 1fr; }
-            .modal { padding: 1.5rem; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .mfa-digits { gap: 0.35rem; }
-            .mfa-digit { width: 40px; height: 50px; font-size: 1.3rem; }
-            .user-badge { display: none; }
-            .action-group { flex-wrap: wrap; }
-        }
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .opp-grid { grid-template-columns: 1fr; }
-        }
+    .header-content { padding: 0 1rem; }
+    .logo-text h1 { font-size: 1rem; }
+    .logo-text p { display: none; }
+    .main-content { padding: 1rem; }
+    .auth-container { margin: 1.5rem auto; padding: 1.5rem; }
+    .hamburger { display: flex; }
+
+    /* Nav STARTS hidden on mobile — hamburger opens it */
+    .dashboard-nav { flex-direction: column; }
+    .dashboard-nav .nav-item { display: none; }
+    .dashboard-nav.mobile-open .nav-item { display: flex; }
+
+    .grid-2 { grid-template-columns: 1fr; }
+    .modal { padding: 1.5rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .mfa-digits { gap: 0.35rem; }
+    .mfa-digit { width: 40px; height: 50px; font-size: 1.3rem; }
+    .user-badge { display: none; }
+    .action-group { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .opp-grid { grid-template-columns: 1fr; }
+}
     </style>
 </head>
 <body>
@@ -2510,3 +2513,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+

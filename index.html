@@ -787,7 +787,187 @@
         </div>
     </section>
 </div>
+<!-- REG S CERTIFICATION MODAL (Bilingual EN + ES) -->
+<div class="modal-overlay" id="regSModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                🌐 Regulation S — Non-US Person Certification<br>
+                <span style="font-size:0.82rem;color:var(--muted);font-weight:400;">
+                    Certificación de Persona No Estadounidense — Regulación S
+                </span>
+            </h3>
+            <button class="modal-close" onclick="closeModal('regSModal')">×</button>
+        </div>
 
+        <div class="alert alert-info" style="margin-bottom:1.25rem;">
+            ℹ️
+            <div>
+                <div><strong>SEC Regulation S Requirement.</strong>
+                    Securities offered through this portal may be offered outside the United States
+                    in reliance on Regulation S. Please confirm all statements below apply to you.</div>
+                <div style="margin-top:0.5rem;color:#4338ca;font-size:0.85rem;">
+                    <strong>Requisito de Regulación S de la SEC.</strong>
+                    Los valores ofrecidos a través de este portal pueden ofrecerse fuera de los Estados Unidos
+                    en virtud de la Regulación S. Por favor confirme que todas las declaraciones a continuación
+                    le aplican.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <span data-en="Country of Residence" data-es="País de Residencia">Country of Residence</span>
+                / <span style="color:var(--muted);">País de Residencia</span>
+                <span style="color:#dc2626;"> *</span>
+            </label>
+            <select class="form-input" id="regSCountry">
+                <option value="">— Select / Seleccione —</option>
+                <option value="MX">Mexico / México</option>
+                <option value="CA">Canada / Canadá</option>
+                <option value="GB">United Kingdom / Reino Unido</option>
+                <option value="DE">Germany / Alemania</option>
+                <option value="FR">France / Francia</option>
+                <option value="ES">Spain / España</option>
+                <option value="BR">Brazil / Brasil</option>
+                <option value="AR">Argentina</option>
+                <option value="CO">Colombia</option>
+                <option value="CL">Chile</option>
+                <option value="PE">Peru / Perú</option>
+                <option value="VE">Venezuela</option>
+                <option value="EC">Ecuador</option>
+                <option value="BO">Bolivia</option>
+                <option value="PY">Paraguay</option>
+                <option value="UY">Uruguay</option>
+                <option value="CR">Costa Rica</option>
+                <option value="PA">Panama / Panamá</option>
+                <option value="GT">Guatemala</option>
+                <option value="HN">Honduras</option>
+                <option value="SV">El Salvador</option>
+                <option value="NI">Nicaragua</option>
+                <option value="DO">Dominican Republic / República Dominicana</option>
+                <option value="CU">Cuba</option>
+                <option value="JP">Japan / Japón</option>
+                <option value="KR">South Korea / Corea del Sur</option>
+                <option value="SG">Singapore / Singapur</option>
+                <option value="AU">Australia</option>
+                <option value="NZ">New Zealand / Nueva Zelanda</option>
+                <option value="IL">Israel</option>
+                <option value="AE">United Arab Emirates / Emiratos Árabes Unidos</option>
+                <option value="OTHER">Other / Otro</option>
+            </select>
+        </div>
+
+        <!-- Checkbox 1 -->
+        <div class="accredited-check" id="regs_check1" onclick="toggleAccreditedCheck(this,'regs_cb1')">
+            <input type="checkbox" id="regs_cb1" onclick="event.stopPropagation()">
+            <label for="regs_cb1">
+                <strong>I am NOT a US Person / No soy una Persona Estadounidense</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">
+                    I am not a natural person resident in the United States, and I am not a partnership,
+                    corporation, or other entity organized under US law. I understand the definition of
+                    "US Person" under SEC Rule 902(k).
+                    <em style="display:block;margin-top:0.3rem;color:#64748b;">
+                        No soy una persona natural residente en los Estados Unidos, ni una sociedad,
+                        corporación u otra entidad organizada bajo la ley estadounidense. Comprendo la
+                        definición de "Persona Estadounidense" bajo la Regla 902(k) de la SEC.
+                    </em>
+                </span>
+            </label>
+        </div>
+
+        <!-- Checkbox 2 -->
+        <div class="accredited-check" id="regs_check2" onclick="toggleAccreditedCheck(this,'regs_cb2')">
+            <input type="checkbox" id="regs_cb2" onclick="event.stopPropagation()">
+            <label for="regs_cb2">
+                <strong>This is an Offshore Transaction / Esta es una Transacción en el Extranjero</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">
+                    I am located outside the United States at the time of this offer and any purchase.
+                    I was not in the United States when the buy order was placed.
+                    <em style="display:block;margin-top:0.3rem;color:#64748b;">
+                        Me encuentro fuera de los Estados Unidos al momento de esta oferta y cualquier compra.
+                        No estaba en los Estados Unidos cuando se realizó la orden de compra.
+                    </em>
+                </span>
+            </label>
+        </div>
+
+        <!-- Checkbox 3 -->
+        <div class="accredited-check" id="regs_check3" onclick="toggleAccreditedCheck(this,'regs_cb3')">
+            <input type="checkbox" id="regs_cb3" onclick="event.stopPropagation()">
+            <label for="regs_cb3">
+                <strong>I Was Not Solicited in the United States / No Fui Contactado en los Estados Unidos</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">
+                    I did not receive any offer or solicitation for these securities while I was
+                    physically present in the United States.
+                    <em style="display:block;margin-top:0.3rem;color:#64748b;">
+                        No recibí ninguna oferta o solicitud de estos valores mientras me encontraba
+                        físicamente en los Estados Unidos.
+                    </em>
+                </span>
+            </label>
+        </div>
+
+        <!-- Checkbox 4 -->
+        <div class="accredited-check" id="regs_check4" onclick="toggleAccreditedCheck(this,'regs_cb4')">
+            <input type="checkbox" id="regs_cb4" onclick="event.stopPropagation()">
+            <label for="regs_cb4">
+                <strong>I Understand Resale Restrictions / Entiendo las Restricciones de Reventa</strong><br>
+                <span style="color:var(--muted);font-size:0.82rem;">
+                    I understand that these securities are "restricted securities" and may not be resold
+                    to US persons or within the United States for a period of one year from the date of
+                    acquisition without registration or an applicable exemption.
+                    <em style="display:block;margin-top:0.3rem;color:#64748b;">
+                        Entiendo que estos valores son "valores restringidos" y no pueden revenderse a
+                        personas estadounidenses ni dentro de los Estados Unidos por un período de un año
+                        desde la fecha de adquisición sin registro o una exención aplicable.
+                    </em>
+                </span>
+            </label>
+        </div>
+
+        <!-- BILINGUAL LEGAL CERTIFICATION TEXT — Always shows both languages -->
+        <div style="background:#fafbff;border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-top:1rem;">
+            <!-- English — always visible for compliance -->
+            <div style="padding-bottom:0.75rem;border-bottom:1px dashed var(--border);margin-bottom:0.75rem;">
+                <span style="display:inline-block;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:0.15rem 0.5rem;border-radius:4px;background:#dbeafe;color:#1e40af;margin-bottom:0.4rem;">English — Legal / Compliance</span>
+                <p style="font-size:0.78rem;color:var(--muted);line-height:1.7;">
+                    By clicking "I Certify" below, I represent and warrant that I am not a US person as
+                    defined in Rule 902(k) of Regulation S under the Securities Act of 1933, that this
+                    transaction is an offshore transaction, and that no directed selling efforts have been
+                    made in the United States with respect to these securities. I understand that Silicon
+                    Corridor Ventures is relying on this representation to determine my eligibility to
+                    participate in this offering under Regulation S. This certification is recorded with a
+                    timestamp and IP address for compliance and audit purposes.
+                </p>
+            </div>
+            <!-- Spanish — always visible for comprehension -->
+            <div>
+                <span style="display:inline-block;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:0.15rem 0.5rem;border-radius:4px;background:#fef9c3;color:#854d0e;margin-bottom:0.4rem;">Español — Comprensión</span>
+                <p style="font-size:0.78rem;color:var(--muted);line-height:1.7;">
+                    Al hacer clic en "Certifico" a continuación, declaro y garantizo que no soy una persona
+                    estadounidense según la definición de la Regla 902(k) de la Regulación S bajo la Ley de
+                    Valores de 1933, que esta transacción es una transacción en el extranjero, y que no se
+                    han realizado esfuerzos de venta dirigidos en los Estados Unidos con respecto a estos
+                    valores. Entiendo que Silicon Corridor Ventures se basa en esta declaración para
+                    determinar mi elegibilidad para participar en esta oferta bajo la Regulación S. Esta
+                    certificación se registra con una marca de tiempo y dirección IP para fines de
+                    cumplimiento y auditoría.
+                </p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('regSModal')">
+                <span data-en="Cancel" data-es="Cancelar">Cancel</span>
+            </button>
+            <button class="btn btn-primary" onclick="submitRegSCertification()">
+                🌐 <span data-en="I Certify — I Am a Non-US Person" data-es="Certifico — Soy una Persona No Estadounidense">I Certify — I Am a Non-US Person</span>
+            </button>
+        </div>
+    </div>
+</div>
+    
 </main>
 
 <!-- ==================== MODALS ==================== -->
@@ -2700,6 +2880,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 
